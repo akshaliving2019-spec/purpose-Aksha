@@ -85,6 +85,9 @@ const HumanBlueprintDiagram = () => {
           className="w-full h-auto block rounded-xl"
         />
 
+        {/* Navy overlay to match website background tone */}
+        <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ backgroundColor: 'rgba(7,20,47,0.18)' }} />
+
         {/* Clickable invisible circles over each dimension */}
         {dimensions.map(dim => (
           <motion.button
