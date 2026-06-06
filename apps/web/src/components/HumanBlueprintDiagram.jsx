@@ -77,11 +77,12 @@ const HumanBlueprintDiagram = () => {
     <section className="w-full bg-[#07142F] overflow-hidden">
 
       {/* IMAGE + CLICKABLE OVERLAYS */}
-      <div className="relative w-full">
+      <div className="relative w-full flex justify-center px-4 md:px-8 py-4">
+      <div className="relative w-full max-w-[88%]">
         <img
           src="/human-blueprint.jpg"
           alt="AKSHA Human Blueprint — Built on Decades of Human Understanding"
-          className="w-full h-auto block"
+          className="w-full h-auto block rounded-xl"
         />
 
         {/* Clickable invisible circles over each dimension */}
@@ -99,6 +100,7 @@ const HumanBlueprintDiagram = () => {
             title={`Learn about ${dim.label}`}
           />
         ))}
+      </div>
       </div>
 
       {/* INFO PANEL */}
