@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import HumanBlueprintDiagram from '@/components/HumanBlueprintDiagram';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ArrowRight, Compass, Sparkles, Fingerprint, Layers, Target, Users, Map, Shield } from 'lucide-react';
@@ -197,29 +198,8 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* BUILT ON DECADES OF HUMAN UNDERSTANDING SECTION */}
-        <section className="w-full bg-background pb-24">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="w-full flex flex-col items-center gap-12"
-          >
-            <img 
-              src="https://horizons-cdn.hostinger.com/3b1220b8-90b4-4363-97a3-2c8f1d706937/d4472caf462d8f74a31f2eef33a2c977.png" 
-              alt="Built on Decades of Human Understanding - Discover Your Life Purpose" 
-              className="w-full h-auto block"
-            />
-            
-            <Link 
-              to="/discover" 
-              className="flex items-center justify-center w-[360px] h-[64px] bg-[#D4AF37] text-[#07142F] font-[700] text-[18px] rounded-[14px] shadow-[0_0_25px_rgba(212,175,55,0.4)] hover:shadow-[0_0_35px_rgba(212,175,55,0.6)] hover:scale-[1.02] transition-all duration-300"
-            >
-              START YOUR JOURNEY →
-            </Link>
-          </motion.div>
-        </section>
+        {/* HUMAN BLUEPRINT INTERACTIVE DIAGRAM */}
+        <HumanBlueprintDiagram />
 
         {/* YOUR PURPOSE PROFILE INCLUDES SECTION */}
         <section className="py-24 bg-background">
