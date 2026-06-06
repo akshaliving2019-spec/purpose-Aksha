@@ -50,7 +50,7 @@ const HomePage = () => {
       </Helmet>
 
       <div className="bg-background flex flex-col min-h-screen">
-        
+
         {/* HERO SECTION */}
         <section className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 text-center bg-background">
           <motion.div
@@ -91,60 +91,8 @@ const HomePage = () => {
           </motion.div>
         </section>
 
-        {/* THE HUMAN CHALLENGE SECTION */}
-        <section className="py-24 bg-background border-y border-border/40">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight text-balance">
-                  The human challenge in the age of AI
-                </h2>
-                <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                  <p>
-                    We are standing at the threshold of the greatest technological shift in human history. As artificial intelligence rapidly masters logic, calculation, and execution, the skills that once guaranteed a secure career are becoming commoditized overnight.
-                  </p>
-                  <p>
-                    This profound transition is creating a crisis of meaning for millions. When a machine can do your job faster and more efficiently, what is left for you? The answer lies not in competing with machines on efficiency, but in leaning into what makes you fundamentally irreplaceable.
-                  </p>
-                  <p>
-                    Your humanity, your nuanced lived experience, and your unique energetic blueprint are the only assets that cannot be replicated by an algorithm. The challenge of this era is no longer just finding a job—it is discovering your true vocation.
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex flex-col items-center justify-center text-center mt-12 lg:mt-0"
-              >
-                <img 
-                  src="https://horizons-cdn.hostinger.com/3b1220b8-90b4-4363-97a3-2c8f1d706937/193aeeb3e72e575f992bc83eb9d6715a.png" 
-                  alt="Human Fingerprint" 
-                  className="w-[456px] h-[456px] object-contain mb-8"
-                />
-                <h3 className="text-4xl font-bold text-primary mb-4">
-                  Reveal Your Human Fingerprint
-                </h3>
-                <p className="text-xl text-foreground mb-8">
-                  AI can replicate skills. It cannot replicate who you are.
-                </p>
-                <Link to="/discover">
-                  <Button size="lg" className="text-lg px-8 py-6 transition-all duration-300 hover:shadow-[0_0_20px_rgba(200,168,75,0.3)] active:scale-[0.98]">
-                    Discover Your Blueprint
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-              </motion.div>
-            </div>
-          </div>
-        </section>
+        {/* HUMAN BLUEPRINT INTERACTIVE DIAGRAM */}
+        <HumanBlueprintDiagram />
 
         {/* WHAT AKSHA DOES SECTION */}
         <section className="py-24 bg-background">
@@ -197,9 +145,6 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-
-        {/* HUMAN BLUEPRINT INTERACTIVE DIAGRAM */}
-        <HumanBlueprintDiagram />
 
         {/* YOUR PURPOSE PROFILE INCLUDES SECTION */}
         <section className="py-24 bg-background">
