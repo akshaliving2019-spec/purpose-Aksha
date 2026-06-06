@@ -268,7 +268,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* WHY BIRTH DATA MATTERS SECTION */}
+        {/* YOUR PURPOSE PROFILE SECTION */}
         <section className="py-24 bg-muted/30 border-t border-border/40">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
@@ -280,35 +280,56 @@ const HomePage = () => {
                 className="text-center mb-12"
               >
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground text-balance">
-                  Why birth data matters
+                  Your Purpose Profile
                 </h2>
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                  AKSHA uses your birth date, time, and location as temporal coordinates. Using precise astronomical calculations and integrating decades of research in psychology, archetypal studies, and human motivation, AKSHA transforms complex data into practical personal insights.
+                </p>
+                <p className="text-sm text-muted-foreground/70 mt-4 italic">
+                  Birth data is used as a temporal reference point, not as a prediction system.
+                </p>
               </motion.div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                {[
+                  { label: 'Energy', desc: 'What naturally drives you. The activities, environments and experiences that activate your motivation and vitality.' },
+                  { label: 'Strengths', desc: 'What you consistently do well. The abilities that repeatedly produce reliable results.' },
+                  { label: 'Gift', desc: 'What comes naturally to you. Unique talents and cognitive patterns that can be refined and developed.' },
+                  { label: 'Impact', desc: 'Where your contribution matters. The areas where your abilities create meaningful value for others.' },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="rounded-xl border-2 border-primary/40 bg-card p-6 flex flex-col gap-3 hover:border-primary transition-colors duration-300"
+                  >
+                    <span className="text-primary font-bold text-lg">{item.label}</span>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="prose prose-lg prose-invert max-w-none text-muted-foreground"
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="mt-10 p-5 rounded-lg border border-primary/20 bg-primary/5 text-center"
               >
-                <p className="mb-6 leading-relaxed">
-                  For millennia, diverse cultures across the globe have understood that time is not merely a linear progression, but a cycle of recurring qualities. The exact moment and location of your birth is more than just historical data; it is a highly specific coordinate in space and time that captures the energetic signature of your beginning.
-                </p>
-                <p className="mb-6 leading-relaxed">
-                  Modern chronobiology and epigenetic studies are increasingly revealing how early environmental factors influence lifelong development. Similarly, the ancient systems utilized by AKSHA track macro-patterns of human personality and societal roles. By mapping your specific temporal coordinates against these proven archetypal frameworks, we can extract incredibly precise insights about your inherent nature.
-                </p>
-                <p className="leading-relaxed">
-                  We don't ask for this data to predict the future. We use it to decode your structural foundation. Just as a seed contains the entire blueprint of the tree it will become, your birth data holds the codified map of your highest potential. AKSHA translates this map into a language you can use today.
+                <p className="text-sm text-muted-foreground">
+                  <span className="text-primary font-semibold">Don't know your birth time?</span> No problem. You can still receive your Purpose Profile. Birth time improves precision of certain dimensions, but it is not required to begin your journey.
                 </p>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* START YOUR ANALYSIS CTA */}
+        {/* DISCOVER YOUR HUMAN BLUEPRINT CTA */}
         <section className="py-32 bg-background relative overflow-hidden border-t border-border/20">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-full max-h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-          
+
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -318,14 +339,14 @@ const HomePage = () => {
               className="max-w-3xl mx-auto text-center"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
-                Ready to discover what makes you <span className="text-primary">irreplaceable</span>?
+                Discover Your <span className="text-primary">Human Blueprint</span>
               </h2>
               <p className="text-xl text-muted-foreground mb-12 leading-relaxed text-balance">
-                Join thousands who have found profound clarity, fierce direction, and unshakeable purpose in the digital age.
+                Transform your birth data into practical insights about your Energy, Strengths, Gifts, and Impact.
               </p>
               <Link to="/discover">
                 <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,168,75,0.3)] active:scale-[0.98]">
-                  Start Your Analysis
+                  Generate My Purpose Profile
                   <ArrowRight className="ml-2 w-6 h-6" />
                 </Button>
               </Link>

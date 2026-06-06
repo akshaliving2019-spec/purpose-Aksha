@@ -17,7 +17,7 @@ const Footer = () => {
               />
             </Link>
             <p className="text-sm leading-relaxed max-w-md">
-              Discover your unique purpose in an AI-driven world. AKSHA maps your innate potential, revealing the one thing artificial intelligence cannot replace — your authentic self.
+              Discover your Human Blueprint in an AI-driven world. AKSHA transforms birth data into insights about your Energy, Strengths, Gifts, and Impact.
             </p>
           </div>
 
@@ -51,9 +51,9 @@ const Footer = () => {
             <h3 className="font-semibold text-foreground mb-6">Contact & Legal</h3>
             <ul className="space-y-4 text-sm">
               <li>
-                <a href="mailto:purpose@akshaliving.com" className="flex items-center gap-3 hover:text-primary transition-colors">
+                <a href="mailto:purpose@aksha.life" className="flex items-center gap-3 hover:text-primary transition-colors">
                   <Mail className="w-4 h-4 text-primary/70" />
-                  purpose@akshaliving.com
+                  purpose@aksha.life
                 </a>
               </li>
               <li>
