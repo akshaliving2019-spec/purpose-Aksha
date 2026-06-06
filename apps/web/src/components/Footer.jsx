@@ -75,7 +75,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-16 pt-8 border-t border-border text-center text-sm flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>&copy; {new Date().getFullYear()} AKSHA Living. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} aksha.life. All rights reserved.</p>
           <p className="text-muted-foreground/60">Illuminating human potential in the digital age</p>
         </div>
       </div>
