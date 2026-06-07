@@ -146,51 +146,21 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* YOUR PURPOSE PROFILE INCLUDES SECTION */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="mb-16 text-center"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground text-balance">
-                Your Purpose Profile includes
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto text-balance">
-                A comprehensive, highly personalized dossier detailing every facet of your innate potential.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {profileIncludes.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                  >
-                    <Card className="h-full border-border/40 bg-card hover:border-primary/40 transition-colors">
-                      <CardHeader>
-                        <Icon className="w-8 h-8 text-primary mb-4" />
-                        <CardTitle className="text-xl text-foreground">{item.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <CardDescription className="text-base text-muted-foreground">
-                          {item.description}
-                        </CardDescription>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
+        {/* WHAT YOUR MAP REVEALS SECTION */}
+        <section className="w-full bg-background">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="w-full flex justify-center px-4 md:px-8 py-8"
+          >
+            <img
+              src="/lo-que-el-mapa-revela.jpg"
+              alt="Lo que el mapa revela acerca de ti"
+              className="w-full max-w-[88%] h-auto block rounded-xl"
+            />
+          </motion.div>
         </section>
 
         {/* YOUR PURPOSE PROFILE SECTION */}
