@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AKSHA · Aaron B.R. · Purpose Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#07142F;--surface:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+    --text:#F0ECE4;--muted:rgba(240,236,228,0.82);--subtle:rgba(240,236,228,0.50);
+    --gold:#C9A84C;--gold-light:#E8C97A;--glyph:#C8D4E0;
+    --passion:#E8536A;--passion-bg:rgba(232,83,106,0.10);
+    --prof:#4ECBA0;--prof-bg:rgba(78,203,160,0.10);
+    --voc:#7B8FE8;--voc-bg:rgba(123,143,232,0.10);
+    --mission:#B57BF0;--mission-bg:rgba(181,123,240,0.10);
+    --wound:#E8A84C;--wound-bg:rgba(232,168,76,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+
+  .hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;padding:80px 32px 60px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(123,143,232,0.12) 0%,transparent 70%),
+               radial-gradient(ellipse 60% 40% at 70% 70%,rgba(181,123,240,0.08) 0%,transparent 60%);
+    pointer-events:none;}
+  .hero-logo{margin-bottom:36px;}
+  .hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,8vw,88px);font-weight:300;
+    letter-spacing:.04em;line-height:1;
+    background:linear-gradient(140deg,#f0ece4 0%,#e8c97a 50%,#f0ece4 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
+  .hero-sub{font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--subtle);margin-bottom:32px;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:44px;}
+  .chip{font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:7px 16px;
+        border-radius:20px;border:1px solid rgba(255,255,255,0.12);color:var(--subtle);}
+  .chip-voc{border-color:rgba(123,143,232,0.4);color:#7B8FE8;background:rgba(123,143,232,0.08);}
+  .chip-passion{border-color:rgba(232,83,106,0.4);color:#E8536A;background:rgba(232,83,106,0.08);}
+  .chip-mission{border-color:rgba(181,123,240,0.4);color:#B57BF0;background:rgba(181,123,240,0.08);}
+  .hero-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.2vw,30px);
+    font-weight:300;line-height:1.5;color:var(--text);max-width:700px;margin:0 auto;}
+  .hero-statement em{color:var(--gold-light);font-style:italic;}
+
+  .wrap{max-width:880px;margin:0 auto;padding:0 32px;}
+  .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);margin:64px 0;}
+  .sec{padding:64px 0 20px;}
+  .rule{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+  .rule::before,.rule::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07);}
+  .rule-text{font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--subtle);white-space:nowrap;}
+  .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;
+    color:var(--text);line-height:1.2;margin-bottom:20px;}
+  .sec-intro{font-size:17px;color:var(--muted);max-width:640px;line-height:1.85;margin-bottom:40px;}
+
+  .glyph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:48px;}
+  .glyph-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:22px 16px;text-align:center;transition:border-color .3s;}
+  .glyph-card:hover{border-color:rgba(212,175,55,0.25);}
+  .glyph-symbol{font-size:26px;display:block;margin-bottom:10px;color:var(--glyph);}
+  .glyph-name{font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;}
+  .glyph-iva{font-size:13px;color:var(--text);}
+
+  .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px;}
+  @media(max-width:640px){.mod-grid{grid-template-columns:1fr;}}
+  .mod{border-radius:16px;padding:32px 28px;border:1px solid var(--border);position:relative;overflow:hidden;}
+  .mod-passion{background:linear-gradient(135deg,rgba(232,83,106,0.06) 0%,rgba(232,83,106,0.02) 100%);border-color:rgba(232,83,106,0.2);}
+  .mod-prof{background:linear-gradient(135deg,rgba(78,203,160,0.06) 0%,rgba(78,203,160,0.02) 100%);border-color:rgba(78,203,160,0.2);}
+  .mod-voc{background:linear-gradient(135deg,rgba(123,143,232,0.06) 0%,rgba(123,143,232,0.02) 100%);border-color:rgba(123,143,232,0.2);}
+  .mod-mission{background:linear-gradient(135deg,rgba(181,123,240,0.06) 0%,rgba(181,123,240,0.02) 100%);border-color:rgba(181,123,240,0.2);}
+  .mod-glyph{font-size:28px;display:block;margin-bottom:12px;}
+  .mod-tag{font-size:9px;letter-spacing:.32em;text-transform:uppercase;margin-bottom:10px;opacity:.7;}
+  .mod-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;line-height:1.3;margin-bottom:14px;}
+  .mod-body{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:20px;}
+  .mod-body strong{color:var(--text);font-weight:500;}
+  .iva-bar-wrap{margin-top:16px;}
+  .iva-label{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;display:flex;justify-content:space-between;}
+  .iva-track{height:4px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;}
+  .iva-fill{height:100%;border-radius:4px;}
+
+  .ikigai-center{text-align:center;padding:72px 32px;position:relative;}
+  .ikigai-center::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(123,143,232,0.07) 0%,transparent 65%);pointer-events:none;}
+  .ikigai-sup{font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block;}
+  .ikigai-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.8vw,34px);font-weight:300;line-height:1.35;color:var(--text);margin-bottom:20px;}
+  .ikigai-title em{font-style:italic;color:var(--gold-light);}
+  .ikigai-body{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.88;}
+
+  .wound-box{background:var(--wound-bg);border:1px solid rgba(232,168,76,0.25);border-radius:16px;padding:36px 32px;margin-bottom:32px;}
+  .wound-glyph{font-size:32px;margin-bottom:12px;display:block;}
+  .wound-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-light);margin-bottom:12px;}
+  .wound-body{font-size:16px;color:var(--muted);line-height:1.85;}
+  .wound-pos{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--wound);margin-bottom:14px;}
+
+  .freno{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin-bottom:16px;}
+  .freno-num{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .freno-glyph{font-size:18px;display:block;margin-bottom:10px;letter-spacing:.12em;}
+  .freno-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:10px;}
+  .freno-body{font-size:16px;color:var(--muted);line-height:1.82;}
+
+  .ruta{border-radius:14px;padding:30px 28px;margin-bottom:16px;border:1px solid var(--border);background:var(--surface);}
+  .ruta-num{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .ruta-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold-light);margin-bottom:12px;}
+  .ruta-body{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:16px;}
+  .ruta-body strong{color:var(--text);font-weight:500;}
+  .ruta-steps{list-style:none;padding:0;}
+  .ruta-steps li{font-size:15px;color:var(--muted);padding:8px 0 8px 20px;border-left:2px solid rgba(212,175,55,0.2);margin-bottom:8px;line-height:1.7;}
+  .ruta-steps li strong{color:var(--text);}
+  .ruta-resultado{margin-top:14px;font-size:13px;letter-spacing:.04em;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);border-radius:8px;padding:10px 14px;}
+
+  .resil-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin-bottom:16px;}
+  .resil-tag{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .resil-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:10px;}
+  .resil-body{font-size:16px;color:var(--muted);line-height:1.82;}
+  .resil-steps{list-style:none;padding:0;margin-top:12px;}
+  .resil-steps li{font-size:15px;color:var(--muted);padding:6px 0 6px 18px;border-left:2px solid rgba(123,143,232,0.3);margin-bottom:6px;}
+
+  .huella-name-label{font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:rgba(201,168,76,0.55);margin-bottom:6px;}
+  .huella-name{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:300;letter-spacing:.08em;
+    background:linear-gradient(140deg,#f0ece4 0%,#e8c97a 55%,#f0ece4 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:24px;}
+  .mod-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px;}
+  .mod-pill{padding:12px 22px;border-radius:30px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;}
+
+  .footer{text-align:center;padding:48px 32px 60px;border-top:1px solid var(--border);margin-top:80px;}
+  .footer-brand{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px;}
+  .footer-note{font-size:12px;color:rgba(240,236,228,0.35);line-height:1.7;max-width:560px;margin:0 auto;}
+
+  @media print{body{background:#07142F!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-logo">
+    <img src="aksha-logo-hero.png" alt="AKSHA" style="width:140px;opacity:.9;" onerror="this.style.display='none'"/>
+  </div>
+  <p class="hero-sub">Purpose Map · AKSHA System</p>
+  <h1 class="hero-name">Aaron B.R.</h1>
+  <p class="hero-sub">February 25, 2005 · 11:58 AM · Queens, New York</p>
+  <div class="hero-chips">
+    <span class="chip chip-voc">Vocation 82%</span>
+    <span class="chip chip-passion">Passion 78%</span>
+    <span class="chip chip-mission">Mission 71%</span>
+    <span class="chip">Profession 65%</span>
+  </div>
+  <p class="hero-statement">
+    You're 21 and you already know how to connect people who seem to have nothing in common.<br>
+    That's not a personality trait — that's <em>the most needed and hardest skill to build in 2026.</em>
+  </p>
+</section>
+
+<div class="hr"></div>
+
+<!-- BEHAVIORAL COORDINATES -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Behavioral Coordinates · Aaron B.R.</span></div>
+    <h2 class="sec-title">What the analysis confirms</h2>
+    <p class="sec-intro">These aren't labels. They're the way your brain processes reality — they've been active your whole life, even if no one has named them until now.</p>
+    <div class="glyph-grid">
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">✦</span>
+        <div class="glyph-name">Core Archetype</div>
+        <div class="glyph-iva" style="color:var(--voc)">Visionary · The Depth</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--prof)">❋</span>
+        <div class="glyph-name">Emotional Pattern</div>
+        <div class="glyph-iva" style="color:var(--prof)">Analytical · The Play</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">⌘</span>
+        <div class="glyph-name">Communication Pattern</div>
+        <div class="glyph-iva" style="color:var(--voc)">Visionary · Internalized</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">✿</span>
+        <div class="glyph-name">Relational Pattern</div>
+        <div class="glyph-iva" style="color:var(--prof)">Architect · The Foundation</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--prof)">▶</span>
+        <div class="glyph-name">Action Pattern</div>
+        <div class="glyph-iva" style="color:var(--prof)">Architect · The Foundation</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">❉</span>
+        <div class="glyph-name">Expansion Pattern</div>
+        <div class="glyph-iva" style="color:var(--voc)">Diplomat · The Mirror</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--mission)">⬡</span>
+        <div class="glyph-name">Structural Pattern</div>
+        <div class="glyph-iva" style="color:var(--mission)">Nurturer · The Roots</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">✺</span>
+        <div class="glyph-name">Innovation Pattern</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Analytical · The Tribe</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">≋</span>
+        <div class="glyph-name">Visionary Pattern</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Architect · The Foundation</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--mission)">◈</span>
+        <div class="glyph-name">Transformation Pattern</div>
+        <div class="glyph-iva" style="color:var(--mission)">Visionary · The Depth</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--wound)">⁂</span>
+        <div class="glyph-name">Wound · Gift</div>
+        <div class="glyph-iva" style="color:var(--wound)">Architect · The Foundation</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">⟰</span>
+        <div class="glyph-name">Destiny Vector</div>
+        <div class="glyph-iva" style="color:var(--passion)">Pioneer · The Presence</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- 4 MODULES -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">The 4 Modules · Convergence Point</span></div>
+    <h2 class="sec-title">Your complete map</h2>
+    <p class="sec-intro">Four dimensions. One fingerprint. Where all four converge is what only you can do in the world — and what 2026 needs urgently.</p>
+  </section>
+</div>
+
+<div style="max-width:880px;margin:0 auto;padding:0 32px;">
+  <div class="mod-grid">
+
+    <div class="mod mod-passion">
+      <span class="mod-glyph" style="color:var(--passion)">✦</span>
+      <p class="mod-tag" style="color:var(--passion)">Passion · What you love</p>
+      <h3 class="mod-title">Building worlds where different people actually understand each other</h3>
+      <p class="mod-body">
+        You walk into a room and within 10 minutes you've connected two people who thought they had nothing in common. You don't think about it — you just do it. <strong>That's your relational intelligence running on autopilot.</strong><br><br>
+        You're energized by creating narratives, spaces, and conversations that change how someone sees themselves. Not the drama — the real transformation that happens when someone finally feels understood.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Passion</span><span style="color:var(--passion)">78%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:78%;background:var(--passion);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-prof">
+      <span class="mod-glyph" style="color:var(--prof)">⬡</span>
+      <p class="mod-tag" style="color:var(--prof)">Profession · What you do well</p>
+      <h3 class="mod-title">Translating complex ideas into something anyone can actually use</h3>
+      <p class="mod-body">
+        You take a hard idea — technical, emotional, cultural — and make it accessible without dumbing it down. <strong>That's a rare skill with a growing market price in 2026.</strong><br><br>
+        You also read the emotional temperature of a group before anyone speaks. You know when there's tension, when there's openness. You use that information — sometimes without realizing you're doing it.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Profession</span><span style="color:var(--prof)">65%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:65%;background:var(--prof);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-voc">
+      <span class="mod-glyph" style="color:var(--voc)">⟰</span>
+      <p class="mod-tag" style="color:var(--voc)">Vocation · What the world needs from you</p>
+      <h3 class="mod-title">Bridges between cultures, generations, and internal languages</h3>
+      <p class="mod-body">
+        Queens is the most diverse place on Earth. You grew up navigating multiple cultures, codes, and worldviews before the age of 10. <strong>That's a capability most people never develop.</strong><br><br>
+        The world in 2026 needs exactly that: people who speak the internal language of communities that don't understand each other. Not word translators — reality translators.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Vocation</span><span style="color:var(--voc)">82%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:82%;background:var(--voc);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-mission">
+      <span class="mod-glyph" style="color:var(--mission)">△</span>
+      <p class="mod-tag" style="color:var(--mission)">Mission · Why the world is better because you exist</p>
+      <h3 class="mod-title">Giving belonging to people who don't fit anywhere else</h3>
+      <p class="mod-body">
+        Your generation has a crisis no one is solving well: they know everything but don't know who they are. They have access to everything but nowhere to truly belong. <strong>You build that place.</strong><br><br>
+        Not as an influencer — that's noise. As someone who creates spaces where difference is the asset, not the problem. Where being weird, multiple, or unclassifiable is exactly why you fit.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Mission</span><span style="color:var(--mission)">71%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:71%;background:var(--mission);"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- CONVERGENCE POINT -->
+<div class="wrap">
+  <div class="ikigai-center">
+    <span class="ikigai-sup">◈ Convergence Point</span>
+    <h3 class="ikigai-title">
+      Building new spaces of belonging<br>
+      for people who don't fit into <em>any of the ones that already exist.</em>
+    </h3>
+    <p class="ikigai-body">
+      Aaron doesn't guide from a manual. He guides from having grown up between worlds without fully belonging to any of them.
+      That's the difference no algorithm can manufacture — and what makes it the scarcest asset of 2026:
+      the human authority of someone who already lived it.
+    </p>
+
+    <!-- FINGERPRINT WITH NAME -->
+    <div style="margin-top:52px;">
+      <p class="huella-name-label">The Unique Fingerprint of</p>
+      <p class="huella-name">Aaron B.R.</p>
+      <div style="position:relative;max-width:480px;margin:0 auto;border-radius:50%;overflow:hidden;
+                  box-shadow:0 0 120px rgba(123,143,232,0.2),0 0 0 1px rgba(123,143,232,0.12);">
+        <img src="aksha-huella.png" alt="Aaron B.R. Fingerprint"
+          style="width:100%;height:auto;display:block;" onerror="this.parentElement.style.display='none'"/>
+        <div style="position:absolute;inset:0;background:rgba(7,20,47,0.1);pointer-events:none;border-radius:50%;"></div>
+        <div style="position:absolute;bottom:28px;right:28px;text-align:right;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;letter-spacing:.12em;color:rgba(123,143,232,0.6);">A.B.R.</p>
+          <p style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:rgba(123,143,232,0.35);margin-top:2px;">AKSHA · 2026</p>
+        </div>
+      </div>
+      <div class="mod-pills">
+        <div class="mod-pill" style="background:rgba(232,83,106,0.08);border:1px solid rgba(232,83,106,0.2);color:#E8536A;">✦ Passion</div>
+        <div class="mod-pill" style="background:rgba(78,203,160,0.08);border:1px solid rgba(78,203,160,0.2);color:#4ECBA0;">⬡ Profession</div>
+        <div class="mod-pill" style="background:rgba(123,143,232,0.08);border:1px solid rgba(123,143,232,0.2);color:#7B8FE8;">⟰ Vocation</div>
+        <div class="mod-pill" style="background:rgba(181,123,240,0.08);border:1px solid rgba(181,123,240,0.2);color:#B57BF0;">△ Mission</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- WOUND · GIFT -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Wound · Gift Pattern</span></div>
+    <h2 class="sec-title">What cost you the most is your greatest asset</h2>
+    <p class="sec-intro">This isn't a metaphor. The pattern that created the most resistance in your life is exactly the one that produces the most valuable result when activated.</p>
+    <div class="wound-box">
+      <span class="wound-glyph" style="color:var(--wound)">⁂</span>
+      <p class="wound-pos">Architect · The Foundation</p>
+      <h3 class="wound-title">The wound: feeling like you're not "serious enough" to be taken seriously</h3>
+      <p class="wound-body">
+        You grew up in an environment that values structure, concrete achievement, visible credentials. And you showed up with visions, connections, and conversations — things that don't measure easily.<br><br>
+        <strong>The message you internalized:</strong> "What I do doesn't count until I produce something tangible." That created a pattern of postponement — not laziness, but a part of you still waiting for permission to be enough.<br><br>
+        <strong>The gift it activated:</strong> You know exactly what it feels like to not be recognized. So when you build spaces, you make sure no one goes invisible. That's not a soft skill — it's the core of why people trust you.
+      </p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- FRICTION PATTERNS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Friction Patterns</span></div>
+    <h2 class="sec-title">The tensions that forge purpose</h2>
+    <p class="sec-intro">These aren't flaws. They're the patterns with the most resistance — and for that reason, the most depth. Real purpose activates when friction is integrated, not eliminated.</p>
+
+    <div class="freno">
+      <p class="freno-num">Tension 01</p>
+      <span class="freno-glyph" style="color:var(--voc)">✦ ⟷ ❋</span>
+      <h4 class="freno-title">Vision without an anchor: you see possibilities others can't, but you struggle to land just one</h4>
+      <p class="freno-body">Your visionary core generates ideas constantly. Your analytical emotional pattern evaluates them and finds them imperfect. The result: paralysis by analysis disguised as perfectionism.<br><br>
+      <strong>What this asks of you:</strong> launch one imperfect thing this week. Not tomorrow — this week. Perfectionism in a visionary isn't excellence — it's fear with good branding.</p>
+    </div>
+
+    <div class="freno">
+      <p class="freno-num">Tension 02</p>
+      <span class="freno-glyph" style="color:var(--prof)">⬡ ⟷ ⬡</span>
+      <h4 class="freno-title">High connection capacity, low personal structure</h4>
+      <p class="freno-body">You connect everyone except yourself to a system that actually works. You have projects, brilliant ideas, great conversations — but without a routine to anchor them, they evaporate before producing results.<br><br>
+      <strong>What this asks of you:</strong> 90 minutes a day — no phone, no notifications — on one single thing. That's not military discipline. That's the difference between the person who has ideas and the one who turns them into something real.</p>
+    </div>
+
+    <div class="freno">
+      <p class="freno-num">Tension 03</p>
+      <span class="freno-glyph" style="color:var(--mission)">△ ⟷ ▶</span>
+      <h4 class="freno-title">Knows who he works for — doesn't know how to charge them</h4>
+      <p class="freno-body">You have clarity about the impact you want to have. The problem is you set the value of what you do based on what others can pay, not what it's actually worth.<br><br>
+      <strong>What this asks of you:</strong> set a price that makes you a little uncomfortable. If the number doesn't give you a slight jolt — it's too low.</p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- 4 ACTIVATION PATHS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Your Activation Path · 4 Concrete Routes</span></div>
+    <h2 class="sec-title">Not advice. Steps.</h2>
+    <p class="sec-intro">Based on your real profile, the 2026 job market, and what already works for profiles like yours. Pick one. Start this week.</p>
+
+    <div class="ruta">
+      <p class="ruta-num">Route 01 · Training</p>
+      <h4 class="ruta-title">AI Product Management — the 2026 job built for your profile</h4>
+      <p class="ruta-body">
+        The fastest-growing role in 2026 is exactly this: someone who understands technology enough to work with engineers, but speaks human enough to know what the user actually needs. <strong>Your communication pattern + relational intelligence is the exact profile this role requires.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>This week:</strong> Go to <em>reforge.com</em> or <em>product-led.com</em> — both have AI-focused Product Management programs. Cost: $500–2,000 USD. Duration: 8–12 weeks part-time.</li>
+        <li><strong>In 30 days:</strong> Complete the "AI for Product Managers" course on Coursera ($49/month) — specifically Google's or IBM's.</li>
+        <li><strong>In 6 months:</strong> Portfolio of 2–3 documented personal projects + first applications to junior roles at NY startups or remote.</li>
+      </ul>
+      <div class="ruta-resultado">Entry salary NY 2026: $85k–110k USD · Role growth: 19x vs 2023 · Source: ZipRecruiter + WEF 2025</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Route 02 · Creation</p>
+      <h4 class="ruta-title">Content with depth — not influencer, educator</h4>
+      <p class="ruta-body">
+        YouTube, podcast, or newsletter focused on one specific topic where your vision + ability to translate the complex becomes an audience. <strong>The difference between noise and authority is the specificity of the topic.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>This week:</strong> Define your topic in one sentence: "I explain ___ for people who ___." If you can't complete it in 10 minutes, the topic is too broad.</li>
+        <li><strong>In 30 days:</strong> 4 pieces of content published. Not perfect — published. On YouTube, LinkedIn, or Substack depending on where your audience is.</li>
+        <li><strong>In 6 months:</strong> 1,000 real followers on one platform = first inbound collaboration or consulting offer.</li>
+      </ul>
+      <div class="ruta-resultado">Initial investment: $0 · Recommended starting platform: YouTube (highest organic reach in 2026) · Time to first monetization: 4–8 months</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Route 03 · Community</p>
+      <h4 class="ruta-title">Build a belonging space — small first, then scalable</h4>
+      <p class="ruta-body">
+        Bring together 10–15 people from your network who share a specific friction. Not a social club — a space with a clear format where your facilitation ability produces concrete results. <strong>That has a price tag from day one.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>This week:</strong> Identify the specific friction: young creatives who don't know how to monetize? Latinos in NY navigating two cultures? Gen Z building professional identity? Pick one. Just one.</li>
+        <li><strong>In 30 days:</strong> First free session with 8–10 people. Format: 90 minutes, one topic, you facilitate. At the end ask: "Would you pay $50/month for this monthly?" If 5 say yes — you have a business.</li>
+        <li><strong>In 3 months:</strong> Paid community on Discord or Geneva. 20 people x $50/month = $1,000/month working 6 hours a month.</li>
+      </ul>
+      <div class="ruta-resultado">Investment: $0 until validated · Payment tool: Stripe + Discord · Scalable to $5k/month with 100 members in 12 months</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Route 04 · Immediate Income</p>
+      <h4 class="ruta-title">Intercultural facilitation for companies with diverse teams in NY</h4>
+      <p class="ruta-body">
+        New York has thousands of companies with multicultural teams that don't communicate well internally. HR departments pay for "diversity and inclusion" workshops that mostly don't work because they're facilitated by someone who never lived that reality. <strong>You did.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>This week:</strong> Design a 2-hour workshop with a clear title: "How multicultural teams make better decisions together." Price: $500–1,500 USD per session for companies.</li>
+        <li><strong>In 30 days:</strong> Offer it free to 2 non-profits or small startups. Document the result. That's your portfolio.</li>
+        <li><strong>In 90 days:</strong> With 2 documented cases, first paying corporate client. A mid-size NY company pays $1,500–3,000 for a well-facilitated workshop.</li>
+      </ul>
+      <div class="ruta-resultado">First income possible: 30–60 days · Zero upfront investment · Channel: LinkedIn + direct network</div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- RESILIENCE TECHNIQUES -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Profession Activation · IVA 65% → priority</span></div>
+    <h2 class="sec-title">Two techniques to ground what you already have</h2>
+    <p class="sec-intro">You have Passion, Vocation, and Mission active. What needs the most work is the structure that converts all of that into concrete results. These two techniques work specifically for your profile: high vision, low ground.</p>
+
+    <div class="resil-box">
+      <p class="resil-tag" style="color:var(--prof)">Brian Tracy · Eat the Frog · Ground</p>
+      <h4 class="resil-title">The task you avoid most is the first one you do — non-negotiable</h4>
+      <p class="resil-body">Your visionary brain generates 10 ideas before breakfast. That's an advantage — except when none of them get executed because there's always something more interesting on the horizon.</p>
+      <ul class="resil-steps">
+        <li>The night before: write ONE task. The most important. The one you've postponed the longest.</li>
+        <li>When you wake up: that task is first. Before your phone, before coffee, before everything.</li>
+        <li>Nothing else until it's done. 21 days straight changes the neurological pattern.</li>
+      </ul>
+    </div>
+
+    <div class="resil-box">
+      <p class="resil-tag" style="color:var(--voc)">Cal Newport · Deep Work · Ground + Air</p>
+      <h4 class="resil-title">90 minutes a day without interruptions — that's what separates the person with ideas from the one who executes them</h4>
+      <p class="resil-body">The attention economy in 2026 rewards whoever can hold focus for more than 12 consecutive minutes. That's already a rare and paid skill.</p>
+      <ul class="resil-steps">
+        <li>Set 1 block of 90 minutes a day: phone on airplane mode, one single task.</li>
+        <li>The first 3 days will feel uncomfortable. That's normal — your brain is detoxing from easy dopamine.</li>
+        <li>In 2 weeks you have more real output than the entire previous month. Measure it.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- CLOSING -->
+<div class="wrap">
+  <section class="sec" style="text-align:center;padding-bottom:60px;">
+    <div class="rule"><span class="rule-text">To close</span></div>
+    <h2 class="sec-title" style="max-width:600px;margin:0 auto 24px;">You're 21 with the profile the 2026 world needs urgently</h2>
+    <p style="font-size:17px;color:var(--muted);max-width:540px;margin:0 auto 36px;line-height:1.85;">
+      The only real risk isn't failing — it's reaching 30 with the same capacity without having activated it. Pick one route. This week. Not Monday — today.
+    </p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);max-width:480px;margin:0 auto;">
+      "The moment you decide who you want to be is also the moment you start becoming it."
+    </p>
+    <div style="margin-top:48px;display:flex;align-items:center;justify-content:center;opacity:.5;">
+      <img src="aksha-logo.png" alt="AKSHA" style="width:60px;" onerror="this.style.display='none'"/>
+    </div>
+  </section>
+</div>
+
+<div class="footer">
+  <p class="footer-brand">AKSHA · Purpose Mapping System · 2026</p>
+  <p class="footer-note">Analysis generated with verified data. Market sources: WEF Future of Jobs 2025 · PwC Workforce 2026 · ZipRecruiter · Indeed. This report is confidential and personal.</p>
+</div>
+
+</body>
+</html>
