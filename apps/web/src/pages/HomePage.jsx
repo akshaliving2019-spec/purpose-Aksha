@@ -63,7 +63,7 @@ const HomePage = () => {
               <img
                 src="/aksha-logo-hero.png"
                 alt="AKSHA Logo"
-                className="w-[115px] md:w-[138px] h-auto object-contain filter drop-shadow-[0_0_15px_rgba(200,168,75,0.4)]"
+                className="w-[140px] md:w-[160px] h-auto object-contain filter drop-shadow-[0_0_15px_rgba(200,168,75,0.4)]"
               />
             </div>
             
