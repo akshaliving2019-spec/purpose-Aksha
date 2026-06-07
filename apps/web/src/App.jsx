@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext.jsx';
+import { LanguageProvider } from '@/contexts/LanguageContext.jsx';
 import ScrollToTop from '@/components/ScrollToTop.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 import Header from '@/components/Header.jsx';
@@ -19,6 +20,7 @@ import { Toaster } from '@/components/ui/sonner';
 
 function App() {
   return (
+    <LanguageProvider>
     <AuthProvider>
       <Router>
         <ScrollToTop />
@@ -51,6 +53,7 @@ function App() {
         <Toaster />
       </Router>
     </AuthProvider>
+    </LanguageProvider>
   );
 }
 
