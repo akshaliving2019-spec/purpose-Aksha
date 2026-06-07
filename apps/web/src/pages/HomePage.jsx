@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import HumanBlueprintDiagram from '@/components/HumanBlueprintDiagram';
@@ -7,7 +7,50 @@ import { useLanguage } from '@/contexts/LanguageContext.jsx';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight, Sparkles, Target } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const questionsEN = [
+  'What do I do now?',
+  'Am I still useful?',
+  'Where do I fit?',
+  'What do I have that a machine doesn\'t?',
+];
+const questionsES = [
+  '¿Qué hago ahora?',
+  '¿Sigo siendo útil?',
+  '¿Dónde encajo?',
+  '¿Qué tengo yo que una máquina no tiene?',
+];
+
+const RotatingQuestion = ({ lang }) => {
+  const questions = lang === 'es' ? questionsES : questionsEN;
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex(i => (i + 1) % questions.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [questions.length]);
+
+  return (
+    <div className="h-10 flex items-center justify-center overflow-hidden mb-10">
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={index}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="text-base md:text-lg italic text-center px-4"
+          style={{ color: 'rgba(212,175,55,0.75)' }}
+        >
+          {questions[index]}
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const HomePage = () => {
   const { t, lang } = useLanguage();
@@ -29,33 +72,8 @@ const HomePage = () => {
             transition={{ duration: 0.8 }}
             className="w-full max-w-5xl mx-auto"
           >
-            {/* QUESTIONS THAT MOVE THE FLOOR */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.1 }}
-              className="flex flex-wrap justify-center gap-3 mb-12"
-            >
-              {(lang === 'es'
-                ? ['¿Qué hago ahora?', '¿Sigo siendo útil?', '¿Dónde encajo?', '¿Qué tengo yo que una máquina no tiene?']
-                : ['What do I do now?', 'Am I still useful?', 'Where do I fit?', 'What do I have that a machine doesn\'t?']
-              ).map((q, i) => (
-                <motion.span
-                  key={q}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 + i * 0.12 }}
-                  className="text-sm md:text-base px-4 py-2 rounded-full italic"
-                  style={{
-                    color: 'rgba(212,175,55,0.85)',
-                    border: '1px solid rgba(212,175,55,0.25)',
-                    backgroundColor: 'rgba(212,175,55,0.05)',
-                  }}
-                >
-                  {q}
-                </motion.span>
-              ))}
-            </motion.div>
+            {/* ROTATING QUESTION — appears before logo, hooks the visitor */}
+            <RotatingQuestion lang={lang} />
 
             <div className="flex justify-center mb-[40px]">
               <img

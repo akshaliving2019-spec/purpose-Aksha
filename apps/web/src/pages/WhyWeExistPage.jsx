@@ -1,10 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
+
+const questionsEN = ['What do I do now?','Am I still useful?','Where do I fit?','What do I have that a machine doesn\'t?'];
+const questionsES = ['¿Qué hago ahora?','¿Sigo siendo útil?','¿Dónde encajo?','¿Qué tengo yo que una máquina no tiene?'];
+
+const RotatingQuestion = ({ lang }) => {
+  const questions = lang === 'es' ? questionsES : questionsEN;
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIndex(i => (i + 1) % questions.length), 2800);
+    return () => clearInterval(t);
+  }, [questions.length]);
+  return (
+    <div className="h-10 flex items-center justify-center overflow-hidden mb-12">
+      <AnimatePresence mode="wait">
+        <motion.p key={index}
+          initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="text-lg md:text-xl italic text-center"
+          style={{ color: 'rgba(212,175,55,0.75)' }}>
+          {questions[index]}
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 28 },
@@ -99,29 +124,8 @@ const WhyWeExistPage = () => {
               </p>
             </motion.div>
 
-            {/* Questions that move the floor */}
-            <motion.div {...fadeUp(0.15)} className="flex flex-wrap justify-center gap-3 mb-14">
-              {(lang === 'es'
-                ? ['¿Qué hago ahora?', '¿Sigo siendo útil?', '¿Dónde encajo?', '¿Qué tengo yo que una máquina no tiene?']
-                : ['What do I do now?', 'Am I still useful?', 'Where do I fit?', 'What do I have that a machine doesn\'t?']
-              ).map((q, i) => (
-                <motion.span
-                  key={q}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                  className="text-sm md:text-base px-4 py-2 rounded-full italic"
-                  style={{
-                    color: 'rgba(212,175,55,0.85)',
-                    border: '1px solid rgba(212,175,55,0.25)',
-                    backgroundColor: 'rgba(212,175,55,0.05)',
-                  }}
-                >
-                  {q}
-                </motion.span>
-              ))}
-            </motion.div>
+            {/* Rotating question hook */}
+            <RotatingQuestion lang={lang} />
 
             {/* Opening line */}
             <motion.p {...fadeUp(0.2)}
