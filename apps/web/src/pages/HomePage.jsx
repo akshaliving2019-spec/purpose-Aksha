@@ -60,10 +60,10 @@ const HomePage = () => {
             className="w-full max-w-5xl mx-auto"
           >
             <div className="flex justify-center mb-[40px]">
-              <img 
-                src="https://horizons-cdn.hostinger.com/3b1220b8-90b4-4363-97a3-2c8f1d706937/6b15f23e170eb99dcdc5ea015f4e0729.png" 
-                alt="AKSHA Logo" 
-                className="w-[100px] md:w-[120px] h-auto object-contain filter drop-shadow-[0_0_15px_rgba(200,168,75,0.4)]"
+              <img
+                src="/aksha-logo-hero.png"
+                alt="AKSHA Logo"
+                className="w-[115px] md:w-[138px] h-auto object-contain filter drop-shadow-[0_0_15px_rgba(200,168,75,0.4)]"
               />
             </div>
             
