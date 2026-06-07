@@ -79,8 +79,24 @@ const WhyWeExistPage = () => {
             style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
 
           <div className="max-w-3xl mx-auto text-center relative z-10">
+
+            {/* MANIFESTO STATEMENT */}
+            <motion.div
+              {...fadeUp}
+              className="mb-12 pb-12 border-b"
+              style={{ borderColor: 'rgba(212,175,55,0.15)' }}
+            >
+              <p className="text-2xl md:text-3xl lg:text-4xl font-light leading-snug text-foreground/60 italic">
+                {lang === 'es'
+                  ? <>El mayor desafío de la era de la IA<br/>no es tecnológico.<br/><span className="font-bold text-foreground not-italic">Es humano.</span></>
+                  : <>The greatest challenge of the AI era<br/>is not technological.<br/><span className="font-bold text-foreground not-italic">It is human.</span></>
+                }
+              </p>
+            </motion.div>
+
             <motion.p
               {...fadeUp}
+              transition={{ duration: 0.7, delay: 0.1 }}
               className="text-xs uppercase tracking-[0.4em] mb-6 font-semibold"
               style={{ color: 'rgba(212,175,55,0.7)' }}
             >

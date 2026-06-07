@@ -61,6 +61,25 @@ const HomePage = () => {
           </motion.div>
         </section>
 
+        {/* MANIFESTO STATEMENT BANNER */}
+        <section className="py-16 px-4 border-y" style={{ borderColor: 'rgba(212,175,55,0.12)', backgroundColor: 'rgba(7,20,47,0.5)' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            <p className="text-2xl md:text-3xl lg:text-4xl leading-snug font-light"
+              style={{ color: 'rgba(255,255,255,0.55)' }}>
+              {lang === 'es'
+                ? <>{`El mayor desafío de la era de la IA\nno es tecnológico.`}<br/><span className="font-bold text-white">Es humano.</span></>
+                : <>{`The greatest challenge of the AI era\nis not technological.`}<br/><span className="font-bold text-white">It is human.</span></>
+              }
+            </p>
+          </motion.div>
+        </section>
+
         {/* HUMAN BLUEPRINT INTERACTIVE DIAGRAM */}
         <HumanBlueprintDiagram />
 
