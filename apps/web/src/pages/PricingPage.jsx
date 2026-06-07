@@ -27,7 +27,7 @@ const PricingPage = () => {
         '25-page Purpose Report (PDF)',
         'Gemini AI Synthesis',
         'Swiss Ephemeris Precision',
-        'Due to the personalized nature of this report, all sales are final once the report has been generated and delivered.',
+        'Refunds are available only if the report has not yet been generated.',
       ],
       cta: 'Get Basic Report',
       color: 'border-border/50 hover:border-primary/40',
@@ -49,7 +49,7 @@ const PricingPage = () => {
         'Activation Roadmap (90-day plan)',
         'Spanish version included',
         'Priority AI processing',
-        'Due to the personalized nature of this report, all sales are final once the report has been generated and delivered.',
+        'Refunds are available only if the report has not yet been generated.',
       ],
       cta: 'Get Pro Report',
       color: 'border-primary/60 hover:border-primary',
@@ -268,7 +268,7 @@ const PricingPage = () => {
                 },
                 {
                   q: 'What if my report doesn\'t resonate?',
-                  a: 'Due to the personalized nature of this report, all sales are final once the report has been generated and delivered. If you have questions before purchasing, write to purpose@aksha.life — we\'re happy to help you choose the right plan.'
+                  a: 'Refunds are available only if the report has not yet been generated. Once your report has been created and delivered, all sales are final. If you have questions before purchasing, write to purpose@aksha.life — we\'re happy to help.'
                 },
                 {
                   q: 'Which plan is right for me?',
