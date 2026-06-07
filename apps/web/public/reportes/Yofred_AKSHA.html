@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AKSHA · Yofred G.M. · Mapa de Propósito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#07142F;--surface:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+    --text:#F0ECE4;--muted:rgba(240,236,228,0.82);--subtle:rgba(240,236,228,0.50);
+    --gold:#C9A84C;--gold-light:#E8C97A;--glyph:#C8D4E0;
+    --passion:#E8536A;--passion-bg:rgba(232,83,106,0.10);
+    --prof:#4ECBA0;--prof-bg:rgba(78,203,160,0.10);
+    --voc:#7B8FE8;--voc-bg:rgba(123,143,232,0.10);
+    --mission:#B57BF0;--mission-bg:rgba(181,123,240,0.10);
+    --wound:#E8A84C;--wound-bg:rgba(232,168,76,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+
+  .hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;padding:80px 32px 60px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(78,203,160,0.10) 0%,transparent 70%),
+               radial-gradient(ellipse 60% 40% at 30% 70%,rgba(201,168,76,0.07) 0%,transparent 60%);
+    pointer-events:none;}
+  .hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,8vw,88px);font-weight:300;
+    letter-spacing:.04em;line-height:1;
+    background:linear-gradient(140deg,#f0ece4 0%,#e8c97a 50%,#f0ece4 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
+  .hero-sub{font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--subtle);margin-bottom:32px;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:44px;}
+  .chip{font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:7px 16px;
+        border-radius:20px;border:1px solid rgba(255,255,255,0.12);color:var(--subtle);}
+  .chip-prof{border-color:rgba(78,203,160,0.4);color:#4ECBA0;background:rgba(78,203,160,0.08);}
+  .chip-passion{border-color:rgba(232,83,106,0.4);color:#E8536A;background:rgba(232,83,106,0.08);}
+  .chip-voc{border-color:rgba(123,143,232,0.4);color:#7B8FE8;background:rgba(123,143,232,0.08);}
+  .chip-mission{border-color:rgba(181,123,240,0.4);color:#B57BF0;background:rgba(181,123,240,0.08);}
+  .hero-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.2vw,30px);
+    font-weight:300;line-height:1.5;color:var(--text);max-width:720px;margin:0 auto;}
+  .hero-statement em{color:var(--gold-light);font-style:italic;}
+
+  .wrap{max-width:880px;margin:0 auto;padding:0 32px;}
+  .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);margin:64px 0;}
+  .sec{padding:64px 0 20px;}
+  .rule{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+  .rule::before,.rule::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07);}
+  .rule-text{font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--subtle);white-space:nowrap;}
+  .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;
+    color:var(--text);line-height:1.2;margin-bottom:20px;}
+  .sec-intro{font-size:17px;color:var(--muted);max-width:640px;line-height:1.85;margin-bottom:40px;}
+
+  .glyph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:48px;}
+  .glyph-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:22px 16px;text-align:center;transition:border-color .3s;}
+  .glyph-card:hover{border-color:rgba(212,175,55,0.25);}
+  .glyph-symbol{font-size:26px;display:block;margin-bottom:10px;color:var(--glyph);}
+  .glyph-name{font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;}
+  .glyph-iva{font-size:13px;color:var(--text);}
+
+  .hallazgo{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.22);border-radius:14px;
+    padding:28px 26px;margin-bottom:14px;}
+  .hallazgo-num{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+  .hallazgo-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--gold-light);margin-bottom:10px;}
+  .hallazgo-body{font-size:16px;color:var(--muted);line-height:1.82;}
+
+  .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px;}
+  @media(max-width:640px){.mod-grid{grid-template-columns:1fr;}}
+  .mod{border-radius:16px;padding:32px 28px;border:1px solid var(--border);position:relative;overflow:hidden;}
+  .mod-passion{background:linear-gradient(135deg,rgba(232,83,106,0.06) 0%,rgba(232,83,106,0.02) 100%);border-color:rgba(232,83,106,0.2);}
+  .mod-prof{background:linear-gradient(135deg,rgba(78,203,160,0.06) 0%,rgba(78,203,160,0.02) 100%);border-color:rgba(78,203,160,0.2);}
+  .mod-voc{background:linear-gradient(135deg,rgba(123,143,232,0.06) 0%,rgba(123,143,232,0.02) 100%);border-color:rgba(123,143,232,0.2);}
+  .mod-mission{background:linear-gradient(135deg,rgba(181,123,240,0.06) 0%,rgba(181,123,240,0.02) 100%);border-color:rgba(181,123,240,0.2);}
+  .mod-glyph{font-size:28px;display:block;margin-bottom:12px;}
+  .mod-tag{font-size:9px;letter-spacing:.32em;text-transform:uppercase;margin-bottom:10px;opacity:.7;}
+  .mod-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;line-height:1.3;margin-bottom:14px;}
+  .mod-body{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:20px;}
+  .mod-body strong{color:var(--text);font-weight:500;}
+  .iva-bar-wrap{margin-top:16px;}
+  .iva-label{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;display:flex;justify-content:space-between;}
+  .iva-track{height:4px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;}
+  .iva-fill{height:100%;border-radius:4px;}
+
+  .ikigai-center{text-align:center;padding:72px 32px;position:relative;}
+  .ikigai-center::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 0%,rgba(78,203,160,0.07) 0%,transparent 65%);pointer-events:none;}
+  .ikigai-sup{font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block;}
+  .ikigai-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.8vw,34px);font-weight:300;
+    line-height:1.35;color:var(--text);margin-bottom:20px;}
+  .ikigai-title em{font-style:italic;color:var(--gold-light);}
+  .ikigai-body{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.88;}
+
+  .wound-box{background:var(--wound-bg);border:1px solid rgba(232,168,76,0.25);border-radius:16px;padding:36px 32px;margin-bottom:32px;}
+  .wound-glyph{font-size:32px;margin-bottom:12px;display:block;}
+  .wound-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-light);margin-bottom:12px;}
+  .wound-body{font-size:16px;color:var(--muted);line-height:1.85;}
+  .wound-pos{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--wound);margin-bottom:14px;}
+
+  .freno{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin-bottom:16px;}
+  .freno-num{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .freno-glyph{font-size:18px;display:block;margin-bottom:10px;letter-spacing:.12em;}
+  .freno-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:10px;}
+  .freno-body{font-size:16px;color:var(--muted);line-height:1.82;}
+  .freno-body strong{color:var(--text);}
+
+  .ruta{border-radius:14px;padding:30px 28px;margin-bottom:16px;border:1px solid var(--border);background:var(--surface);}
+  .ruta-num{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .ruta-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold-light);margin-bottom:12px;}
+  .ruta-body{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:16px;}
+  .ruta-body strong{color:var(--text);font-weight:500;}
+  .ruta-steps{list-style:none;padding:0;}
+  .ruta-steps li{font-size:15px;color:var(--muted);padding:8px 0 8px 20px;border-left:2px solid rgba(212,175,55,0.2);margin-bottom:8px;line-height:1.7;}
+  .ruta-steps li strong{color:var(--text);}
+  .ruta-resultado{margin-top:14px;font-size:13px;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);border-radius:8px;padding:10px 14px;}
+
+  .resil-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin-bottom:16px;}
+  .resil-tag{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
+  .resil-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:10px;}
+  .resil-body{font-size:16px;color:var(--muted);line-height:1.82;}
+  .resil-steps{list-style:none;padding:0;margin-top:12px;}
+  .resil-steps li{font-size:15px;color:var(--muted);padding:6px 0 6px 18px;border-left:2px solid rgba(181,123,240,0.3);margin-bottom:6px;}
+
+  .huella-name-label{font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:rgba(201,168,76,0.55);margin-bottom:6px;}
+  .huella-name{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:300;letter-spacing:.08em;
+    background:linear-gradient(140deg,#f0ece4 0%,#e8c97a 55%,#f0ece4 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:24px;}
+  .mod-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px;}
+  .mod-pill{padding:12px 22px;border-radius:30px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;}
+
+  .footer{text-align:center;padding:48px 32px 60px;border-top:1px solid var(--border);margin-top:80px;}
+  .footer-brand{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px;}
+  .footer-note{font-size:12px;color:rgba(240,236,228,0.35);line-height:1.7;max-width:560px;margin:0 auto;}
+
+  @media print{body{background:#07142F!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div style="margin-bottom:36px;">
+    <img src="aksha-logo-hero.png" alt="AKSHA" style="width:140px;opacity:.9;" onerror="this.style.display='none'"/>
+  </div>
+  <p class="hero-sub">Mapa de Propósito · Sistema AKSHA</p>
+  <h1 class="hero-name">Yofred G.M.</h1>
+  <p class="hero-sub">31 de diciembre de 1968 · 11:30 AM · Palmira, Valle · Miami, FL</p>
+  <div class="hero-chips">
+    <span class="chip chip-prof">Profesión 85%</span>
+    <span class="chip chip-passion">Pasión 70%</span>
+    <span class="chip chip-voc">Vocación 63%</span>
+    <span class="chip chip-mission">Misión 55%</span>
+  </div>
+  <p class="hero-statement">
+    57 años construyendo cosas que duran.<br>
+    Lo que falta no es más experiencia —<br>
+    es <em>saber exactamente para quién construyes y por qué eso cambia todo.</em>
+  </p>
+</section>
+
+<div class="hr"></div>
+
+<!-- HALLAZGOS CRÍTICOS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">3 Hallazgos Críticos · Antes de Todo</span></div>
+    <h2 class="sec-title">Lo que el análisis reveló que no es obvio</h2>
+    <p class="sec-intro">Estos tres patrones definen la arquitectura completa de tu propósito. Todo lo demás en este informe se entiende desde aquí.</p>
+
+    <div class="hallazgo">
+      <p class="hallazgo-num">Hallazgo 01 · El más importante</p>
+      <h4 class="hallazgo-title">Naciste con el núcleo de tu propósito exactamente sobre tu legado público — 0°23' de diferencia</h4>
+      <p class="hallazgo-body">Tu Núcleo Arquetípico está a menos de medio grado del punto más alto de tu mapa — la zona que define lo que construyes públicamente y por lo que serás recordado. Eso no es frecuente. Significa que no puedes separar quién eres de lo que construyes. Tu trabajo no es lo que haces — <strong>es lo que eres.</strong> Cuando eso no está alineado, todo se siente vacío aunque los resultados sean buenos.</p>
+    </div>
+
+    <div class="hallazgo">
+      <p class="hallazgo-num">Hallazgo 02</p>
+      <h4 class="hallazgo-title">Tres de tus patrones más fuertes se activan únicamente en relación con otros</h4>
+      <p class="hallazgo-body">Tu patrón de acción, expansión e innovación están concentrados en El Espejo — la zona de los socios, aliados y contratos. Solo llegas a un nivel. Con el socio correcto te multiplicas. Esto no es debilidad — es el diseño exacto de tu perfil. <strong>El error que has cometido antes es probablemente haber intentado construir todo solo.</strong> El modelo correcto para ti siempre involucra una alianza estratégica real.</p>
+    </div>
+
+    <div class="hallazgo">
+      <p class="hallazgo-num">Hallazgo 03</p>
+      <h4 class="hallazgo-title">Tu dimensión más profunda opera en silencio — y es tu ventaja más subutilizada</h4>
+      <p class="hallazgo-body">El patrón Herida·Don está en la zona más oculta del mapa (El Fondo), en el arquetipo Visionario. Tienes acceso a una intuición del ser humano que la mayoría de constructores no tiene — pero llevas años sin usarla porque no encaja en el mundo concreto que construyes. <strong>Cuando la integres, lo que produces deja de ser útil y pasa a ser transformador.</strong></p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- COORDENADAS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Coordenadas de Comportamiento · Yofred G.M.</span></div>
+    <h2 class="sec-title">El mapa completo verificado</h2>
+    <p class="sec-intro">Posiciones exactas verificadas con Swiss Ephemeris. Palmira, Colombia · 31/12/1968 · 11:30 AM.</p>
+    <div class="glyph-grid">
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--prof)">✦</span>
+        <div class="glyph-name">Núcleo Arquetípico</div>
+        <div class="glyph-iva" style="color:var(--prof)">Arquitecto · El Legado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">❋</span>
+        <div class="glyph-name">Patrón Emocional</div>
+        <div class="glyph-iva" style="color:var(--voc)">Comunicador · La Mente</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--prof)">⌘</span>
+        <div class="glyph-name">Patrón Comunicación</div>
+        <div class="glyph-iva" style="color:var(--prof)">Arquitecto · El Legado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">✿</span>
+        <div class="glyph-name">Patrón Relacional</div>
+        <div class="glyph-iva" style="color:var(--voc)">Innovador · La Tribu</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">▶</span>
+        <div class="glyph-name">Patrón de Acción</div>
+        <div class="glyph-iva" style="color:var(--passion)">Transformador · El Espejo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">❉</span>
+        <div class="glyph-name">Patrón de Expansión</div>
+        <div class="glyph-iva" style="color:var(--voc)">Diplomático · El Espejo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">⬡</span>
+        <div class="glyph-name">Patrón Estructural</div>
+        <div class="glyph-iva" style="color:var(--passion)">Pionero · La Presencia ·  internalizado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">✺</span>
+        <div class="glyph-name">Patrón Innovación</div>
+        <div class="glyph-iva" style="color:var(--voc)">Diplomático · El Espejo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">≋</span>
+        <div class="glyph-name">Patrón Visionario</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Transformador · La Ruptura</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--mission)">◈</span>
+        <div class="glyph-name">Patrón Transformación</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Analítico · El Ritmo · internalizado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--wound)">⁂</span>
+        <div class="glyph-name">Herida · Don</div>
+        <div class="glyph-iva" style="color:var(--wound)">Visionario · El Fondo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">⟰</span>
+        <div class="glyph-name">Vector de Destino</div>
+        <div class="glyph-iva" style="color:var(--passion)">Pionero · La Presencia</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- 4 MÓDULOS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Los 4 Módulos · Punto de Convergencia</span></div>
+    <h2 class="sec-title">Tu mapa completo</h2>
+    <p class="sec-intro">Cuatro dimensiones. Una huella. Donde las cuatro convergen está lo que solo Yofred puede hacer — con 57 años de construcción real como respaldo.</p>
+  </section>
+</div>
+
+<div style="max-width:880px;margin:0 auto;padding:0 32px;">
+  <div class="mod-grid">
+
+    <div class="mod mod-passion">
+      <span class="mod-glyph" style="color:var(--passion)">✦</span>
+      <p class="mod-tag" style="color:var(--passion)">Pasión · Lo que amas</p>
+      <h3 class="mod-title">Construir estructuras que funcionen cuando ya no estés mirando</h3>
+      <p class="mod-body">
+        No te motivan los proyectos que duran un sprint. Te motiva lo que permanece — sistemas, organizaciones, procesos que siguen funcionando solos. <strong>Eso no es perfeccionismo, es la firma del Arquitecto.</strong><br><br>
+        Lo que más te energiza no es la idea inicial sino el momento en que algo que diseñaste empieza a operar sin necesitar de ti. Eso es lo que buscas — y cuando no lo encuentras, el trabajo se siente vacío aunque pague bien.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Pasión</span><span style="color:var(--passion)">70%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:70%;background:var(--passion);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-prof">
+      <span class="mod-glyph" style="color:var(--prof)">⬡</span>
+      <p class="mod-tag" style="color:var(--prof)">Profesión · Lo que haces mejor que la mayoría</p>
+      <h3 class="mod-title">Ver la estructura correcta donde otros solo ven caos</h3>
+      <p class="mod-body">
+        Entras a una situación compleja y en poco tiempo sabes qué está fallando, en qué orden hay que resolverlo y cuánto va a costar arreglarlo. <strong>Eso es diagnóstico estructural — y es escaso.</strong><br><br>
+        Además puedes comunicarlo. La mayoría de constructores no pueden explicar lo que ven. Tú sí. Eso duplica el valor de lo que haces porque no solo resuelves el problema — también convences a quien necesita autorizarlo.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Profesión</span><span style="color:var(--prof)">85%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:85%;background:var(--prof);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-voc">
+      <span class="mod-glyph" style="color:var(--voc)">⟰</span>
+      <p class="mod-tag" style="color:var(--voc)">Vocación · Lo que el mundo necesita de ti</p>
+      <h3 class="mod-title">Mostrar que se puede construir con rigor sin perder la dimensión humana</h3>
+      <p class="mod-body">
+        Miami tiene constructores. Lo que le falta son constructores que entiendan al ser humano detrás del proyecto. <strong>Tú tienes los dos lados: la disciplina del Arquitecto y la intuición del Comunicador.</strong><br><br>
+        Los latinos profesionales en Miami de tu generación — 50 a 65 años — necesitan a alguien que hable su idioma, entienda su contexto cultural y sepa cómo construir en el mercado americano sin perder quiénes son. Ese perfil casi no existe.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Vocación</span><span style="color:var(--voc)">63%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:63%;background:var(--voc);"></div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-mission">
+      <span class="mod-glyph" style="color:var(--mission)">△</span>
+      <p class="mod-tag" style="color:var(--mission)">Misión · Por qué el mundo es mejor porque existes</p>
+      <h3 class="mod-title">Dejar un modelo que otros puedan replicar — no solo resultados que admiren</h3>
+      <p class="mod-body">
+        No basta con haber construido bien. La misión real es que lo que construiste le muestre a alguien más que es posible. <strong>El legado no es el edificio — es la persona que aprendió a construir mirándote.</strong><br><br>
+        Eso requiere un paso que todavía no has dado completamente: documentar cómo lo haces, no solo hacerlo. Cuando eso ocurra, tu impacto deja de ser lineal y se vuelve exponencial.
+      </p>
+      <div class="iva-bar-wrap">
+        <div class="iva-label"><span>IVA% Misión</span><span style="color:var(--mission)">55%</span></div>
+        <div class="iva-track"><div class="iva-fill" style="width:55%;background:var(--mission);"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- PUNTO DE CONVERGENCIA -->
+<div class="wrap">
+  <div class="ikigai-center">
+    <span class="ikigai-sup">◈ Punto de Convergencia</span>
+    <h3 class="ikigai-title">
+      Construir sistemas que funcionen —<br>
+      y enseñar a otros a construirlos<br>
+      <em>desde la experiencia real, no desde la teoría.</em>
+    </h3>
+    <p class="ikigai-body">
+      Yofred no enseña desde un aula. Enseña desde haber construido — y desde haber cometido los errores que ningún libro describe.
+      Esa combinación de rigor estructural e intuición humana es exactamente lo que el mercado de 2026 en Miami no puede fabricar en serie.
+    </p>
+
+    <!-- HUELLA -->
+    <div style="margin-top:52px;">
+      <p class="huella-name-label">La Huella Única de</p>
+      <p class="huella-name">Yofred G.M.</p>
+      <div style="position:relative;max-width:480px;margin:0 auto;border-radius:50%;overflow:hidden;
+                  box-shadow:0 0 120px rgba(78,203,160,0.18),0 0 0 1px rgba(78,203,160,0.15);">
+        <img src="aksha-huella.png" alt="La Huella de Yofred G.M."
+          style="width:100%;height:auto;display:block;" onerror="this.parentElement.style.display='none'"/>
+        <div style="position:absolute;inset:0;background:rgba(7,20,47,0.08);pointer-events:none;border-radius:50%;"></div>
+        <div style="position:absolute;bottom:28px;right:28px;text-align:right;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;letter-spacing:.12em;color:rgba(78,203,160,0.6);">Y.G.M.</p>
+          <p style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,203,160,0.35);margin-top:2px;">AKSHA · 2026</p>
+        </div>
+      </div>
+      <div class="mod-pills">
+        <div class="mod-pill" style="background:rgba(232,83,106,0.08);border:1px solid rgba(232,83,106,0.2);color:#E8536A;">✦ Pasión</div>
+        <div class="mod-pill" style="background:rgba(78,203,160,0.08);border:1px solid rgba(78,203,160,0.2);color:#4ECBA0;">⬡ Profesión</div>
+        <div class="mod-pill" style="background:rgba(123,143,232,0.08);border:1px solid rgba(123,143,232,0.2);color:#7B8FE8;">⟰ Vocación</div>
+        <div class="mod-pill" style="background:rgba(181,123,240,0.08);border:1px solid rgba(181,123,240,0.2);color:#B57BF0;">△ Misión</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- HERIDA-DON -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Patrón Herida · Don</span></div>
+    <h2 class="sec-title">La dimensión que opera en silencio</h2>
+    <div class="wound-box">
+      <span class="wound-glyph" style="color:var(--wound)">⁂</span>
+      <p class="wound-pos">Visionario · El Fondo</p>
+      <h3 class="wound-title">La herida: sientes que tu dimensión más profunda no tiene lugar en el mundo que construyes</h3>
+      <p class="wound-body">
+        Eres un constructor. El mundo te pide resultados, estructuras, plazos. Y tú los das. Pero hay una parte de ti — la que percibe lo que otros no ven, la que intuye el estado emocional de un sistema antes de que los números lo confirmen — que lleva años sin tener espacio oficial en tu trabajo.<br><br>
+        <strong>El mensaje que te diste sin saberlo:</strong> "Lo que siento no es datos, entonces no cuenta." El resultado es que tomas decisiones con el 60% de tu capacidad real porque descartas la información que no tiene forma de spreadsheet.<br><br>
+        <strong>El don que eso activó:</strong> Cuando integres esa dimensión — no como espiritualidad, sino como inteligencia sistémica — lo que diagnosticas pasa de correcto a exacto. Ya no solo ves qué falla. Sabes por qué va a fallar antes de que ocurra. Eso no tiene precio de mercado establecido porque casi nadie lo tiene.
+      </p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- TENSIONES -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Patrones de Tensión</span></div>
+    <h2 class="sec-title">Las fricciones que forjan el propósito</h2>
+    <p class="sec-intro">No son defectos de carácter. Son las tensiones estructurales del perfil — y cada una tiene una salida específica.</p>
+
+    <div class="freno">
+      <p class="freno-num">Tensión 01 · La más costosa</p>
+      <span class="freno-glyph" style="color:var(--prof)">✦ ⟷ ❋</span>
+      <h4 class="freno-title">Tu mente quiere explorar todo — tu núcleo necesita construir una sola cosa a fondo</h4>
+      <p class="freno-body">
+        Tu Núcleo Arquetípico es Arquitecto — construye despacio, en profundidad, para que dure. Tu Patrón Emocional es Comunicador — quiere moverse rápido, explorar, conectar ideas nuevas constantemente. Esos dos patrones están en oposición directa en tu mapa.<br><br>
+        <strong>El costo real:</strong> proyectos que empezaste con rigor y que en algún punto te aburriste porque la mente ya estaba en el siguiente. El edificio a medias.<br><br>
+        <strong>La salida:</strong> elige un proyecto de 12 meses. Solo uno. Todo lo demás es una nota en una libreta hasta que ese esté terminado. La disciplina aquí no es de voluntad — es de diseño.
+      </p>
+    </div>
+
+    <div class="freno">
+      <p class="freno-num">Tensión 02</p>
+      <span class="freno-glyph" style="color:var(--voc)">▶ ❉ ✺ ⟷ ⬡</span>
+      <h4 class="freno-title">Tu mayor potencia se activa con otros — pero has intentado hacerlo solo más de lo necesario</h4>
+      <p class="freno-body">
+        Tres patrones centrales en El Espejo es una señal estructural: no es que necesites ayuda, es que tu diseño multiplica cuando hay un socio estratégico real. Hacerlo solo no es independencia — es operar al 40% de tu capacidad.<br><br>
+        <strong>La salida:</strong> define el perfil exacto del socio que te complementa. No alguien parecido a ti — alguien que tenga lo que tú no tienes. En los próximos 90 días, una conversación real con esa persona.
+      </p>
+    </div>
+
+    <div class="freno">
+      <p class="freno-num">Tensión 03</p>
+      <span class="freno-glyph" style="color:var(--mission)">△ ⟷ ⟰</span>
+      <h4 class="freno-title">Sabe cómo construir — no ha definido para quién construye y por qué eso importa más allá del proyecto</h4>
+      <p class="freno-body">
+        Con Misión al 55% el perfil dice que lo que produces es valioso pero todavía no está conectado a algo mayor que el proyecto en sí. Cuando eso cambie — cuando quede claro quién específicamente es mejor porque Yofred construyó — el nivel de energía y la calidad del trabajo suben sin esfuerzo adicional.<br><br>
+        <strong>La salida:</strong> completa esta frase en menos de 20 palabras: "Yo construyo para que ___." Si tarda más de 5 minutos — ahí está el trabajo.
+      </p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- 4 RUTAS -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Tu Camino de Activación · 4 Rutas Concretas</span></div>
+    <h2 class="sec-title">No consejos. Pasos con fechas.</h2>
+    <p class="sec-intro">57 años de experiencia real son el activo. Lo que sigue es el sistema para convertirlo en resultados concretos en el mercado de Miami 2026.</p>
+
+    <div class="ruta">
+      <p class="ruta-num">Ruta 01 · Monetización inmediata</p>
+      <h4 class="ruta-title">Consultoría de diagnóstico estructural para empresas latinas en Miami</h4>
+      <p class="ruta-body">
+        Miami tiene miles de negocios latinos entre $500k y $5M de facturación que tienen el mismo problema: crecieron rápido, sin estructura, y ahora el crecimiento los está ahogando. <strong>Tú puedes entrar, diagnosticar en 2 sesiones qué está fallando y proponer el plan. Eso vale $3,000–8,000 USD por cliente.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>Esta semana:</strong> Define el diagnóstico como producto concreto — nombre, qué incluye, cuánto cuesta, qué entrega el cliente al final. Dos páginas máximo.</li>
+        <li><strong>En 30 días:</strong> 3 conversaciones con dueños de negocio latino en Miami que conozcas. No vendes — escuchas. Preguntas: "¿Cuál es el problema más caro que tienes ahora mismo?" Si menciona estructura, procesos o equipo — tienes un prospecto.</li>
+        <li><strong>En 60 días:</strong> Primer cliente pagando. Con 4 clientes al mes a $3,000 = $12,000 USD/mes. Con 2 clientes premium a $8,000 = lo mismo trabajando menos.</li>
+      </ul>
+      <div class="ruta-resultado">Inversión inicial: $0 · Canal: red directa + LinkedIn en español · Primer ingreso posible: 30–45 días</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Ruta 02 · Alianza estratégica</p>
+      <h4 class="ruta-title">El socio que activa el 40% que todavía no está operando</h4>
+      <p class="ruta-body">
+        Tu perfil necesita un socio que tenga lo que tú no: red de distribución, presencia digital fuerte, o acceso a mercados que tú no tienes. <strong>No un empleado — un igual que traiga lo complementario.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>Esta semana:</strong> Escribe el perfil exacto del socio ideal — no su nombre, su función. Qué tiene que tener, qué no puede tener, qué tiene que creer.</li>
+        <li><strong>En 30 días:</strong> Identifica 3 personas reales en Miami que encajen con ese perfil. Una conversación con cada una — sin proponer nada todavía. Solo conocer.</li>
+        <li><strong>En 90 días:</strong> Una alianza formal con términos claros. No handshake — contrato de una página que defina quién hace qué y cómo se distribuye el resultado.</li>
+      </ul>
+      <div class="ruta-resultado">Resultado proyectado: duplicar capacidad de entrega sin duplicar horas trabajadas · Plazo: 90 días</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Ruta 03 · Metodología propia</p>
+      <h4 class="ruta-title">Formalizar lo que sabes en un sistema que otros puedan comprar y replicar</h4>
+      <p class="ruta-body">
+        Lo que tienes en la cabeza después de 30+ años construyendo vale más que cualquier certificado. El problema es que solo existe en tu cabeza. <strong>Cuando lo documentes se convierte en un producto escalable — curso, libro, programa de mentoría — que genera ingreso sin que estés presente.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>Esta semana:</strong> Graba en audio 20 minutos respondiendo: "¿Cómo diagnostico si una empresa tiene un problema estructural?" Sin editar. Solo habla. Eso es el capítulo 1.</li>
+        <li><strong>En 60 días:</strong> 8 grabaciones de 20 minutos = el esqueleto del curso. Plataforma: Hotmart (gratis hasta vender, fuerte en Latinoamérica) o Kajabi ($149/mes).</li>
+        <li><strong>En 6 meses:</strong> Programa de mentoría grupal de 3 meses para dueños de negocio. $1,500 USD por persona. Con 10 personas = $15,000 USD trabajando 6 horas al mes.</li>
+      </ul>
+      <div class="ruta-resultado">Inversión: tiempo · Sin costo inicial · Escalable sin límite de horas · Primer lanzamiento posible: 90 días</div>
+    </div>
+
+    <div class="ruta">
+      <p class="ruta-num">Ruta 04 · Legado</p>
+      <h4 class="ruta-title">Mentoría directa para la siguiente generación de constructores latinos</h4>
+      <p class="ruta-body">
+        Hay una generación de latinos de 30–45 años en Miami que saben construir pero no saben cómo hacerlo de forma sostenible en el mercado americano. Necesitan a alguien que ya lo hizo — no un coach, <strong>alguien con cicatrices reales y resultados verificables.</strong>
+      </p>
+      <ul class="ruta-steps">
+        <li><strong>Esta semana:</strong> Identifica 2 personas en tu red de 30–45 años con potencial real. Una conversación. No ofreces mentoría — preguntas qué están construyendo y qué los tiene atascados.</li>
+        <li><strong>En 30 días:</strong> Proceso de mentoría de 6 meses con 3–4 personas. $500–800 USD/mes por persona. Con 4 personas = $2,000–3,200 USD/mes trabajando 8 horas mensuales.</li>
+        <li><strong>En 12 meses:</strong> Los primeros 4 mentoreados son tus mejores casos de estudio — y el canal de adquisición para los siguientes.</li>
+      </ul>
+      <div class="ruta-resultado">Ingreso: $2,000–3,200 USD/mes · Horas: 8/mes · Impacto: directo y medible · Empieza esta semana</div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- RESILIENCIA -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Activación de Misión y Vocación · prioridad</span></div>
+    <h2 class="sec-title">Dos técnicas para conectar lo que construyes con por qué importa</h2>
+    <p class="sec-intro">Profesión al 85% significa que sabes hacer. Misión al 55% significa que todavía no está claro para quién y para qué. Estas dos técnicas cierran esa brecha.</p>
+
+    <div class="resil-box">
+      <p class="resil-tag" style="color:var(--mission)">Tony Robbins · El Ejercicio del Legado · Agua</p>
+      <h4 class="resil-title">Lo que quieres que digan de ti en 20 años es la brújula de lo que haces esta semana</h4>
+      <p class="resil-body">No como ejercicio poético — como herramienta de toma de decisiones. Si lo que haces hoy no acorta la distancia entre tu situación actual y ese legado, no debería estar en tu agenda.</p>
+      <ul class="resil-steps">
+        <li>Escribe 3 párrafos: qué quieres que digan de lo que construiste. Específico — nombres, situaciones, impactos concretos. No adjetivos.</li>
+        <li>Compara con lo que hiciste esta semana. ¿Cuánto porcentaje de tu tiempo fue hacia ese legado?</li>
+        <li>Identifica UNA acción esta semana que acorte esa distancia. Hazla antes del viernes. Sin excepción.</li>
+      </ul>
+    </div>
+
+    <div class="resil-box">
+      <p class="resil-tag" style="color:var(--voc)">Brian Tracy · Declaración de Impacto · Tierra</p>
+      <h4 class="resil-title">Una frase de 20 palabras que define exactamente a quién sirves y qué cambia cuando lo haces</h4>
+      <p class="resil-body">Sin esa frase, cada proyecto parece igualmente válido — y el resultado es que la energía se dispersa en lugar de acumularse.</p>
+      <ul class="resil-steps">
+        <li>Completa: "Yo construyo para que [quién específico] pueda [hacer qué] y así [qué resultado concreto]."</li>
+        <li>Léela cada mañana. Si en 7 días no te genera algo físico en el pecho — no es suficientemente real. Reescríbela.</li>
+        <li>Úsala como filtro: si un proyecto no encaja con esa declaración, rechazarlo no es perder una oportunidad — es proteger la energía para la correcta.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- CIERRE -->
+<div class="wrap">
+  <section class="sec" style="text-align:center;padding-bottom:60px;">
+    <div class="rule"><span class="rule-text">Para cerrar</span></div>
+    <h2 class="sec-title" style="max-width:620px;margin:0 auto 24px;">57 años construyendo es el activo más escaso del mercado de 2026</h2>
+    <p style="font-size:17px;color:var(--muted);max-width:560px;margin:0 auto 36px;line-height:1.85;">
+      El riesgo no es empezar tarde. Es tener todo lo que se necesita y no haberlo organizado de forma que otros puedan acceder a ello. Elige una ruta. Empieza esta semana. No el lunes — hoy.
+    </p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--gold-light);max-width:500px;margin:0 auto;">
+      "Lo que construiste te trajo hasta aquí. Lo que documentes llevará a otros más lejos."
+    </p>
+    <div style="margin-top:48px;display:flex;align-items:center;justify-content:center;opacity:.5;">
+      <img src="aksha-logo.png" alt="AKSHA" style="width:60px;" onerror="this.style.display='none'"/>
+    </div>
+  </section>
+</div>
+
+<div class="footer">
+  <p class="footer-brand">AKSHA · Purpose Mapping System · 2026</p>
+  <p class="footer-note">Análisis generado con datos verificados. Swiss Ephemeris · Palmira, Colombia 31/12/1968 11:30 AM. Este reporte es confidencial y personal.</p>
+</div>
+
+</body>
+</html>

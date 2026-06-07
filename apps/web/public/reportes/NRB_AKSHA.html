@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKSHA · N.R.B. · Mapa de Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --obsidian: #08080f;
+    --deep: #0f0f18;
+    --card: #13131e;
+    --card2: #181826;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.12);
+    --text: #f0ece4;
+    --muted: rgba(240,236,228,0.82);
+    --subtle: rgba(240,236,228,0.50);
+
+    /* MÓDULOS */
+    --passion:    #E8536A;
+    --passion-bg: rgba(232,83,106,0.10);
+    --passion-bd: rgba(232,83,106,0.28);
+
+    --prof:    #4ECBA0;
+    --prof-bg: rgba(78,203,160,0.10);
+    --prof-bd: rgba(78,203,160,0.28);
+
+    --voc:    #7B8FE8;
+    --voc-bg: rgba(123,143,232,0.10);
+    --voc-bd: rgba(123,143,232,0.28);
+
+    --mission:    #B57BF0;
+    --mission-bg: rgba(181,123,240,0.10);
+    --mission-bd: rgba(181,123,240,0.28);
+
+    --wound:    #E8A84C;
+    --wound-bg: rgba(232,168,76,0.10);
+    --wound-bd: rgba(232,168,76,0.30);
+
+    /* GLIFOS */
+    --glyph: #C8D4E0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--obsidian);color:var(--text);
+    font-family:'DM Sans',sans-serif;font-weight:400;
+    font-size:17px;line-height:1.85;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.45) 0%,transparent 100%),
+      radial-gradient(1px 1px at 78% 6%,rgba(255,255,255,.3) 0%,transparent 100%),
+      radial-gradient(1.5px 1.5px at 44% 52%,rgba(255,255,255,.2) 0%,transparent 100%),
+      radial-gradient(1px 1px at 6% 78%,rgba(255,255,255,.25) 0%,transparent 100%),
+      radial-gradient(1px 1px at 62% 90%,rgba(255,255,255,.22) 0%,transparent 100%),
+      radial-gradient(1px 1px at 90% 42%,rgba(255,255,255,.18) 0%,transparent 100%),
+      radial-gradient(1px 1px at 33% 65%,rgba(201,168,76,.2) 0%,transparent 100%),
+      radial-gradient(1px 1px at 55% 28%,rgba(181,123,240,.15) 0%,transparent 100%);
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 32px;position:relative;z-index:1;}
+
+  /* ── HERO ── */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;position:relative;}
+  .hero::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:140px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  .badge{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(201,168,76,.35);color:var(--gold);font-size:9px;letter-spacing:.4em;text-transform:uppercase;padding:7px 20px;border-radius:2px;margin-bottom:52px;}
+  .badge-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+  .hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(70px,12vw,110px);font-weight:300;letter-spacing:-.01em;line-height:1;margin-bottom:12px;background:linear-gradient(140deg,var(--text) 0%,var(--gold-light) 55%,var(--text) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-role{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.6vw,23px);font-style:italic;color:var(--subtle);letter-spacing:.05em;margin-bottom:44px;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:52px;}
+  .chip{font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 16px;border-radius:100px;border:1px solid var(--border);color:var(--subtle);}
+  .chip span{color:var(--gold);margin-left:5px;}
+  .hero-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.2vw,28px);font-weight:300;line-height:1.55;max-width:640px;color:var(--text);}
+  .hero-statement em{font-style:italic;color:var(--gold-light);}
+
+  /* ── MÓDULO COLORS ── */
+  .c-passion { color: var(--passion); }
+  .c-prof    { color: var(--prof); }
+  .c-voc     { color: var(--voc); }
+  .c-mission { color: var(--mission); }
+  .c-wound   { color: var(--wound); }
+  .c-gold    { color: var(--gold); }
+  .c-glyph   { color: var(--glyph); font-size: 1.1em; }
+
+  /* ── SECTION ── */
+  .sec{padding:88px 0;}
+  .rule{display:flex;align-items:center;gap:14px;margin-bottom:40px;}
+  .rule::before,.rule::after{content:'';flex:1;height:1px;background:var(--border);}
+  .rule-text{font-size:8.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+  .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,52px);font-weight:300;line-height:1.12;margin-bottom:14px;}
+  .sec-intro{font-size:17px;color:var(--muted);max-width:660px;line-height:1.9;margin-bottom:44px;}
+  .body-text{font-size:17px;color:var(--muted);line-height:1.9;}
+  .body-text strong{color:var(--text);font-weight:500;}
+
+  /* ── IVA BARS ── */
+  .iva-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:36px 40px;margin-bottom:44px;}
+  .iva-label-row{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:26px;}
+  .iva-row{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+  .iva-glyph{font-size:20px;width:32px;text-align:center;flex-shrink:0;}
+  .iva-name{font-size:13px;color:var(--subtle);width:110px;flex-shrink:0;}
+  .iva-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;}
+  .iva-bar{height:100%;border-radius:3px;}
+  .iva-pct{font-size:13px;font-weight:500;width:40px;text-align:right;flex-shrink:0;}
+  .iva-note{font-size:14px;color:var(--subtle);margin-top:20px;font-style:italic;line-height:1.7;}
+
+  /* ── 4 MÓDULOS GRID ── */
+  .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;border-radius:16px;overflow:hidden;}
+  @media(max-width:600px){.mod-grid{grid-template-columns:1fr;}}
+  .mod{padding:44px 38px;position:relative;overflow:hidden;transition:filter .3s;}
+  .mod:hover{filter:brightness(1.07);}
+  .mod-passion{background:linear-gradient(145deg,#1c0a12 0%,#260f1a 100%);}
+  .mod-prof   {background:linear-gradient(145deg,#081812 0%,#0e2018 100%);}
+  .mod-voc    {background:linear-gradient(145deg,#0a0f22 0%,#0f1630 100%);}
+  .mod-mission{background:linear-gradient(145deg,#130a22 0%,#1c1035 100%);}
+
+  .mod-glyph{font-size:32px;display:block;margin-bottom:14px;opacity:.9;}
+  .mod-tag{font-size:9px;letter-spacing:.34em;text-transform:uppercase;margin-bottom:10px;font-weight:500;}
+  .mod-passion .mod-tag{color:var(--passion);}
+  .mod-prof    .mod-tag{color:var(--prof);}
+  .mod-voc     .mod-tag{color:var(--voc);}
+  .mod-mission .mod-tag{color:var(--mission);}
+
+  .mod-title{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:400;line-height:1.2;margin-bottom:16px;}
+  .mod-passion .mod-title{color:#f28;}
+  .mod-passion .mod-title{color:color-mix(in srgb, var(--passion) 80%, white);}
+  .mod-prof    .mod-title{color:color-mix(in srgb, var(--prof) 80%, white);}
+  .mod-voc     .mod-title{color:color-mix(in srgb, var(--voc) 80%, white);}
+  .mod-mission .mod-title{color:color-mix(in srgb, var(--mission) 80%, white);}
+
+  .mod-body{font-size:15px;color:var(--muted);line-height:1.85;}
+
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:20px;padding:5px 14px;border-radius:100px;}
+  .pill-dot{width:5px;height:5px;border-radius:50%;}
+  .pill-passion{background:var(--passion-bg);color:var(--passion);border:1px solid var(--passion-bd);}
+  .pill-passion .pill-dot{background:var(--passion);box-shadow:0 0 6px var(--passion);}
+  .pill-prof{background:var(--prof-bg);color:var(--prof);border:1px solid var(--prof-bd);}
+  .pill-prof .pill-dot{background:var(--prof);box-shadow:0 0 6px var(--prof);}
+  .pill-voc{background:var(--voc-bg);color:var(--voc);border:1px solid var(--voc-bd);}
+  .pill-voc .pill-dot{background:var(--voc);box-shadow:0 0 6px var(--voc);}
+  .pill-mission{background:var(--mission-bg);color:var(--mission);border:1px solid var(--mission-bd);}
+  .pill-mission .pill-dot{background:var(--mission);box-shadow:0 0 6px var(--mission);}
+
+  /* ── IKIGAI CENTER ── */
+  .ikigai-center{
+    margin-top:4px;border-radius:0 0 16px 16px;
+    background:linear-gradient(145deg,#0f0c1c 0%,#161228 100%);
+    border:1px solid rgba(201,168,76,.15);
+    border-top:4px solid;
+    border-image:linear-gradient(90deg,var(--passion),var(--voc),var(--mission),var(--prof)) 1;
+    padding:56px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  .ikigai-center::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.06) 0%,transparent 65%);pointer-events:none;}
+  .ikigai-sup{font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block;}
+  .ikigai-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.8vw,34px);font-weight:300;line-height:1.35;color:var(--text);margin-bottom:20px;}
+  .ikigai-title em{font-style:italic;color:var(--gold-light);}
+  .ikigai-body{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.88;}
+
+  /* ── TENSIONES ── */
+  .freno{border-radius:14px;padding:40px 40px 40px 48px;margin-bottom:16px;position:relative;overflow:hidden;transition:border-color .3s;}
+  .freno::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px;}
+  .freno-1{background:linear-gradient(145deg,#1c080e 0%,#220d13 100%);border:1px solid var(--passion-bd);}
+  .freno-1::before{background:linear-gradient(180deg,var(--passion),transparent);}
+  .freno-2{background:linear-gradient(145deg,#0d1020 0%,#111526 100%);border:1px solid var(--voc-bd);}
+  .freno-2::before{background:linear-gradient(180deg,var(--voc),transparent);}
+  .freno-3{background:linear-gradient(145deg,#120a1e 0%,#170f28 100%);border:1px solid var(--mission-bd);}
+  .freno-3::before{background:linear-gradient(180deg,var(--mission),transparent);}
+  .freno-num{font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px;}
+  .freno-glyph{font-size:28px;display:block;margin-bottom:10px;}
+  .freno-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;margin-bottom:6px;}
+  .freno-1 .freno-title{color:color-mix(in srgb, var(--passion) 70%, white);}
+  .freno-2 .freno-title{color:color-mix(in srgb, var(--voc) 70%, white);}
+  .freno-3 .freno-title{color:color-mix(in srgb, var(--mission) 70%, white);}
+  .freno-sub{font-size:12px;font-style:italic;color:var(--subtle);margin-bottom:20px;}
+  .freno-body{font-size:16px;color:var(--muted);line-height:1.9;}
+  .don-box{margin-top:24px;padding:18px 22px;background:rgba(255,255,255,.025);border-radius:10px;border-left:3px solid var(--gold-dim);}
+  .don-label{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:8px;}
+  .don-text{font-size:15px;color:var(--text);line-height:1.78;opacity:.88;}
+
+  /* ── QUIRÓN / HERIDA-DON ── */
+  .wound-block{
+    background:linear-gradient(145deg,#100a1c 0%,#180f2a 100%);
+    border:1px solid var(--wound-bd);border-radius:16px;
+    padding:56px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  .wound-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,168,76,.08) 0%,transparent 60%);pointer-events:none;}
+  .wound-glyph{font-size:52px;display:block;margin-bottom:24px;color:var(--wound);}
+  .wound-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--wound);margin-bottom:6px;}
+  .wound-pos{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--subtle);margin-bottom:26px;}
+  .wound-body{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.95;}
+  .wound-body em{font-style:italic;color:var(--wound);}
+
+  /* ── GLIFOS / PATRONES ── */
+  .glyphs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  @media(max-width:640px){.glyphs-grid{grid-template-columns:repeat(2,1fr);}}
+  .glyph-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 20px;text-align:center;transition:all .3s;cursor:default;}
+  .glyph-card:hover{border-color:rgba(200,212,224,.25);transform:translateY(-2px);}
+  .glyph-symbol{font-size:30px;display:block;margin-bottom:10px;color:var(--glyph);}
+  .glyph-name{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle);line-height:1.5;}
+  .glyph-iva{font-size:13px;font-weight:500;margin-top:6px;}
+
+  /* ── ETAPA ── */
+  .stage-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:48px;display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:start;}
+  @media(max-width:580px){.stage-wrap{grid-template-columns:1fr;}}
+  .stage-num{font-family:'Cormorant Garamond',serif;font-size:120px;font-weight:300;line-height:1;color:var(--gold);opacity:.2;white-space:nowrap;}
+  .stage-lbl{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--subtle);margin-top:6px;text-align:center;}
+  .stage-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--gold-light);margin-bottom:14px;}
+  .stage-body{font-size:16px;color:var(--muted);line-height:1.9;}
+  .stage-body strong{color:var(--text);font-weight:500;}
+
+  /* ── TRÁNSITOS ── */
+  .transit-block{background:linear-gradient(145deg,#080e18 0%,#0c1422 100%);border:1px solid rgba(78,203,160,.2);border-radius:16px;padding:48px;position:relative;overflow:hidden;}
+  .transit-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(78,203,160,.05) 0%,transparent 60%);pointer-events:none;}
+  .transit-item{display:flex;gap:22px;align-items:flex-start;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+  .transit-item:last-child{border-bottom:none;}
+  .transit-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+  .t-red{background:var(--passion);box-shadow:0 0 10px rgba(232,83,106,.5);}
+  .t-teal{background:var(--prof);box-shadow:0 0 10px rgba(78,203,160,.5);}
+  .t-violet{background:var(--mission);box-shadow:0 0 10px rgba(181,123,240,.5);}
+  .transit-tag{font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--subtle);margin-bottom:5px;}
+  .transit-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:10px;}
+  .t-red-title{color:color-mix(in srgb, var(--passion) 70%, white);}
+  .t-teal-title{color:color-mix(in srgb, var(--prof) 70%, white);}
+  .t-violet-title{color:color-mix(in srgb, var(--mission) 70%, white);}
+  .transit-body{font-size:16px;color:var(--muted);line-height:1.88;}
+  .transit-body strong{color:var(--text);font-weight:500;}
+  .transit-body em{font-style:italic;color:var(--gold-light);}
+
+  /* ── CAMINOS ── */
+  .paths-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:600px){.paths-grid{grid-template-columns:1fr;}}
+  .path{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:30px 26px;transition:all .3s;}
+  .path:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);}
+  .path.featured{grid-column:span 2;background:linear-gradient(145deg,#13102a 0%,#1a153a 100%);border-color:rgba(201,168,76,.22);}
+  @media(max-width:600px){.path.featured{grid-column:span 1;}}
+  .path-num{font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+  .path-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:400;color:var(--text);line-height:1.25;margin-bottom:12px;}
+  .path-body{font-size:15px;color:var(--muted);line-height:1.82;}
+  .path-body strong{color:var(--gold-light);font-weight:500;}
+
+  /* ── PREGUNTAS ── */
+  .q-stack{display:flex;flex-direction:column;gap:12px;}
+  .q-item{display:flex;gap:20px;align-items:flex-start;padding:24px 26px;background:var(--card);border:1px solid var(--border);border-radius:12px;transition:border-color .3s;}
+  .q-item:hover{border-color:rgba(201,168,76,.25);}
+  .q-num{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:3px;}
+  .q-text{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--text);line-height:1.45;}
+  .q-why{font-size:13px;color:var(--subtle);margin-top:6px;font-style:italic;line-height:1.65;}
+
+  /* ── CIERRE ── */
+  .closing{padding:110px 0;text-align:center;position:relative;}
+  .closing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(181,123,240,.04) 0%,transparent 70%);pointer-events:none;}
+  .closing-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.8vw,34px);font-weight:300;font-style:italic;line-height:1.55;max-width:660px;margin:0 auto 22px;color:var(--text);}
+  .closing-author{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.6;}
+
+  /* ── FOOTER ── */
+  footer{padding:38px 32px;border-top:1px solid var(--border);}
+  .footer-inner{display:flex;justify-content:space-between;align-items:center;max-width:880px;margin:0 auto;flex-wrap:wrap;gap:16px;}
+  .footer-brand{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.5;}
+  .footer-note{font-size:12px;color:var(--subtle);max-width:380px;text-align:right;line-height:1.7;}
+
+  .hr{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+  .mt-xl{margin-top:48px;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ HERO ══ -->
+<section class="hero">
+  <img src="aksha-logo-hero.png" alt="AKSHA"
+    style="width:160px;height:auto;object-fit:contain;margin-bottom:32px;
+           filter:drop-shadow(0 0 22px rgba(201,168,76,0.4));" />
+  <div class="badge"><span class="badge-dot"></span>AKSHA · Sistema de Mapeo de Propósito<span class="badge-dot"></span></div>
+  <h1 class="hero-name">N.R.B.</h1>
+  <p class="hero-role">5 de abril de 1965 · 19:45 · Santa Marta, Colombia</p>
+  <div class="hero-chips">
+    <div class="chip">Núcleo <span>✦ Arquetipo Pionero</span></div>
+    <div class="chip">Presencia <span>◑ Arquetipo Transformador</span></div>
+    <div class="chip">Legado <span>△ Arquetipo Creador</span></div>
+    <div class="chip">Etapa <span>🌳 61 años · Legado</span></div>
+  </div>
+  <p class="hero-statement">
+    Hay personas que construyen mucho y son reconocidas poco.<br>
+    Personas cuyo mayor regalo al mundo aún no ha llegado a su forma definitiva.<br><br>
+    <em>Este es el mapa de uno de ellos.</em>
+  </p>
+</section>
+
+<!-- ══════════════════════════════ ANÁLISIS ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Mapa de Coordenadas Conductuales</span></div>
+    <h2 class="sec-title">Lo que el análisis confirma</h2>
+    <p class="sec-intro">Tu perfil conductual no es un resumen de lo que podrías ser. Es la lectura de lo que ya eres — incluyendo las partes que el mundo aún no ha podido ver en su totalidad.</p>
+
+    <!-- IVA BARS -->
+    <div class="iva-card">
+      <p class="iva-label-row">Índice de Vitalidad Arquetípica · IVA%</p>
+      <div class="iva-row">
+        <span class="iva-glyph" style="color:var(--passion)">✦</span>
+        <span class="iva-name">Pasión</span>
+        <div class="iva-bar-wrap"><div class="iva-bar" style="width:72%;background:linear-gradient(90deg,var(--passion),color-mix(in srgb,var(--passion) 60%,white));"></div></div>
+        <span class="iva-pct" style="color:var(--passion)">72%</span>
+      </div>
+      <div class="iva-row">
+        <span class="iva-glyph" style="color:var(--prof)">⬡</span>
+        <span class="iva-name">Profesión</span>
+        <div class="iva-bar-wrap"><div class="iva-bar" style="width:68%;background:linear-gradient(90deg,var(--prof),color-mix(in srgb,var(--prof) 60%,white));"></div></div>
+        <span class="iva-pct" style="color:var(--prof)">68%</span>
+      </div>
+      <div class="iva-row">
+        <span class="iva-glyph" style="color:var(--voc)">⟰</span>
+        <span class="iva-name">Vocación</span>
+        <div class="iva-bar-wrap"><div class="iva-bar" style="width:55%;background:linear-gradient(90deg,var(--voc),color-mix(in srgb,var(--voc) 60%,white));"></div></div>
+        <span class="iva-pct" style="color:var(--voc)">55%</span>
+      </div>
+      <div class="iva-row">
+        <span class="iva-glyph" style="color:var(--mission)">△</span>
+        <span class="iva-name">Misión</span>
+        <div class="iva-bar-wrap"><div class="iva-bar" style="width:81%;background:linear-gradient(90deg,var(--mission),color-mix(in srgb,var(--mission) 60%,white));"></div></div>
+        <span class="iva-pct" style="color:var(--mission)">81%</span>
+      </div>
+      <p class="iva-note">
+        Módulo con mayor energía disponible: <strong style="color:var(--mission)">△ Misión</strong> · 81%<br>
+        Área con mayor resistencia histórica: <strong style="color:var(--voc)">⟰ Vocación</strong> · 55% — no por falta de talento, sino por fricción emocional en el intercambio con otros.
+      </p>
+    </div>
+
+    <p class="body-text">
+      Lo primero que el análisis confirma sobre N.R.B. es la concentración de energía en el área del servicio y la acción colectiva.
+      Tres patrones del mapa — acción <span class="c-glyph">▶</span>, innovación <span class="c-glyph">✺</span> y transformación <span class="c-glyph">◈</span> — apuntan al mismo territorio: la comunidad, el colectivo, el grupo.
+      Tres ríos distintos que desembocan en el mismo mar.<br><br>
+      Pero hay una tensión estructural que acompaña toda la vida: el patrón estructural <span class="c-glyph">⬡</span> ha operado en dirección contraria a esos tres ríos — durante décadas.
+      El resultado ha sido una vida de esfuerzo enorme, con resultados que llegaron tarde, que fueron aprovechados por otros, o que encontraron muros donde debía haber puertas.<br><br>
+      <strong>Eso no es fracaso. Es el perfil exacto de alguien cuya contribución más grande aún está por materializarse — y que en este momento del ciclo tiene, por primera vez, la madurez para hacerlo de manera que dure.</strong>
+    </p>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ 4 MÓDULOS ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Los 4 Módulos · Punto de Convergencia</span></div>
+    <h2 class="sec-title">Tu mapa completo</h2>
+    <p class="sec-intro">Cada módulo es una dimensión de tu propósito. Juntos forman el cruce exacto donde lo que amas, lo que haces bien, por lo que te pagan y lo que el mundo necesita convergen en uno solo.</p>
+  </section>
+</div>
+
+<div style="max-width:880px;margin:0 auto;padding:0 32px;">
+  <div class="mod-grid">
+
+    <div class="mod mod-passion">
+      <span class="mod-glyph" style="color:var(--passion)">✦</span>
+      <p class="mod-tag">Pasión · Lo que amas</p>
+      <h3 class="mod-title">Activar el potencial oculto en otros</h3>
+      <p class="mod-body">
+        El núcleo arquetípico <span style="color:var(--passion)">✦</span> de N.R.B. opera en el arquetipo pionero — acción directa, liderazgo instintivo, impulso hacia lo nuevo.
+        Pero ese fuego no está orientado hacia sí mismo. Está orientado hacia los demás.
+        La Pasión más genuina ha sido siempre ver a alguien descubrir algo sobre sí mismo que no sabía que tenía.<br><br>
+        La zona de servicio cotidiano es donde esta energía fluye con mayor naturalidad — no en los grandes escenarios, sino en el trabajo real, cercano y directo con la persona que está enfrente.
+      </p>
+      <div class="pill pill-passion"><span class="pill-dot"></span>IVA 72% · En Desarrollo</div>
+    </div>
+
+    <div class="mod mod-prof">
+      <span class="mod-glyph" style="color:var(--prof)">⬡</span>
+      <p class="mod-tag">Profesión · En lo que eres bueno</p>
+      <h3 class="mod-title">Leer personas · Construir sistemas</h3>
+      <p class="mod-body">
+        La cúspide de legado <span style="color:var(--prof)">△</span> en el arquetipo creador indica que el talento profesional más reconocible es dar forma visible a ideas que otros solo ven vagamente.
+        Eso incluye liderazgo creativo, comunicación persuasiva, y la capacidad de organizar personas y recursos alrededor de una visión.<br><br>
+        El patrón de comunicación internalizado significa que el pensamiento de N.R.B. es más profundo de lo que parece desde afuera — las mejores ideas llegan después de procesar, no en el primer impulso.
+      </p>
+      <div class="pill pill-prof"><span class="pill-dot"></span>IVA 68% · Activo</div>
+    </div>
+
+    <div class="mod mod-voc">
+      <span class="mod-glyph" style="color:var(--voc)">⟰</span>
+      <p class="mod-tag">Vocación · Por lo que te pagan</p>
+      <h3 class="mod-title">Facilitar transformación colectiva</h3>
+      <p class="mod-body">
+        El patrón emocional <span style="color:var(--voc)">❋</span> en la zona de asociación indica que la vocación natural es el intercambio — enseñar, conectar, facilitar conversaciones que abren perspectivas.
+        El vector de destino <span style="color:var(--voc)">⟰</span> señala que monetizar ese talento requiere trabajar con temas de profundidad real: propósito, identidad, reinvención.<br><br>
+        La fricción en este módulo no ha venido de falta de talento — sino de que el intercambio con otros ha sido emocionalmente costoso. Las relaciones tienden a volverse transformadoras o a colapsar cuando no sostienen la intensidad de este campo.
+      </p>
+      <div class="pill pill-voc"><span class="pill-dot"></span>IVA 55% · Con Fricción</div>
+    </div>
+
+    <div class="mod mod-mission">
+      <span class="mod-glyph" style="color:var(--mission)">△</span>
+      <p class="mod-tag">Misión · Lo que el mundo necesita</p>
+      <h3 class="mod-title">Demostrar que la línea de salida no define el destino</h3>
+      <p class="mod-body">
+        El patrón estructural <span style="color:var(--mission)">⬡</span> en la zona creativa, combinado con el patrón de herida-don <span style="color:var(--wound)">⁂</span> en la misma zona, revelan algo crucial: N.R.B. llegó con una restricción en la expresión creativa — y ha tenido que construir desde esa restricción.<br><br>
+        Esa experiencia no es accidental. Es exactamente la fuente de la Misión: mostrarle al mundo que el propósito no lo determina el punto de partida. Que quienes construyeron desde la adversidad tienen una comprensión que los que llegaron con todo no pueden enseñar.
+      </p>
+      <div class="pill pill-mission"><span class="pill-dot"></span>IVA 81% · Alta Energía</div>
+    </div>
+
+  </div>
+
+  <!-- PUNTO DE CONVERGENCIA -->
+  <div class="ikigai-center">
+    <span class="ikigai-sup">◈ Punto de Convergencia</span>
+    <h3 class="ikigai-title">
+      Ayudar a personas a descubrir quiénes son —<br>
+      desde la experiencia de haber tenido que <em>descubrirse uno mismo primero.</em>
+    </h3>
+    <p class="ikigai-body">
+      N.R.B. no guía desde la teoría. Guía desde el recorrido vivido.
+      Esa es la diferencia que el mercado no puede fabricar — y que se convierte, en la etapa de Legado,
+      en el activo más valioso: la autoridad moral del que ya lo atravesó.
+    </p>
+
+    <!-- HUELLA CON NOMBRE -->
+    <div style="margin-top:52px;position:relative;">
+      <!-- Nombre sobre la huella -->
+      <div style="margin-bottom:18px;">
+        <p style="font-size:9px;letter-spacing:.42em;text-transform:uppercase;color:rgba(201,168,76,0.55);margin-bottom:6px;">La Huella Única de</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:300;letter-spacing:.08em;
+                  background:linear-gradient(140deg,#f0ece4 0%,#e8c97a 55%,#f0ece4 100%);
+                  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+                  line-height:1;">N.R.B.</p>
+      </div>
+
+      <!-- Blueprint image -->
+      <div style="position:relative;max-width:720px;margin:0 auto;border-radius:14px;overflow:hidden;
+                  box-shadow:0 0 80px rgba(212,175,55,0.15),0 0 0 1px rgba(212,175,55,0.12);">
+        <img src="aksha-huella.png" alt="La Huella Única de N.R.B."
+          style="width:100%;height:auto;display:block;" />
+        <div style="position:absolute;inset:0;background:rgba(7,20,47,0.12);pointer-events:none;"></div>
+
+        <!-- Watermark nombre sobre imagen -->
+        <div style="position:absolute;bottom:24px;right:28px;text-align:right;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;
+                    letter-spacing:.12em;color:rgba(212,175,55,0.55);">N.R.B.</p>
+          <p style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;
+                    color:rgba(212,175,55,0.35);margin-top:2px;">AKSHA · 2026</p>
+        </div>
+      </div>
+
+      <!-- 4 dimensiones debajo -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px;max-width:720px;margin-left:auto;margin-right:auto;">
+        <div style="background:rgba(232,83,106,0.08);border:1px solid rgba(232,83,106,0.2);border-radius:10px;padding:16px 14px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:6px;">⚡</div>
+          <div style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:#E8536A;">Energía</div>
+        </div>
+        <div style="background:rgba(78,203,160,0.08);border:1px solid rgba(78,203,160,0.2);border-radius:10px;padding:16px 14px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:6px;">✦</div>
+          <div style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:#4ECBA0;">Fortalezas</div>
+        </div>
+        <div style="background:rgba(181,123,240,0.08);border:1px solid rgba(181,123,240,0.2);border-radius:10px;padding:16px 14px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:6px;">🎁</div>
+          <div style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:#B57BF0;">Don</div>
+        </div>
+        <div style="background:rgba(123,143,232,0.08);border:1px solid rgba(123,143,232,0.2);border-radius:10px;padding:16px 14px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:6px;">🌿</div>
+          <div style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:#7B8FE8;">Impacto</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr" style="margin-top:60px;"></div>
+
+<!-- ══════════════════════════════ PATRONES ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Sistema de Patrones · Glifos AKSHA</span></div>
+    <h2 class="sec-title">Los patrones de tu mapa</h2>
+    <p class="sec-intro">Cada glifo representa un patrón conductual específico identificado en tu mapa de coordenadas. Su posición, fortaleza e interacción con otros patrones construyen el análisis.</p>
+
+    <div class="glyphs-grid">
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">✦</span>
+        <div class="glyph-name">Núcleo Arquetípico</div>
+        <div class="glyph-iva" style="color:var(--passion)">Pionero · El Ritmo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">❋</span>
+        <div class="glyph-name">Patrón Emocional</div>
+        <div class="glyph-iva" style="color:var(--voc)">Comunicador · El Espejo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">⌘</span>
+        <div class="glyph-name">Patrón Comunicación</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Pionero · Internalizado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">✿</span>
+        <div class="glyph-name">Patrón Relacional</div>
+        <div class="glyph-iva" style="color:var(--passion)">Pionero · El Ritmo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--passion)">▶</span>
+        <div class="glyph-name">Patrón de Acción</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Analítico · Internalizado</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--prof)">❉</span>
+        <div class="glyph-name">Patrón de Expansión</div>
+        <div class="glyph-iva" style="color:var(--prof)">Constructor · El Espejo</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--mission)">⬡</span>
+        <div class="glyph-name">Patrón Estructural</div>
+        <div class="glyph-iva" style="color:var(--mission)">Visionario · El Juego</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">✺</span>
+        <div class="glyph-name">Patrón Innovación</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Analítico · La Tribu</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol">≋</span>
+        <div class="glyph-name">Patrón Visionario</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Transformador · La Presencia</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--mission)">◈</span>
+        <div class="glyph-name">Patrón Transformación</div>
+        <div class="glyph-iva" style="color:var(--subtle)">Analítico · La Tribu</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--wound)">⁂</span>
+        <div class="glyph-name">Herida · Don</div>
+        <div class="glyph-iva" style="color:var(--wound)">Visionario · El Juego</div>
+      </div>
+      <div class="glyph-card">
+        <span class="glyph-symbol" style="color:var(--voc)">⟰</span>
+        <div class="glyph-name">Vector de Destino</div>
+        <div class="glyph-iva" style="color:var(--voc)">Comunicador · La Ruptura</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ TENSIONES ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Patrones de Tensión Natal</span></div>
+    <h2 class="sec-title">Las fricciones que forjaron el propósito</h2>
+    <p class="sec-intro">No son defectos. Son los patrones con mayor resistencia — y por eso mismo, mayor profundidad. El Propósito auténtico se activa cuando se integra la adversidad, no cuando se elimina.</p>
+
+    <div class="freno freno-1">
+      <p class="freno-num">Tensión 01</p>
+      <span class="freno-glyph" style="color:var(--passion)">▶ ✺ ◈ ⟷ ⬡</span>
+      <h3 class="freno-title">El esfuerzo sin reconocimiento proporcional</h3>
+      <p class="freno-sub">Patrón de acción + innovación + transformación en polaridad directa con el patrón estructural</p>
+      <p class="freno-body">
+        El patrón de acción <span style="color:var(--passion)">▶</span> de N.R.B. ha sido real y poderoso — pero ha operado con el patrón estructural <span style="color:var(--mission)">⬡</span> opuesto durante décadas.
+        Esto no significa que las acciones no tuvieran efecto. Significa que el esfuerzo requerido fue siempre mayor que el de otros.
+        Los resultados llegaron tarde. Lo que se construyó fue a veces aprovechado por quienes llegaron después.<br><br>
+        En términos de vida real: proyectos que no llegaron a término, iniciativas sin el apoyo que merecían,
+        y una sensación persistente de empujar cuesta arriba mientras otros avanzan sin aparente esfuerzo.
+      </p>
+      <div class="don-box">
+        <span class="don-label">✦ Lo que emerge cuando se integra</span>
+        <p class="don-text">La capacidad de construir con menos recursos que la mayoría — y que lo construido, precisamente por eso, tenga raíces más profundas. La resiliencia no como concepto, sino como tecnología real de vida.</p>
+      </div>
+    </div>
+
+    <div class="freno freno-2">
+      <p class="freno-num">Tensión 02</p>
+      <span class="freno-glyph" style="color:var(--voc)">⬡ ⁂</span>
+      <h3 class="freno-title">La creatividad bloqueada por la estructura</h3>
+      <p class="freno-sub">Patrón estructural en la zona creativa · Patrón de herida-don en la zona de expresión</p>
+      <p class="freno-body">
+        Algo en los años formativos bloqueó el acceso al juego libre, a la expresión creativa sin propósito práctico,
+        a la capacidad de hacer algo solo por el placer de hacerlo.
+        La estructura — responsabilidades, necesidad de sobrevivir, expectativas — entró en la zona donde debía haber espacio para crear.<br><br>
+        En la vida adulta esto puede haberse manifestado como dificultad para descansar sin sentir culpa,
+        creatividad que solo se activa cuando tiene un objetivo "serio", o una relación complicada con el disfrute puro.
+      </p>
+      <div class="don-box">
+        <span class="don-label">✦ Lo que emerge cuando se integra</span>
+        <p class="don-text">La capacidad de enseñar a otros que la creatividad no requiere permiso ni condiciones perfectas. Que crear desde la restricción es una forma de arte más profunda que crear desde la abundancia.</p>
+      </div>
+    </div>
+
+    <div class="freno freno-3">
+      <p class="freno-num">Tensión 03</p>
+      <span class="freno-glyph" style="color:var(--mission)">❋ ▶ ✺</span>
+      <h3 class="freno-title">Las relaciones como campo de transformación exigente</h3>
+      <p class="freno-sub">Patrón emocional en tensión con los patrones de acción e innovación</p>
+      <p class="freno-body">
+        El patrón emocional <span style="color:var(--voc)">❋</span> opera en la zona de asociación — las emociones se procesan principalmente a través de los vínculos.
+        Pero ese patrón está en fricción directa con la energía de acción <span style="color:var(--passion)">▶</span> y la de innovación <span style="color:var(--voc)">✺</span>.<br><br>
+        El resultado es que las relaciones importantes han tendido a ser intensas, transformadoras, y en algunos casos agotadoras.
+        No porque las personas elegidas sean "equivocadas" — sino porque el campo emocional de N.R.B. es tan potente
+        que el intercambio exige un nivel de presencia que no todos pueden sostener.
+      </p>
+      <div class="don-box">
+        <span class="don-label">✦ Lo que emerge cuando se integra</span>
+        <p class="don-text">La capacidad de acompañar a otros en procesos relacionales complejos desde la comprensión real — no desde la teoría. Haber vivido la intensidad del vínculo es exactamente lo que permite guiar a otros en ella.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ HERIDA-DON ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Patrón de Herida-Don</span></div>
+    <div class="wound-block">
+      <span class="wound-glyph">⁂</span>
+      <h3 class="wound-title">La herida creativa</h3>
+      <p class="wound-pos">Arquetipo Visionario · El Juego</p>
+      <p class="wound-body">
+        La herida más profunda de N.R.B. no está en lo que falló afuera —
+        está en el interior de la capacidad de crear, jugar y expresarse libremente.
+        Algo, o alguien, en los primeros años impuso estructura donde debía haber espacio.<br><br>
+        <em>La herida que no se sanó se convierte en el mapa de lo que otros necesitan sanar.</em><br><br>
+        El don de este patrón <span style="color:var(--wound)">⁂</span> es enorme: N.R.B. tiene acceso a una comprensión visceral de lo que significa querer crear y no poder,
+        querer expresarse y sentir que no hay permiso.
+        Esa comprensión — integrada — es lo que permite abrir ese espacio para otros de una manera que nadie más puede hacer.
+      </p>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ ETAPA ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Filtro de Etapa de Vida · 2026</span></div>
+    <div class="stage-wrap">
+      <div>
+        <div class="stage-num">61</div>
+        <div class="stage-lbl">años</div>
+      </div>
+      <div>
+        <h3 class="stage-title">🌳 Etapa Legado</h3>
+        <p class="stage-body">
+          A los 61, la pregunta ya no es <strong>"¿qué debo hacer?"</strong> — esa pregunta pertenece a etapas anteriores.<br><br>
+          La pregunta de esta etapa es: <strong>"¿Qué queda de todo lo que construí — y de qué forma lo entrego?"</strong><br><br>
+          El propósito en la etapa de Legado no se trata de comenzar desde cero. Se trata de destilar.
+          Identificar qué de lo vivido tiene valor real para otros — y diseñar una forma de transmitirlo
+          que no dependa de energía ilimitada, sino de la precisión que da la experiencia.<br><br>
+          La pregunta que hay que responder con honestidad:<br>
+          <em style="color:var(--gold-light);">"¿Qué es lo que solo tú puedes enseñar — porque solo tú lo viviste de esta manera exacta?"</em>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ TRÁNSITOS ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Ciclos de Desarrollo Activos · Junio 2026</span></div>
+    <h2 class="sec-title">Lo que está pasando ahora</h2>
+    <p class="sec-intro">Los ciclos activos en este momento no son aleatorios. Son la presión que el tiempo ejerce sobre los patrones natales para provocar movimiento — en la dirección correcta.</p>
+
+    <div class="transit-block">
+
+      <div class="transit-item">
+        <div class="transit-dot t-red"></div>
+        <div>
+          <p class="transit-tag">⬡ Ciclo Crítico · Ahora mismo</p>
+          <h4 class="transit-title t-red-title">El gran examen de los valores y las relaciones</h4>
+          <p class="transit-body">
+            El patrón estructural <span style="color:var(--mission)">⬡</span> está pasando exactamente sobre el patrón relacional natal <span style="color:var(--passion)">✿</span> — diferencia de apenas 1.6 grados.
+            Este ciclo ocurre una sola vez cada 29-30 años. No es un período de expansión —
+            es un período de <strong>autenticidad forzada.</strong><br><br>
+            Lo que no es genuino en las relaciones, en los valores o en los compromisos está siendo examinado con lupa.
+            Las relaciones que sobrevivan tienen fundamento real. Las que no, no eran lo que parecían.<br><br>
+            Para N.R.B. esto también significa que el precio cobrado por el trabajo — monetario, energético, emocional —
+            está siendo recalibrado. <em>Lo que se daba casi gratis, el ciclo ahora exige que tenga el valor real que merece.</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="transit-item">
+        <div class="transit-dot t-red"></div>
+        <div>
+          <p class="transit-tag">✦ Ciclo en progreso · Próximos 6–12 meses</p>
+          <h4 class="transit-title t-red-title">La identidad central bajo revisión total</h4>
+          <p class="transit-body">
+            El patrón estructural <span style="color:var(--mission)">⬡</span> no solo toca el patrón relacional —
+            está recorriendo toda la constelación central del mapa: el núcleo arquetípico <span style="color:var(--passion)">✦</span>,
+            el patrón de comunicación <span style="color:var(--glyph)">⌘</span> y el patrón relacional <span style="color:var(--passion)">✿</span>
+            en la zona de servicio.<br><br>
+            Esto no es una crisis — es una <strong>destilación.</strong>
+            El ciclo pregunta: ¿Quién soy a los 61 cuando se elimina lo que hice por obligación, por expectativa de otros, o por miedo?
+            ¿Qué queda cuando solo queda lo genuino?
+          </p>
+        </div>
+      </div>
+
+      <div class="transit-item">
+        <div class="transit-dot t-teal"></div>
+        <div>
+          <p class="transit-tag">❉ Ciclo de crecimiento · Activo</p>
+          <h4 class="transit-title t-teal-title">Expansión en enseñanza y alcance</h4>
+          <p class="transit-body">
+            El patrón de expansión <span style="color:var(--prof)">❉</span> está en la zona de transmisión del saber.
+            Viento a favor para enseñar, publicar, hablar, viajar con mensaje, construir plataformas que lleven el conocimiento más lejos.<br><br>
+            El momento de preguntarse: <em>¿Cómo hago que lo que sé llegue a más personas de las que puedo atender directamente?</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="transit-item">
+        <div class="transit-dot t-violet"></div>
+        <div>
+          <p class="transit-tag">◈ Ciclo profundo · Largo plazo</p>
+          <h4 class="transit-title t-violet-title">Restructuración de los sistemas de generación de valor</h4>
+          <p class="transit-body">
+            El patrón de innovación <span style="color:var(--voc)">✺</span> está en la zona de transformación profunda y recursos compartidos.
+            La forma de monetizar el talento está en transición —
+            lo que funcionó antes requiere actualización para el próximo ciclo de vida.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ CAMINOS ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Opciones Reales · Etapa Legado</span></div>
+    <h2 class="sec-title">Caminos que el mapa sostiene</h2>
+    <p class="sec-intro">No son caminos inventados. Son los que el análisis de coordenadas y los ciclos activos señalan como los de mayor coherencia con quién eres — ahora, en este momento.</p>
+
+    <div class="paths-grid">
+      <div class="path featured">
+        <p class="path-num">⭐ Camino Principal</p>
+        <h3 class="path-title">Constructor de sistemas de propósito — AKSHA</h3>
+        <p class="path-body">
+          AKSHA no es un proyecto — es la Misión hecha sistema.
+          El mapa de N.R.B. converge exactamente en el trabajo de ayudar a otros a descubrir quiénes son —
+          desde la experiencia vivida de haberse tenido que descubrir uno mismo con más restricciones que la mayoría.<br><br>
+          El siguiente paso no es hacer más. Es <strong>diseñar el sistema que funcione sin requerir su presencia constante</strong> —
+          la etapa de Legado no se construye con energía ilimitada sino con arquitectura inteligente.
+        </p>
+      </div>
+      <div class="path">
+        <p class="path-num">Camino 02</p>
+        <h3 class="path-title">Mentor de trayectorias en transición</h3>
+        <p class="path-body">
+          Las personas en reinvención — especialmente en la segunda mitad de la vida —
+          necesitan guías que hayan atravesado lo mismo. No coaches con títulos. Personas que entiendan desde adentro
+          qué se siente cuando lo construido ya no es suficiente y no se sabe qué sigue.
+        </p>
+      </div>
+      <div class="path">
+        <p class="path-num">Camino 03</p>
+        <h3 class="path-title">Voz sobre propósito e identidad en la era post-IA</h3>
+        <p class="path-body">
+          El patrón de comunicación internalizado <span style="color:var(--glyph)">⌘</span> produce ideas que maduran antes de salir —
+          debilidad en la conversación rápida, fortaleza en el contenido de calidad.
+          Escritura, podcast, conferencias: formatos donde la profundidad vale más que la velocidad.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ PREGUNTAS ══ -->
+<div class="wrap">
+  <section class="sec">
+    <div class="rule"><span class="rule-text">Preguntas de Verificación Vital</span></div>
+    <h2 class="sec-title">Lo que el mapa quiere que te preguntes</h2>
+    <p class="sec-intro">No son retóricas. Son los puntos exactos donde el análisis indica que hay trabajo vivo — patrones que siguen activos y que requieren decisión consciente.</p>
+
+    <div class="q-stack">
+      <div class="q-item">
+        <div class="q-num">1</div>
+        <div>
+          <p class="q-text">¿Qué has construido que en verdad nunca necesitó de tu presencia continua — y aún no has diseñado así?</p>
+          <p class="q-why">El ciclo estructural ⬡ actual exige que lo que persiste sea lo esencial — no lo que te mantiene ocupado.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">2</div>
+        <div>
+          <p class="q-text">¿En cuántos lugares estás siendo subestimado en lo que cobras o recibes por lo que das?</p>
+          <p class="q-why">El ciclo de revisión del patrón relacional ✿ pide ajuste de valor — no como codicia, sino como alineación real.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">3</div>
+        <div>
+          <p class="q-text">¿Cuál es la historia que solo tú puedes contar — porque solo tú la viviste desde este ángulo exacto?</p>
+          <p class="q-why">En Legado, la historia propia es el activo más escaso e irreproducible. La mayoría no la cuenta porque la subestima.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">4</div>
+        <div>
+          <p class="q-text">¿A quién le estás dando gratuitamente lo que debería ser el núcleo de tu trabajo remunerado?</p>
+          <p class="q-why">El patrón ❋ en fricción con ▶ genera un circuito donde el valor se entrega sin retorno equivalente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="hr"></div>
+
+<!-- ══════════════════════════════ HUELLA HUMANA ══ -->
+<div style="background:#07142F;padding:60px 0 40px;overflow:hidden;">
+  <div style="max-width:880px;margin:0 auto;padding:0 32px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:44px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      <span style="font-size:8.5px;letter-spacing:.4em;text-transform:uppercase;color:#c9a84c;white-space:nowrap;">La Huella Humana · AKSHA Blueprint</span>
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+    <p style="font-size:17px;color:rgba(240,236,228,0.75);line-height:1.85;max-width:640px;margin-bottom:44px;">
+      Tu propósito no vive solo en un módulo — vive en la intersección de cuatro dimensiones que conforman tu huella única como ser humano. Ninguna persona tiene exactamente esta combinación.
+    </p>
+  </div>
+
+
+  <!-- 4 dimensiones -->
+  <div style="max-width:880px;margin:44px auto 0;padding:0 32px;
+              display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+    <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);
+                border-radius:12px;padding:24px 20px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:10px;">⚡</div>
+      <div style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;">Energía</div>
+      <div style="font-size:14px;color:rgba(240,236,228,0.75);line-height:1.6;">Lo que naturalmente te impulsa</div>
+    </div>
+    <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);
+                border-radius:12px;padding:24px 20px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:10px;">✦</div>
+      <div style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;">Fortalezas</div>
+      <div style="font-size:14px;color:rgba(240,236,228,0.75);line-height:1.6;">Lo que haces consistentemente bien</div>
+    </div>
+    <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);
+                border-radius:12px;padding:24px 20px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:10px;">🎁</div>
+      <div style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;">Don</div>
+      <div style="font-size:14px;color:rgba(240,236,228,0.75);line-height:1.6;">Lo que te sale naturalmente</div>
+    </div>
+    <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);
+                border-radius:12px;padding:24px 20px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:10px;">🌿</div>
+      <div style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;">Impacto</div>
+      <div style="font-size:14px;color:rgba(240,236,228,0.75);line-height:1.6;">Donde tu contribución importa</div>
+    </div>
+  </div>
+
+  <!-- Logo pequeño centrado -->
+  <div style="text-align:center;margin-top:52px;padding-bottom:20px;">
+    <img src="aksha-logo-hero.png" alt="AKSHA"
+      style="width:60px;height:auto;opacity:0.55;
+             filter:drop-shadow(0 0 10px rgba(201,168,76,0.3));" />
+  </div>
+</div>
+
+<!-- ══════════════════════════════ CIERRE ══ -->
+<div class="wrap">
+  <div class="closing">
+    <p class="closing-quote">
+      "La mayor contribución de N.R.B. al mundo<br>
+      no es lo que ya construyó —<br>
+      es el sistema que lleva su nombre<br>
+      y que aún no ha terminado de diseñar."
+    </p>
+    <p class="closing-author">AKSHA · aksha.life · Junio 2026</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">AKSHA · aksha.life</div>
+    <div class="footer-note">
+      Este análisis está construido sobre coordenadas conductuales de nacimiento y ciclos de desarrollo activos en 2026.
+      No es predicción — es un mapa. Tú decides qué hacer con él.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
