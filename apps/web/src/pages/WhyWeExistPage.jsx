@@ -99,6 +99,30 @@ const WhyWeExistPage = () => {
               </p>
             </motion.div>
 
+            {/* Questions that move the floor */}
+            <motion.div {...fadeUp(0.15)} className="flex flex-wrap justify-center gap-3 mb-14">
+              {(lang === 'es'
+                ? ['¿Qué hago ahora?', '¿Sigo siendo útil?', '¿Dónde encajo?', '¿Qué tengo yo que una máquina no tiene?']
+                : ['What do I do now?', 'Am I still useful?', 'Where do I fit?', 'What do I have that a machine doesn\'t?']
+              ).map((q, i) => (
+                <motion.span
+                  key={q}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
+                  className="text-sm md:text-base px-4 py-2 rounded-full italic"
+                  style={{
+                    color: 'rgba(212,175,55,0.85)',
+                    border: '1px solid rgba(212,175,55,0.25)',
+                    backgroundColor: 'rgba(212,175,55,0.05)',
+                  }}
+                >
+                  {q}
+                </motion.span>
+              ))}
+            </motion.div>
+
             {/* Opening line */}
             <motion.p {...fadeUp(0.2)}
               className="text-xl md:text-2xl text-foreground/70 leading-relaxed font-light italic max-w-xl mx-auto">

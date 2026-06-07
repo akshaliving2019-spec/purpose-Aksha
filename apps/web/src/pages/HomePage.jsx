@@ -29,6 +29,34 @@ const HomePage = () => {
             transition={{ duration: 0.8 }}
             className="w-full max-w-5xl mx-auto"
           >
+            {/* QUESTIONS THAT MOVE THE FLOOR */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+              className="flex flex-wrap justify-center gap-3 mb-12"
+            >
+              {(lang === 'es'
+                ? ['¿Qué hago ahora?', '¿Sigo siendo útil?', '¿Dónde encajo?', '¿Qué tengo yo que una máquina no tiene?']
+                : ['What do I do now?', 'Am I still useful?', 'Where do I fit?', 'What do I have that a machine doesn\'t?']
+              ).map((q, i) => (
+                <motion.span
+                  key={q}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 + i * 0.12 }}
+                  className="text-sm md:text-base px-4 py-2 rounded-full italic"
+                  style={{
+                    color: 'rgba(212,175,55,0.85)',
+                    border: '1px solid rgba(212,175,55,0.25)',
+                    backgroundColor: 'rgba(212,175,55,0.05)',
+                  }}
+                >
+                  {q}
+                </motion.span>
+              ))}
+            </motion.div>
+
             <div className="flex justify-center mb-[40px]">
               <img
                 src="/aksha-logo-hero.png"
