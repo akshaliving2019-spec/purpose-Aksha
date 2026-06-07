@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
+import HumanBlueprintDiagram from '@/components/HumanBlueprintDiagram';
 
 const questionsEN = ['What do I do now?','Am I still useful?','Where do I fit?','What do I have that a machine doesn\'t?'];
 const questionsES = ['¿Qué hago ahora?','¿Sigo siendo útil?','¿Dónde encajo?','¿Qué tengo yo que una máquina no tiene?'];
@@ -107,6 +108,21 @@ const WhyWeExistPage = () => {
             style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
 
           <div className="relative z-10 max-w-3xl mx-auto">
+
+            {/* LOGO */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="flex justify-center mb-10"
+            >
+              <img
+                src="/aksha-logo-hero.png"
+                alt="AKSHA"
+                className="w-[140px] md:w-[180px] h-auto object-contain filter drop-shadow-[0_0_20px_rgba(212,175,55,0.45)]"
+              />
+            </motion.div>
+
             <motion.p {...fadeUp(0)} className="text-xs uppercase tracking-[0.45em] mb-10 font-semibold"
               style={{ color: 'rgba(212,175,55,0.65)' }}>
               {c.eyebrow}
@@ -241,6 +257,9 @@ const WhyWeExistPage = () => {
             </motion.p>
           </div>
         </section>
+
+        {/* ── HUMAN BLUEPRINT DIAGRAM ── */}
+        <HumanBlueprintDiagram />
 
         {/* ── CTA ── */}
         <section className="py-28 px-4 text-center relative overflow-hidden border-t"
