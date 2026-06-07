@@ -3,50 +3,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import HumanBlueprintDiagram from '@/components/HumanBlueprintDiagram';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowRight, Compass, Sparkles, Fingerprint, Layers, Target, Users, Map, Shield } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { ArrowRight, Sparkles, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const HomePage = () => {
-  const profileIncludes = [
-    {
-      icon: Compass,
-      title: 'Core Vocation',
-      description: 'The fundamental drive and overarching mission that brings sustained meaning to your life.'
-    },
-    {
-      icon: Fingerprint,
-      title: 'Natural Talents',
-      description: 'Inherent skills and cognitive advantages that require less effort for you than others.'
-    },
-    {
-      icon: Shield,
-      title: 'Shadow Traits',
-      description: 'Hidden challenges and psychological blind spots that, once integrated, become your greatest strengths.'
-    },
-    {
-      icon: Map,
-      title: 'Career Roadmap',
-      description: 'Actionable steps to align your current professional trajectory with your authentic purpose.'
-    },
-    {
-      icon: Users,
-      title: 'Relational Dynamics',
-      description: 'How your unique energy interacts with others, highlighting ideal collaborators and partners.'
-    },
-    {
-      icon: Layers,
-      title: 'Optimal Environments',
-      description: 'The specific cultural, physical, and organizational settings where you naturally thrive.'
-    }
-  ];
+  const { t, lang } = useLanguage();
 
   return (
     <>
       <Helmet>
-        <title>AKSHA - Discover Your Unique Purpose</title>
-        <meta name="description" content="While AI transforms everything, AKSHA reveals the one thing it cannot replace — who you uniquely are. Discover your purpose in an AI-driven economy." />
+        <title>AKSHA - {t.home.heroTitle}</title>
+        <meta name="description" content={t.home.heroSubtitle} />
       </Helmet>
 
       <div className="bg-background flex flex-col min-h-screen">
@@ -66,25 +36,25 @@ const HomePage = () => {
                 className="w-[190px] md:w-[230px] h-auto object-contain filter drop-shadow-[0_0_15px_rgba(200,168,75,0.4)]"
               />
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-[30px] leading-tight text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
-              The Purpose of Your Life
+              {t.home.heroTitle}
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-muted-foreground mb-[40px] leading-relaxed max-w-3xl mx-auto text-balance">
-              While AI transforms everything, AKSHA reveals the one thing it cannot replace — who you uniquely are.
+              {t.home.heroSubtitle}
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-2xl mx-auto">
               <Link to="/discover" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full text-lg px-8 py-6 transition-all duration-300 hover:shadow-[0_0_20px_rgba(200,168,75,0.3)] active:scale-[0.98]">
-                  Discover Your Purpose
+                  {t.home.discoverBtn}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link to="/science" className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="w-full text-lg px-8 py-6 border-primary/50 text-primary hover:bg-primary/10 transition-all duration-300 active:scale-[0.98]">
-                  The Science Behind AKSHA
+                  {t.home.scienceBtn}
                 </Button>
               </Link>
             </div>
@@ -105,10 +75,10 @@ const HomePage = () => {
               className="text-center mb-16 max-w-3xl mx-auto"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground text-balance">
-                What AKSHA does
+                {t.home.whatAkshaTitle}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                AKSHA acts as a mirror for your highest potential. By analyzing your unique temporal coordinates, we translate complex energetic patterns into clear, actionable life guidance.
+                {t.home.whatAkshaSubtitle}
               </p>
             </motion.div>
 
@@ -121,10 +91,8 @@ const HomePage = () => {
               >
                 <Card className="h-full border-border/50 bg-card hover:border-primary/30 transition-colors p-8">
                   <Target className="w-12 h-12 text-primary mb-6" />
-                  <h3 className="text-2xl font-semibold mb-4 text-foreground">Reveals Your Authentic Path</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    We cut through societal conditioning and familial expectations to reveal what you were genuinely designed to do. AKSHA helps you pivot from surviving to thriving by identifying the exact arenas where your natural gifts shine.
-                  </p>
+                  <h3 className="text-2xl font-semibold mb-4 text-foreground">{t.home.revealsTitle}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{t.home.revealsText}</p>
                 </Card>
               </motion.div>
 
@@ -136,10 +104,8 @@ const HomePage = () => {
               >
                 <Card className="h-full border-border/50 bg-card hover:border-primary/30 transition-colors p-8">
                   <Sparkles className="w-12 h-12 text-primary mb-6" />
-                  <h3 className="text-2xl font-semibold mb-4 text-foreground">Translates Insight into Action</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Insight without action is merely entertainment. AKSHA bridges the gap between deep self-awareness and practical reality, providing you with a structured roadmap to align your career and relationships with your true purpose.
-                  </p>
+                  <h3 className="text-2xl font-semibold mb-4 text-foreground">{t.home.translatesTitle}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{t.home.translatesText}</p>
                 </Card>
               </motion.div>
             </div>
@@ -157,12 +123,11 @@ const HomePage = () => {
           >
             <img
               src="/lo-que-el-mapa-revela.jpg"
-              alt="Lo que el mapa revela acerca de ti"
+              alt={lang === 'es' ? 'Lo que el mapa revela acerca de ti' : 'What your map reveals about you'}
               className="w-full max-w-[88%] h-auto block rounded-xl"
             />
           </motion.div>
         </section>
-
 
         {/* DISCOVER YOUR HUMAN BLUEPRINT CTA */}
         <section className="py-32 bg-background relative overflow-hidden border-t border-border/20">
@@ -177,14 +142,14 @@ const HomePage = () => {
               className="max-w-3xl mx-auto text-center"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
-                Discover Your <span className="text-primary">Human Blueprint</span>
+                {t.home.ctaTitle} <span className="text-primary">{t.home.ctaHighlight}</span>
               </h2>
               <p className="text-xl text-muted-foreground mb-12 leading-relaxed text-balance">
-                Transform your birth data into practical insights about your Energy, Strengths, Gifts, and Impact.
+                {t.home.ctaSubtitle}
               </p>
               <Link to="/discover">
                 <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,168,75,0.3)] active:scale-[0.98]">
-                  Generate My Purpose Profile
+                  {t.home.ctaBtn}
                   <ArrowRight className="ml-2 w-6 h-6" />
                 </Button>
               </Link>
