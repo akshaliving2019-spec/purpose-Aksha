@@ -215,7 +215,7 @@ const CheckoutPage = () => {
                     <span className="text-sm text-muted-foreground">Total</span>
                     <span className="text-3xl font-bold text-foreground">${plan.price}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">One-time payment · 7-day guarantee</p>
+                  <p className="text-xs text-muted-foreground mt-1">One-time payment · Refunds only if report not yet generated</p>
                 </CardContent>
               </Card>
             </motion.div>
