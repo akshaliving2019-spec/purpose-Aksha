@@ -6,114 +6,175 @@ import { X, Zap, Star, Gift, Leaf } from 'lucide-react';
 const dimensions = [
   {
     id: 'energy', label: 'ENERGY', Icon: Zap,
-    top: '14%', left: '30%', width: '13%', height: '22%',
+    // Right panel overlays
+    panelTop: '7%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    color: '#D4AF37',
     definition: 'What naturally drives you.',
-    expanded: 'The activities, environments and experiences that naturally activate your motivation and vitality.',
+    expanded: 'ENERGY is the fuel behind everything you do. It\'s not about caffeine or willpower — it\'s about the activities, environments and experiences that naturally activate your motivation and vitality from the inside out.',
+    deep: 'When you operate inside your natural energy, time disappears. Tasks feel lighter. Results multiply. AKSHA maps your specific energy patterns so you stop forcing and start flowing.',
     examples: ['Curiosity', 'Movement', 'Creation', 'Learning', 'Connection'],
+    question: 'What lights you up without needing external motivation?',
   },
   {
     id: 'strengths', label: 'STRENGTHS', Icon: Star,
-    top: '14%', left: '55%', width: '13%', height: '22%',
+    panelTop: '30%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    color: '#D4AF37',
     definition: 'What you consistently do well.',
-    expanded: 'The abilities you consistently express and that produce reliable results.',
+    expanded: 'STRENGTHS are the abilities you express repeatedly and that produce reliable results — often things you take for granted because they feel natural to you.',
+    deep: 'The problem is most people don\'t recognize their own strengths. They assume everyone can do what they do. AKSHA reveals what truly sets you apart — your repeatable advantage.',
     examples: ['Analysis', 'Leadership', 'Empathy', 'Communication', 'Strategy'],
+    question: 'What do others consistently come to you for?',
   },
   {
     id: 'gift', label: 'GIFT', Icon: Gift,
-    top: '54%', left: '30%', width: '13%', height: '22%',
+    panelTop: '52%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    color: '#D4AF37',
     definition: 'What comes naturally to you.',
-    expanded: 'Your unique talents and cognitive patterns that come naturally and can be refined.',
+    expanded: 'Your GIFT is your deepest natural intelligence — the cognitive pattern that processes reality differently. It\'s not learned, it\'s inherent. And when developed, it becomes your greatest contribution.',
+    deep: 'Gifts are often invisible to their owner. They feel "too easy" to be valuable. But your gift is exactly what the world needs most — in its raw or refined form.',
     examples: ['Intuition', 'Imagination', 'Design', 'Teaching', 'Problem-Solving'],
+    question: 'What comes so naturally you almost feel guilty charging for it?',
   },
   {
     id: 'impact', label: 'IMPACT', Icon: Leaf,
-    top: '54%', left: '55%', width: '13%', height: '22%',
+    panelTop: '74%', panelLeft: '67%', panelWidth: '28%', panelHeight: '18%',
+    color: '#D4AF37',
     definition: 'Where your contribution matters.',
-    expanded: 'The areas where your abilities create meaningful value for others and the world.',
+    expanded: 'IMPACT is the intersection where your abilities meet the world\'s needs. It\'s where what you do creates meaningful change — for people, communities, or systems.',
+    deep: 'Without impact, purpose feels hollow. AKSHA maps the specific areas where your unique combination of Energy, Strengths and Gift creates the most value — so you invest your life where it truly matters.',
     examples: ['Healing', 'Building', 'Inspiring', 'Innovating', 'Serving'],
+    question: 'Where does your work create a ripple beyond yourself?',
   },
 ];
 
-const InfoPanel = ({ dim, onClose }) => {
+// Popup modal with deep content
+const Popup = ({ dim, onClose }) => {
   const { Icon } = dim;
   return (
     <motion.div
-      key={dim.id}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8 }}
-      transition={{ duration: 0.25 }}
-      className="rounded-xl border border-[#D4AF37]/40 bg-[#07142F]/95 backdrop-blur-sm p-5 relative shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(7,20,47,0.85)', backdropFilter: 'blur(6px)' }}
+      onClick={onClose}
     >
-      <button onClick={onClose} className="absolute top-3 right-3 text-white/30 hover:text-white/70 transition-colors">
-        <X className="w-4 h-4" />
-      </button>
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-8 h-8 rounded-full border border-[#D4AF37]/40 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10">
-          <Icon className="w-4 h-4 text-[#D4AF37]" strokeWidth={1.5} />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.3 }}
+        className="relative w-full max-w-lg rounded-2xl p-7 shadow-[0_0_60px_rgba(212,175,55,0.25)]"
+        style={{ backgroundColor: '#07142F', border: '1.5px solid rgba(212,175,55,0.5)' }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/40 hover:text-white/80 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-5">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: 'rgba(212,175,55,0.15)', border: '1.5px solid rgba(212,175,55,0.5)' }}>
+            <Icon className="w-6 h-6" style={{ color: '#D4AF37' }} strokeWidth={1.5} />
+          </div>
+          <div>
+            <p className="text-xs tracking-[0.3em] text-white/40 uppercase mb-0.5">Dimension</p>
+            <h3 className="text-xl font-bold tracking-[0.15em] uppercase" style={{ color: '#D4AF37' }}>
+              {dim.label}
+            </h3>
+          </div>
         </div>
-        <p className="text-[#D4AF37] font-bold text-sm tracking-[0.2em] uppercase">{dim.label}</p>
-      </div>
-      <p className="text-white/70 text-sm leading-relaxed mb-3">{dim.expanded}</p>
-      <p className="text-[#D4AF37]/60 text-[10px] uppercase tracking-widest mb-2">Examples:</p>
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {dim.examples.map(ex => (
-          <span key={ex} className="text-[11px] border border-[#D4AF37]/25 text-white/55 rounded px-2 py-0.5">{ex}</span>
-        ))}
-      </div>
-      <Link to="/discover" className="inline-flex items-center gap-1 text-[#D4AF37] text-xs font-semibold hover:underline">
-        Discover your {dim.label} →
-      </Link>
+
+        {/* Definition */}
+        <p className="text-white font-semibold text-base mb-3">{dim.definition}</p>
+
+        {/* Expanded */}
+        <p className="text-white/65 text-sm leading-relaxed mb-4">{dim.expanded}</p>
+
+        {/* Deep insight */}
+        <div className="rounded-xl p-4 mb-5" style={{ backgroundColor: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <p className="text-white/80 text-sm leading-relaxed italic">{dim.deep}</p>
+        </div>
+
+        {/* Question */}
+        <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'rgba(212,175,55,0.6)' }}>Reflect on this:</p>
+        <p className="text-white/70 text-sm italic mb-5">"{dim.question}"</p>
+
+        {/* Examples */}
+        <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'rgba(212,175,55,0.6)' }}>Examples:</p>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {dim.examples.map(ex => (
+            <span key={ex} className="text-xs rounded-full px-3 py-1 text-white/60"
+              style={{ border: '1px solid rgba(212,175,55,0.3)' }}>
+              {ex}
+            </span>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <Link
+          to="/discover"
+          onClick={onClose}
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]"
+          style={{ backgroundColor: '#D4AF37', color: '#07142F' }}
+        >
+          Discover My {dim.label} →
+        </Link>
+      </motion.div>
     </motion.div>
   );
 };
 
 const HumanBlueprintDiagram = () => {
-  const [activePanel, setActivePanel] = useState(null);
-  const toggle = (id) => setActivePanel(prev => prev === id ? null : id);
-  const activeDim = dimensions.find(d => d.id === activePanel);
+  const [activePopup, setActivePopup] = useState(null);
+  const activeDim = dimensions.find(d => d.id === activePopup);
 
   return (
     <section className="w-full bg-[#07142F] overflow-hidden">
 
       {/* IMAGE + CLICKABLE OVERLAYS */}
       <div className="relative w-full flex justify-center px-4 md:px-8 py-4">
-      <div className="relative w-full max-w-[88%]">
-        <img
-          src="/human-blueprint.jpg"
-          alt="AKSHA Human Blueprint — Built on Decades of Human Understanding"
-          className="w-full h-auto block rounded-xl"
-        />
-
-        {/* Navy overlay to match website background tone */}
-        <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ backgroundColor: 'rgba(7,20,47,0.18)' }} />
-
-        {/* Clickable invisible circles over each dimension */}
-        {dimensions.map(dim => (
-          <motion.button
-            key={dim.id}
-            onClick={() => toggle(dim.id)}
-            whileHover={{ backgroundColor: 'rgba(212,175,55,0.10)' }}
-            className={`absolute rounded-full border-2 transition-all duration-300 cursor-pointer ${
-              activePanel === dim.id
-                ? 'border-[#D4AF37]/70 shadow-[0_0_25px_rgba(212,175,55,0.4)]'
-                : 'border-transparent hover:border-[#D4AF37]/40'
-            }`}
-            style={{ top: dim.top, left: dim.left, width: dim.width, height: dim.height }}
-            title={`Learn about ${dim.label}`}
+        <div className="relative w-full max-w-[88%]">
+          <img
+            src="/human-blueprint.jpg"
+            alt="AKSHA Human Blueprint — Built on Decades of Human Understanding"
+            className="w-full h-auto block rounded-xl"
           />
-        ))}
-      </div>
+
+          {/* Navy overlay to match website background tone */}
+          <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ backgroundColor: 'rgba(7,20,47,0.18)' }} />
+
+          {/* Clickable overlays over RIGHT SIDE panels */}
+          {dimensions.map(dim => (
+            <motion.button
+              key={dim.id}
+              onClick={() => setActivePopup(dim.id)}
+              whileHover={{ backgroundColor: 'rgba(212,175,55,0.12)' }}
+              className="absolute rounded-xl cursor-pointer transition-all duration-300"
+              style={{
+                top: dim.panelTop,
+                left: dim.panelLeft,
+                width: dim.panelWidth,
+                height: dim.panelHeight,
+                border: '2px solid transparent',
+              }}
+              onMouseEnter={e => e.currentTarget.style.border = '2px solid rgba(212,175,55,0.8)'}
+              onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
+              title={`Learn more about ${dim.label}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* INFO PANEL */}
+      {/* POPUP */}
       <AnimatePresence>
         {activeDim && (
-          <div className="px-4 md:px-10 py-5 bg-[#07142F]">
-            <div className="max-w-xl mx-auto">
-              <InfoPanel dim={activeDim} onClose={() => setActivePanel(null)} />
-            </div>
-          </div>
+          <Popup dim={activeDim} onClose={() => setActivePopup(null)} />
         )}
       </AnimatePresence>
 
