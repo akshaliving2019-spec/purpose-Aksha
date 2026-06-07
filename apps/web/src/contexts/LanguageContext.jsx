@@ -17,6 +17,7 @@ export const translations = {
       getReport: 'Get Your Report',
       logout: 'Logout',
       dashboard: 'Dashboard',
+      whyWeExist: 'Why We Exist',
     },
     // Home page
     home: {
@@ -48,6 +49,7 @@ export const translations = {
       getReport: 'Obtener mi Reporte',
       logout: 'Salir',
       dashboard: 'Panel',
+      whyWeExist: 'Por Qué Existimos',
     },
     // Página de inicio
     home: {

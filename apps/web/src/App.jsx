@@ -14,6 +14,7 @@ import SignupPage from '@/pages/SignupPage.jsx';
 import SciencePage from '@/pages/SciencePage.jsx';
 import SampleAnalysisPage from '@/pages/SampleAnalysisPage.jsx';
 import PricingPage from '@/pages/PricingPage.jsx';
+import WhyWeExistPage from '@/pages/WhyWeExistPage.jsx';
 import CheckoutPage from '@/pages/CheckoutPage.jsx';
 import PaymentSuccessPage from '@/pages/PaymentSuccessPage.jsx';
 import { Toaster } from '@/components/ui/sonner';
@@ -33,6 +34,7 @@ function App() {
               <Route path="/sample-analysis" element={<SampleAnalysisPage />} />
               <Route path="/discover" element={<DiscoveryPage />} />
               <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/why-we-exist" element={<WhyWeExistPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/payment-success" element={<PaymentSuccessPage />} />
               <Route path="/login" element={<LoginPage />} />

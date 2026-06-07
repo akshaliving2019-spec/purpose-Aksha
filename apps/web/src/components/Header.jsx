@@ -17,6 +17,7 @@ const Header = () => {
     { path: '/sample-analysis', label: t.nav.sampleAnalysis },
     { path: '/pricing', label: t.nav.pricing },
     { path: '/discover', label: t.nav.discover },
+    { path: '/why-we-exist', label: t.nav.whyWeExist },
   ];
 
   return (
