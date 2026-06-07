@@ -6,62 +6,66 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
-const fadeUp = {
-  initial: { opacity: 0, y: 30 },
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.7 },
-};
+  transition: { duration: 0.75, delay },
+});
 
 const WhyWeExistPage = () => {
   const { lang } = useLanguage();
 
-  const content = {
+  const c = {
     en: {
       meta: 'Why We Exist | AKSHA',
-      metaDesc: 'If you are here, it is because — like us — you are a seeker. Welcome to the experience.',
+      metaDesc: 'If you are here, perhaps you are a seeker, just like us. Welcome to the journey of remembering who you are.',
       eyebrow: 'Why We Exist',
-      headline: 'If you are here,\nit is because you are a seeker.',
-      intro: 'Just like us.',
-      p1: 'Many people live their entire lives without ever clearly discovering who they truly are. We are not our conditioning. We are not the roles assigned to us in childhood. Beneath all of that — beneath the noise — lives our real consciousness, on its own search, on its own journey of self-knowledge.',
-      p2: 'And that journey is not easy.',
-      layersHeadline: 'We arrive in this world whole.\nThen life begins to add layers.',
-      layersText: 'From childhood, we acquire conditioning. Sometimes dozens of layers. Sometimes thousands. Family expectations. Cultural scripts. Societal pressures. Fear. Comparison. Survival patterns that no longer serve us.',
-      onionLabel: 'The Onion Metaphor',
-      onionText: 'Discovering who you truly are is like peeling a giant onion. Layer by layer. Sometimes with tears. Always with courage.',
-      aiHeadline: 'AI cannot replace who you are.\nBut it can help you find yourself — faster.',
-      aiText: 'AKSHA was built at the intersection of decades of human understanding and the speed of artificial intelligence. We use AI not to replace your humanity — but to accelerate the process of uncovering it. What once took years of therapy, journaling, and deep inner work, we begin to illuminate in a single report.',
-      notAloneHeadline: 'You are not alone.',
-      notAloneText: 'There are millions like you — people who feel the pull toward something more meaningful, more aligned, more true. This project exists to serve that search. To remove layers at the speed only AI makes possible. To help you encounter your true nature.',
-      missionLabel: 'Our Mission',
-      missionText: 'To give every human being on Earth access to a clear map of who they are — so they can stop surviving and start living with purpose.',
-      cta: 'Welcome to the experience.',
-      ctaBtn: 'Discover Your Purpose',
+      manifesto1: 'The greatest challenge of the AI era is not technological.',
+      manifesto2: 'It is human.',
+      pullQuote: '"When survival becomes the priority, self-discovery is often postponed."',
+      p1: 'If you are here, perhaps you are a seeker, just like us.',
+      p2: 'The journey of self-discovery is not the same for everyone.',
+      p3: 'Some are born surrounded by opportunity, guidance, and support. Others spend much of their lives simply trying to survive.',
+      p4: 'We do not all begin from the same starting line.',
+      layersTitle: 'Life adds layers to each of us.',
+      p5: 'Expectations, fears, responsibilities, disappointments, beliefs, and experiences. For some, those layers are few. For others, they can feel endless.',
+      onionText: 'Like peeling a giant onion, the journey back to ourselves can take years, sometimes a lifetime.',
+      p6: 'Yet beneath those layers lives something that has never disappeared:',
+      p6bold: 'your unique gifts, talents, motivations, and potential.',
+      aiTitle: 'A new kind of challenge.',
+      p7: 'As artificial intelligence transforms the world around us, knowing who we truly are may become one of the most important challenges of our time.',
+      missionTitle: 'Why AKSHA was created.',
+      p8: 'AKSHA was created to help people reconnect with that deeper part of themselves — not by telling them who to become, but by helping them discover what has been there all along.',
+      p9: 'Because your path may be different from mine, but your uniqueness matters just as much.',
+      cta: 'Welcome to the journey of remembering who you are.',
+      ctaBtn: 'Begin Your Journey',
     },
     es: {
       meta: 'Por Qué Existimos | AKSHA',
-      metaDesc: 'Si estás aquí, es porque — como nosotros — eres un buscador. Bienvenido a la experiencia.',
+      metaDesc: 'Si estás aquí, quizás eres un buscador, al igual que nosotros. Bienvenido al viaje de recordar quién eres.',
       eyebrow: 'Por Qué Existimos',
-      headline: 'Si estás aquí,\nes porque eres un buscador.',
-      intro: 'Al igual que nosotros.',
-      p1: 'Muchas personas transcurren toda su vida sin descubrirlo claramente. No somos nuestro condicionamiento. No somos los roles que nos asignaron en la infancia. Debajo de todo eso — debajo del ruido — vive nuestra conciencia real, en su propia búsqueda, en su propio camino de autoconocimiento.',
-      p2: 'Y ese camino no es fácil.',
-      layersHeadline: 'Llegamos a este mundo completos.\nLuego la vida empieza a añadir capas.',
-      layersText: 'Desde niños adquirimos condicionamientos. A veces decenas de capas. A veces miles. Expectativas familiares. Guiones culturales. Presiones sociales. Miedo. Comparación. Patrones de supervivencia que ya no nos sirven.',
-      onionLabel: 'La Metáfora de la Cebolla',
-      onionText: 'Descubrir quién realmente eres es como pelar una cebolla gigante. Capa por capa. A veces con lágrimas. Siempre con valentía.',
-      aiHeadline: 'La IA no puede reemplazar quién eres.\nPero puede ayudarte a encontrarte — más rápido.',
-      aiText: 'AKSHA fue construido en la intersección de décadas de comprensión humana y la velocidad de la inteligencia artificial. Usamos la IA no para reemplazar tu humanidad — sino para acelerar el proceso de descubrirla. Lo que antes tomaba años de terapia, journaling y trabajo interior profundo, comenzamos a iluminarlo en un solo reporte.',
-      notAloneHeadline: 'No estás solo.',
-      notAloneText: 'Hay millones como tú — personas que sienten el llamado hacia algo más significativo, más alineado, más verdadero. Este proyecto existe para servir a esa búsqueda. Para eliminar capas a la velocidad que solo la IA hace posible. Para ayudarte a encontrar tu verdadera naturaleza.',
-      missionLabel: 'Nuestra Misión',
-      missionText: 'Dar a cada ser humano en la Tierra acceso a un mapa claro de quién es — para que deje de sobrevivir y comience a vivir con propósito.',
-      cta: 'Bienvenido a la experiencia.',
-      ctaBtn: 'Descubre Tu Propósito',
+      manifesto1: 'El mayor desafío de la era de la IA no es tecnológico.',
+      manifesto2: 'Es humano.',
+      pullQuote: '"Cuando la supervivencia se convierte en la prioridad, el autodescubrimiento suele posponerse."',
+      p1: 'Si estás aquí, quizás eres un buscador, al igual que nosotros.',
+      p2: 'El viaje del autodescubrimiento no es igual para todos.',
+      p3: 'Algunos nacen rodeados de oportunidades, guía y apoyo. Otros pasan gran parte de su vida simplemente tratando de sobrevivir.',
+      p4: 'No todos comenzamos desde la misma línea de salida.',
+      layersTitle: 'La vida añade capas a cada uno de nosotros.',
+      p5: 'Expectativas, miedos, responsabilidades, decepciones, creencias y experiencias. Para algunos, esas capas son pocas. Para otros, pueden parecer interminables.',
+      onionText: 'Como pelar una cebolla gigante, el camino de regreso a nosotros mismos puede tomar años, a veces toda una vida.',
+      p6: 'Sin embargo, debajo de esas capas vive algo que nunca ha desaparecido:',
+      p6bold: 'tus dones únicos, talentos, motivaciones y potencial.',
+      aiTitle: 'Un nuevo tipo de desafío.',
+      p7: 'A medida que la inteligencia artificial transforma el mundo a nuestro alrededor, saber quiénes somos realmente puede convertirse en uno de los desafíos más importantes de nuestra época.',
+      missionTitle: 'Por qué se creó AKSHA.',
+      p8: 'AKSHA fue creado para ayudar a las personas a reconectarse con esa parte más profunda de sí mismas — no diciéndoles en quiénes convertirse, sino ayudándoles a descubrir lo que siempre ha estado ahí.',
+      p9: 'Porque tu camino puede ser diferente al mío, pero tu singularidad importa igual.',
+      cta: 'Bienvenido al viaje de recordar quién eres.',
+      ctaBtn: 'Comenzar Mi Viaje',
     },
-  };
-
-  const c = content[lang] || content.en;
+  }[lang] || {};
 
   return (
     <>
@@ -72,186 +76,156 @@ const WhyWeExistPage = () => {
 
       <div className="bg-background min-h-screen">
 
-        {/* HERO */}
-        <section className="relative pt-36 pb-28 px-4 overflow-hidden">
-          {/* Background glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
+        {/* ── HERO: MANIFESTO ── */}
+        <section className="relative pt-36 pb-24 px-4 overflow-hidden text-center">
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
 
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-
-            {/* MANIFESTO STATEMENT */}
-            <motion.div
-              {...fadeUp}
-              className="mb-12 pb-12 border-b"
-              style={{ borderColor: 'rgba(212,175,55,0.15)' }}
-            >
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light leading-snug text-foreground/60 italic">
-                {lang === 'es'
-                  ? <>El mayor desafío de la era de la IA<br/>no es tecnológico.<br/><span className="font-bold text-foreground not-italic">Es humano.</span></>
-                  : <>The greatest challenge of the AI era<br/>is not technological.<br/><span className="font-bold text-foreground not-italic">It is human.</span></>
-                }
-              </p>
-            </motion.div>
-
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-xs uppercase tracking-[0.4em] mb-6 font-semibold"
-              style={{ color: 'rgba(212,175,55,0.7)' }}
-            >
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <motion.p {...fadeUp(0)} className="text-xs uppercase tracking-[0.45em] mb-10 font-semibold"
+              style={{ color: 'rgba(212,175,55,0.65)' }}>
               {c.eyebrow}
             </motion.p>
 
-            <motion.h1
-              {...fadeUp}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-foreground"
-              style={{ letterSpacing: '-0.02em', whiteSpace: 'pre-line' }}
-            >
-              {c.headline}
-            </motion.h1>
+            {/* Manifesto statement */}
+            <motion.div {...fadeUp(0.1)} className="mb-16">
+              <p className="text-3xl md:text-4xl lg:text-5xl font-light leading-snug mb-3"
+                style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {c.manifesto1}
+              </p>
+              <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
+                style={{ letterSpacing: '-0.02em' }}>
+                {c.manifesto2}
+              </p>
+            </motion.div>
 
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-2xl md:text-3xl font-light italic"
-              style={{ color: '#D4AF37' }}
-            >
-              {c.intro}
-            </motion.p>
-          </div>
-        </section>
-
-        {/* SECTION 1 — THE SEARCH */}
-        <section className="py-20 px-4">
-          <div className="max-w-2xl mx-auto space-y-7">
-            <motion.p {...fadeUp} className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
+            {/* Opening line */}
+            <motion.p {...fadeUp(0.2)}
+              className="text-xl md:text-2xl text-foreground/70 leading-relaxed font-light italic max-w-xl mx-auto">
               {c.p1}
             </motion.p>
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-2xl md:text-3xl font-semibold"
-              style={{ color: '#D4AF37' }}
-            >
+          </div>
+        </section>
+
+        {/* ── SECTION 1: NOT THE SAME STARTING LINE ── */}
+        <section className="py-20 px-4 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+          <div className="max-w-2xl mx-auto space-y-8">
+            <motion.p {...fadeUp(0)} className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
               {c.p2}
+            </motion.p>
+
+            <motion.p {...fadeUp(0.1)} className="text-lg text-foreground/65 leading-relaxed">
+              {c.p3}
+            </motion.p>
+
+            {/* Pull quote */}
+            <motion.blockquote {...fadeUp(0.2)}
+              className="border-l-4 pl-6 py-2 my-8"
+              style={{ borderColor: '#D4AF37' }}>
+              <p className="text-xl md:text-2xl font-semibold italic leading-relaxed"
+                style={{ color: '#D4AF37' }}>
+                {c.pullQuote}
+              </p>
+            </motion.blockquote>
+
+            <motion.p {...fadeUp(0.3)}
+              className="text-xl md:text-2xl font-semibold text-foreground leading-snug"
+              style={{ letterSpacing: '-0.01em' }}>
+              {c.p4}
             </motion.p>
           </div>
         </section>
 
-        {/* SECTION 2 — LAYERS / ONION */}
-        <section className="py-20 px-4 border-y" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
+        {/* ── SECTION 2: THE ONION LAYERS ── */}
+        <section className="py-20 px-4" style={{ backgroundColor: 'rgba(7,20,47,0.45)' }}>
           <div className="max-w-2xl mx-auto">
-            <motion.h2
-              {...fadeUp}
-              className="text-3xl md:text-4xl font-bold mb-10 leading-snug"
-              style={{ whiteSpace: 'pre-line', letterSpacing: '-0.02em' }}
-            >
-              {c.layersHeadline}
+            <motion.h2 {...fadeUp(0)}
+              className="text-3xl md:text-4xl font-bold mb-8 leading-tight"
+              style={{ letterSpacing: '-0.02em' }}>
+              {c.layersTitle}
             </motion.h2>
 
-            <motion.p {...fadeUp} transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-lg text-foreground/70 leading-relaxed mb-10">
-              {c.layersText}
+            <motion.p {...fadeUp(0.1)} className="text-lg text-foreground/65 leading-relaxed mb-12">
+              {c.p5}
             </motion.p>
 
-            {/* Onion visual */}
-            <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="rounded-2xl p-8 text-center"
-              style={{ backgroundColor: 'rgba(212,175,55,0.06)', border: '1.5px solid rgba(212,175,55,0.2)' }}
-            >
-              {/* Concentric circles */}
-              <div className="relative flex items-center justify-center mb-6" style={{ height: '160px' }}>
-                {[140, 110, 80, 50].map((size, i) => (
-                  <div
-                    key={size}
-                    className="absolute rounded-full"
-                    style={{
-                      width: size,
-                      height: size,
-                      border: `1.5px solid rgba(212,175,55,${0.15 + i * 0.15})`,
-                      backgroundColor: `rgba(212,175,55,${0.02 + i * 0.02})`,
-                    }}
-                  />
+            {/* Visual: onion rings */}
+            <motion.div {...fadeUp(0.2)}
+              className="rounded-2xl p-10 text-center mb-10"
+              style={{ backgroundColor: 'rgba(212,175,55,0.05)', border: '1.5px solid rgba(212,175,55,0.18)' }}>
+              <div className="relative flex items-center justify-center mb-7" style={{ height: '170px' }}>
+                {[160, 126, 92, 58, 28].map((size, i) => (
+                  <div key={size} className="absolute rounded-full" style={{
+                    width: size, height: size,
+                    border: `1.5px solid rgba(212,175,55,${0.1 + i * 0.12})`,
+                    backgroundColor: `rgba(212,175,55,${0.01 + i * 0.015})`,
+                  }} />
                 ))}
-                <span className="relative text-xs font-bold tracking-widest uppercase" style={{ color: '#D4AF37' }}>YOU</span>
+                <span className="relative text-[10px] font-bold tracking-[0.3em] uppercase"
+                  style={{ color: '#D4AF37' }}>YOU</span>
               </div>
-              <p className="text-xs uppercase tracking-[0.3em] font-semibold mb-2" style={{ color: 'rgba(212,175,55,0.6)' }}>
-                {c.onionLabel}
-              </p>
-              <p className="text-base text-foreground/70 leading-relaxed max-w-sm mx-auto italic">
+              <p className="text-base md:text-lg text-foreground/70 leading-relaxed max-w-md mx-auto italic">
                 {c.onionText}
               </p>
             </motion.div>
+
+            {/* The core that remains */}
+            <motion.p {...fadeUp(0.3)} className="text-lg text-foreground/65 leading-relaxed">
+              {c.p6}{' '}
+              <span className="font-semibold text-white">{c.p6bold}</span>
+            </motion.p>
           </div>
         </section>
 
-        {/* SECTION 3 — AI + HUMAN */}
+        {/* ── SECTION 3: AI CHALLENGE ── */}
+        <section className="py-20 px-4 border-t border-b" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+          <div className="max-w-2xl mx-auto">
+            <motion.h2 {...fadeUp(0)}
+              className="text-3xl md:text-4xl font-bold mb-8 leading-tight"
+              style={{ letterSpacing: '-0.02em' }}>
+              {c.aiTitle}
+            </motion.h2>
+            <motion.p {...fadeUp(0.1)} className="text-lg text-foreground/70 leading-relaxed">
+              {c.p7}
+            </motion.p>
+          </div>
+        </section>
+
+        {/* ── SECTION 4: MISSION ── */}
         <section className="py-20 px-4">
           <div className="max-w-2xl mx-auto">
-            <motion.h2
-              {...fadeUp}
-              className="text-3xl md:text-4xl font-bold mb-8 leading-snug"
-              style={{ whiteSpace: 'pre-line', letterSpacing: '-0.02em' }}
-            >
-              {c.aiHeadline}
+            <motion.h2 {...fadeUp(0)}
+              className="text-3xl md:text-4xl font-bold mb-8 leading-tight"
+              style={{ letterSpacing: '-0.02em' }}>
+              {c.missionTitle}
             </motion.h2>
-            <motion.p {...fadeUp} transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-lg text-foreground/70 leading-relaxed">
-              {c.aiText}
-            </motion.p>
-          </div>
-        </section>
 
-        {/* SECTION 4 — NOT ALONE */}
-        <section className="py-20 px-4" style={{ backgroundColor: 'rgba(7,20,47,0.4)' }}>
-          <div className="max-w-2xl mx-auto">
-            <motion.h2
-              {...fadeUp}
-              className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
-              style={{ letterSpacing: '-0.02em' }}
-            >
-              {c.notAloneHeadline}
-            </motion.h2>
-            <motion.p {...fadeUp} transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-lg text-foreground/70 leading-relaxed mb-12">
-              {c.notAloneText}
-            </motion.p>
-
-            {/* Mission box */}
-            <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="rounded-2xl p-8"
-              style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(212,175,55,0.04) 100%)', border: '1.5px solid rgba(212,175,55,0.35)' }}
-            >
-              <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.7)' }}>
-                {c.missionLabel}
-              </p>
-              <p className="text-xl md:text-2xl font-semibold text-foreground leading-relaxed">
-                {c.missionText}
+            <motion.div {...fadeUp(0.1)}
+              className="rounded-2xl p-8 mb-10"
+              style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(212,175,55,0.04) 100%)', border: '1.5px solid rgba(212,175,55,0.3)' }}>
+              <p className="text-xl md:text-2xl text-foreground leading-relaxed">
+                {c.p8}
               </p>
             </motion.div>
+
+            <motion.p {...fadeUp(0.2)} className="text-lg text-foreground/65 leading-relaxed italic">
+              {c.p9}
+            </motion.p>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-28 px-4 text-center relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.08) 0%, transparent 70%)' }} />
-
+        {/* ── CTA ── */}
+        <section className="py-28 px-4 text-center relative overflow-hidden border-t"
+          style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
           <div className="relative z-10 max-w-xl mx-auto">
-            <motion.p
-              {...fadeUp}
-              className="text-3xl md:text-4xl font-bold mb-10 text-foreground"
-              style={{ letterSpacing: '-0.01em' }}
-            >
+            <motion.p {...fadeUp(0)}
+              className="text-3xl md:text-4xl font-bold mb-10 text-foreground leading-snug"
+              style={{ letterSpacing: '-0.01em' }}>
               {c.cta}
             </motion.p>
-            <motion.div {...fadeUp} transition={{ duration: 0.7, delay: 0.15 }}>
+            <motion.div {...fadeUp(0.15)}>
               <Link to="/discover">
                 <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,175,55,0.35)] active:scale-[0.98]">
                   {c.ctaBtn}
