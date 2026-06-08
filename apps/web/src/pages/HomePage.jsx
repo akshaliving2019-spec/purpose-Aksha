@@ -66,7 +66,7 @@ const reviewsEN = [
     stars: 5,
   },
   {
-    name: 'Nelson R.',
+    name: 'Ricardo C.',
     country: 'Colombia',
     text: 'For the first time I have a clear direction — not based on what others expect, but on who I actually am.',
     stars: 5,
@@ -87,7 +87,7 @@ const reviewsES = [
     stars: 5,
   },
   {
-    name: 'Nelson R.',
+    name: 'Ricardo C.',
     country: 'Colombia',
     text: 'Por primera vez tengo una dirección clara — no basada en lo que otros esperan, sino en quién realmente soy.',
     stars: 5,

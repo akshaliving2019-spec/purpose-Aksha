@@ -205,7 +205,7 @@ const HumanBlueprintDiagram = () => {
   return (
     <section className="w-full bg-[#07142F] overflow-hidden">
       <div className="relative w-full flex justify-center px-4 md:px-8 py-4">
-        <div className="relative w-full max-w-[88%]">
+        <div className="relative w-full max-w-4xl mx-auto">
           <img
             src="/human-blueprint.jpg"
             alt="AKSHA LIFE — Mapa de Propósito Humano"
