@@ -4,46 +4,79 @@ import { Helmet } from 'react-helmet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { Brain, Sparkles, Activity, Layers, Compass } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
+
+const methodologiesES = [
+  {
+    icon: Layers,
+    title: 'Arquetipos de Personalidad',
+    description: 'Nos basamos en modelos psicológicos bien establecidos para mapear las estructuras fundamentales de tu carácter. Al comprender tu arquetipo central, podemos predecir cómo interactúas naturalmente con el mundo, resuelves problemas y encuentras plenitud.',
+  },
+  {
+    icon: Activity,
+    title: 'Ciclos y Ritmos de Vida',
+    description: 'El desarrollo humano no es lineal; opera en ciclos. Nuestro sistema calcula en qué punto de tu línea de tiempo de desarrollo te encuentras actualmente, ayudándote a alinear tus transiciones de carrera y decisiones de vida con tus períodos naturales de crecimiento e introspección.',
+  },
+  {
+    icon: Compass,
+    title: 'Patrones de Desarrollo',
+    description: 'Al analizar hitos clave del desarrollo, mapeamos la trayectoria de tu crecimiento. Esto ayuda a identificar las habilidades que estás naturalmente programado para dominar y el valor único que puedes ofrecer en un mundo cada vez más automatizado.',
+  },
+  {
+    icon: Brain,
+    title: 'Psicología de los Cinco Grandes',
+    description: 'Integrando principios de los Cinco Grandes rasgos de personalidad (Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo), proporcionamos una base científicamente fundamentada para entender tu estilo de trabajo, respuestas al estrés y dinámica de equipo.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Marco Junguiano',
+    description: 'Enraizado en la psicología analítica de Carl Jung, exploramos los impulsores más profundos, a menudo inconscientes, de tu comportamiento. Este marco ayuda a descubrir tu verdadera vocación, separando las expectativas sociales de tus motivaciones auténticas e intrínsecas.',
+  }
+];
+
+const methodologiesEN = [
+  {
+    icon: Layers,
+    title: 'Personality Archetypes',
+    description: 'We draw upon well-established psychological models to map out the foundational structures of your character. By understanding your core archetype, we can predict how you naturally interact with the world, solve problems, and find fulfillment.',
+  },
+  {
+    icon: Activity,
+    title: 'Life Cycles & Rhythms',
+    description: 'Human development isn\'t linear; it operates in cycles. Our system calculates where you currently stand in your developmental timeline, helping you align your career transitions and life choices with your natural periods of growth and introspection.',
+  },
+  {
+    icon: Compass,
+    title: 'Developmental Patterns',
+    description: 'By analyzing key developmental milestones, we map the trajectory of your growth. This helps identify the skills you are naturally wired to master and the unique value you can offer in an increasingly automated world.',
+  },
+  {
+    icon: Brain,
+    title: 'Big Five Psychology',
+    description: 'Integrating principles from the Big Five personality traits (Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism), we provide a scientifically grounded baseline to understand your working style, stress responses, and team dynamics.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Jungian Framework',
+    description: 'Rooted in Carl Jung\'s analytical psychology, we explore the deeper, often unconscious drivers of your behavior. This framework helps uncover your true calling, separating societal expectations from your authentic, intrinsic motivations.',
+  }
+];
 
 const SciencePage = () => {
-  const methodologies = [
-    {
-      icon: Layers,
-      title: 'Personality Archetypes',
-      description: 'We draw upon well-established psychological models to map out the foundational structures of your character. By understanding your core archetype, we can predict how you naturally interact with the world, solve problems, and find fulfillment.',
-    },
-    {
-      icon: Activity,
-      title: 'Life Cycles & Rhythms',
-      description: 'Human development isn\'t linear; it operates in cycles. Our system calculates where you currently stand in your developmental timeline, helping you align your career transitions and life choices with your natural periods of growth and introspection.',
-    },
-    {
-      icon: Compass,
-      title: 'Developmental Patterns',
-      description: 'By analyzing key developmental milestones, we map the trajectory of your growth. This helps identify the skills you are naturally wired to master and the unique value you can offer in an increasingly automated world.',
-    },
-    {
-      icon: Brain,
-      title: 'Big Five Psychology',
-      description: 'Integrating principles from the Big Five personality traits (Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism), we provide a scientifically grounded baseline to understand your working style, stress responses, and team dynamics.',
-    },
-    {
-      icon: Sparkles,
-      title: 'Jungian Framework',
-      description: 'Rooted in Carl Jung\'s analytical psychology, we explore the deeper, often unconscious drivers of your behavior. This framework helps uncover your true calling, separating societal expectations from your authentic, intrinsic motivations.',
-    }
-  ];
+  const { lang } = useLanguage();
+  const methodologies = lang === 'es' ? methodologiesES : methodologiesEN;
 
   return (
     <>
       <Helmet>
-        <title>The Science Behind AKSHA - Methodology</title>
-        <meta name="description" content="Discover the psychological frameworks and scientific methodologies powering AKSHA's purpose discovery engine." />
+        <title>{lang === 'es' ? 'La Ciencia detrás de AKSHA — Metodología' : 'The Science Behind AKSHA - Methodology'}</title>
+        <meta name="description" content={lang === 'es'
+          ? 'Descubre los marcos psicológicos y metodologías científicas que impulsan el motor de descubrimiento de propósito de AKSHA.'
+          : 'Discover the psychological frameworks and scientific methodologies powering AKSHA\'s purpose discovery engine.'} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
         <section className="py-24 relative overflow-hidden">
-          {/* Subtle background glow */}
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -54,10 +87,16 @@ const SciencePage = () => {
               className="max-w-3xl mx-auto text-center mb-20"
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-foreground" style={{ letterSpacing: '-0.02em' }}>
-                The Science of <span className="text-primary">Purpose</span>
+                {lang === 'es'
+                  ? <>{`La Ciencia del `}<span className="text-primary">Propósito</span></>
+                  : <>{'The Science of '}<span className="text-primary">Purpose</span></>
+                }
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                AKSHA combines established psychological frameworks with advanced developmental theories to create a holistic, highly accurate map of your innate potential.
+                {lang === 'es'
+                  ? 'AKSHA combina marcos psicológicos establecidos con teorías avanzadas del desarrollo para crear un mapa holístico y altamente preciso de tu potencial innato.'
+                  : 'AKSHA combines established psychological frameworks with advanced developmental theories to create a holistic, highly accurate map of your innate potential.'
+                }
               </p>
             </motion.div>
 

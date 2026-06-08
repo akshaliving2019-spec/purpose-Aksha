@@ -6,7 +6,6 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export const translations = {
   en: {
-    // Navigation
     nav: {
       home: 'Home',
       science: 'Science',
@@ -19,26 +18,25 @@ export const translations = {
       dashboard: 'Dashboard',
       whyWeExist: 'Why We Exist',
     },
-    // Home page
     home: {
       heroTitle: 'The Purpose of Your Life',
-      heroSubtitle: 'While AI transforms everything, AKSHA reveals the one thing it cannot replace — who you uniquely are.',
+      heroSubtitle: 'While AI transforms everything, AKSHA LIFE reveals the one thing it cannot replace — who you uniquely are.',
       discoverBtn: 'Discover Your Purpose',
-      scienceBtn: 'The Science Behind AKSHA',
-      whatAkshaTitle: 'What AKSHA does',
-      whatAkshaSubtitle: 'AKSHA acts as a mirror for your highest potential. By analyzing your unique temporal coordinates, we translate complex energetic patterns into clear, actionable life guidance.',
-      revealsTitle: 'Reveals Your Authentic Path',
-      revealsText: 'We cut through societal conditioning and familial expectations to reveal what you were genuinely designed to do. AKSHA helps you pivot from surviving to thriving by identifying the exact arenas where your natural gifts shine.',
-      translatesTitle: 'Translates Insight into Action',
-      translatesText: 'Insight without action is merely entertainment. AKSHA bridges the gap between deep self-awareness and practical reality, providing you with a structured roadmap to align your career and relationships with your true purpose.',
-      ctaTitle: 'Discover Your',
-      ctaHighlight: 'Human Blueprint',
-      ctaSubtitle: 'Transform your birth data into practical insights about your Energy, Strengths, Gifts, and Impact.',
-      ctaBtn: 'Generate My Purpose Profile',
+      scienceBtn: 'The Science Behind AKSHA LIFE',
+      whatAkshaTitle: 'What AKSHA LIFE does for you',
+      whatAkshaSubtitle: 'Enter your birth date. We give you a clear map of your natural talents, strengths, and purpose in life.\nNo astrology. No dogma. Just you.',
+      revealsTitle: 'Find Out Who You Really Are',
+      revealsText: 'Most people spend years figuring out what they\'re naturally built for. You don\'t have to. AKSHA LIFE maps your unique strengths, energy and purpose — and gives you a clear action plan for what\'s next.',
+      translatesTitle: 'Stop Guessing. Start Moving.',
+      translatesText: 'What if you woke up Monday knowing exactly where to focus your energy? AKSHA LIFE gives you a personalized map of your natural strengths and purpose — so you stop guessing and start moving. No astrology. No dogma. Just clarity.',
+      ctaTitle: 'Find Out Who',
+      ctaHighlight: 'You Really Are',
+      ctaSubtitle: 'Enter your birth date. Get a clear map of your natural talents, strengths and purpose.\nNo astrology. No dogma. Just you.',
+      ctaBtn: 'Get My Purpose Map',
+      reviewsTitle: 'What people discovered about themselves',
     },
   },
   es: {
-    // Navegación
     nav: {
       home: 'Inicio',
       science: 'Ciencia',
@@ -51,22 +49,22 @@ export const translations = {
       dashboard: 'Panel',
       whyWeExist: 'Por Qué Existimos',
     },
-    // Página de inicio
     home: {
       heroTitle: 'El Propósito de Tu Vida',
-      heroSubtitle: 'Mientras la IA transforma todo, AKSHA revela lo único que no puede reemplazar — quién eres tú de manera única.',
+      heroSubtitle: 'Mientras la IA transforma todo, AKSHA LIFE revela lo único que no puede reemplazar — quién eres tú de manera única.',
       discoverBtn: 'Descubre Tu Propósito',
-      scienceBtn: 'La Ciencia detrás de AKSHA',
-      whatAkshaTitle: 'Qué hace AKSHA',
-      whatAkshaSubtitle: 'AKSHA actúa como un espejo de tu máximo potencial. Al analizar tus coordenadas temporales únicas, traducimos patrones energéticos complejos en orientación de vida clara y accionable.',
-      revealsTitle: 'Revela Tu Camino Auténtico',
-      revealsText: 'Atravesamos el condicionamiento social y las expectativas familiares para revelar para qué fuiste genuinamente diseñado. AKSHA te ayuda a pasar de sobrevivir a prosperar, identificando las áreas exactas donde brillan tus dones naturales.',
-      translatesTitle: 'Transforma el Conocimiento en Acción',
-      translatesText: 'El conocimiento sin acción es simplemente entretenimiento. AKSHA cierra la brecha entre la autoconciencia profunda y la realidad práctica, brindándote una hoja de ruta estructurada para alinear tu carrera y relaciones con tu verdadero propósito.',
-      ctaTitle: 'Descubre Tu',
-      ctaHighlight: 'Huella de Propósito',
-      ctaSubtitle: 'Transforma tu fecha de nacimiento en un mapa práctico de tu Energía, Fortalezas, Dones e Impacto — único como tu huella digital.',
-      ctaBtn: 'Generar Mi Mapa de Propósito',
+      scienceBtn: 'La Ciencia detrás de AKSHA LIFE',
+      whatAkshaTitle: 'Lo que AKSHA LIFE hace por ti',
+      whatAkshaSubtitle: 'Introduces tu fecha de nacimiento.\nTe decimos quién eres realmente — tus talentos, tu energía, tu propósito.\nSin astrología. Sin dogmas. Solo tú.',
+      revealsTitle: 'Descubre Quién Eres Realmente',
+      revealsText: 'La mayoría de las personas pasan años intentando descubrir para qué están naturalmente hechas. Tú no tienes que hacerlo. AKSHA LIFE mapea tus fortalezas únicas, energía y propósito — y te da un plan de acción claro para lo que sigue.',
+      translatesTitle: 'Deja de Adivinar. Empieza a Moverte.',
+      translatesText: '¿Y si el lunes supieras exactamente dónde enfocar tu energía? AKSHA LIFE te da un mapa personalizado de tus fortalezas y propósito natural — para que dejes de adivinar y empieces a moverte. Sin astrología. Sin dogmas. Solo claridad.',
+      ctaTitle: 'Descubre Quién',
+      ctaHighlight: 'Eres Realmente',
+      ctaSubtitle: 'Introduce tu fecha de nacimiento. Recibe un mapa claro de tus talentos naturales, fortalezas y propósito.\nSin astrología. Sin dogmas. Solo tú.',
+      ctaBtn: 'Obtener Mi Mapa de Propósito',
+      reviewsTitle: 'Lo que otros descubrieron sobre sí mismos',
     },
   },
 };
