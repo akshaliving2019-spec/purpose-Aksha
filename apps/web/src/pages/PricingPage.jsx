@@ -15,7 +15,7 @@ const features = {
     '4 weeks of personalized weekly guidance based on your energy balance',
     'AI-synthesized — unique to your birth data',
     'Delivered to your email within 24–48 hours',
-    'No astrology. No dogma. Just you.',
+    'Neuroscience. Psychology. Archetypes. Chronobiology. All synthesized around you.',
   ],
   es: [
     'Informe de Propósito — 5 secciones: Dato · Análisis · Síntesis · Descubrimiento · Acción',
@@ -25,7 +25,7 @@ const features = {
     '4 semanas de guía semanal personalizada basada en tu balance energético',
     'Sintetizado por IA — único según tus datos de nacimiento',
     'Entregado a tu email en 24–48 horas',
-    'Sin astrología. Sin dogmas. Solo tú.',
+    'Neurociencia. Psicología. Arquetipos. Cronobiología. Todo sintetizado alrededor de ti.',
   ],
 };
 

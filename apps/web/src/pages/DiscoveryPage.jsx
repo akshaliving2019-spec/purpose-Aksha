@@ -215,7 +215,7 @@ const DiscoveryPage = () => {
                   </span>
                 </p>
                 <p className="text-xs mt-3 tracking-widest uppercase" style={{ color: 'rgba(212,175,55,0.5)' }}>
-                  {es ? 'Sin astrología · Sin dogmas · Solo tú' : 'No astrology · No dogma · Just you'}
+                  {es ? 'Neurociencia · Psicología · Arquetipos · Cronobiología' : 'Neuroscience · Psychology · Archetypes · Chronobiology'}
                 </p>
               </div>
 
