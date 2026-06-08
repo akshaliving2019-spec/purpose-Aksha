@@ -13,79 +13,101 @@ import { Calendar, Clock, MapPin, Sparkles, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Human silhouette — dark left half / outline right half + onion layers
+// Human silhouette — realistic standing figure, dark left / outline right, onion layers
 const HumanSilhouette = () => {
-  // Full human body path centered at cx=140, designed to look like the reference image
-  const bodyPath = `
-    M140,30
-    C128,30 118,40 118,53 C118,66 128,76 140,76 C152,76 162,66 162,53 C162,40 152,30 140,30 Z
-    M118,78 C105,82 96,90 92,102 C88,114 86,126 85,136 L82,158 C80,162 78,178 80,182 L86,182 L90,158 L92,182 L98,182 L100,160
-    L108,220 L106,270 L100,290 L108,292 L114,272 L118,240
-    L122,290 L130,292 L126,270 L124,220
-    L132,160 L134,182 L140,182 L140,160
-    L148,182 L154,182 L156,158 L160,182 L166,182 C168,178 166,162 164,158 L161,136 C160,126 158,114 154,102 C150,90 141,82 128,78 Z
-  `;
+  const { lang } = useLanguage();
+
+  // ViewBox: 0 0 280 580, center x=140
+  // HEAD circle: cx=140 cy=46 r=36
+
+  // BODY: torso + hips + legs (no arms — arms are separate shapes)
+  const BODY = `M108,84 C90,90 72,104 64,116 C62,126 64,155 66,175 C68,200 70,220 70,238 C70,255 68,275 68,295 C68,312 74,326 82,330 L78,428 L74,498 L70,528 L66,538 L98,538 L92,528 L96,498 L100,428 L104,334 L140,334 L176,334 L180,428 L184,498 L188,528 L182,538 L214,538 L210,528 L206,498 L202,428 L198,330 C206,326 212,312 212,295 C212,275 210,255 210,238 C210,220 212,200 214,175 C216,155 218,126 216,116 C208,104 190,90 172,84 C163,86 153,88 140,88 C127,88 117,86 108,84 Z`;
+
+  // LEFT ARM: hangs slightly outward from left shoulder (64,116)
+  const LEFT_ARM = `M64,116 C52,124 42,152 38,186 C34,220 36,256 40,280 C44,296 52,306 62,306 C70,306 76,296 76,280 C74,254 70,218 72,185 C74,154 80,128 84,118 C80,112 72,110 64,116 Z`;
+
+  // RIGHT ARM: mirror of left arm (right shoulder at 216,116)
+  const RIGHT_ARM = `M216,116 C208,110 200,112 196,118 C200,128 206,154 208,185 C210,218 206,254 204,280 C204,296 210,306 218,306 C228,306 236,296 240,280 C244,256 246,220 242,186 C238,152 228,124 216,116 Z`;
+
+  const leftLabels = lang === 'es'
+    ? ['miedos', 'expectativas', 'creencias', 'decepciones', 'prisión']
+    : ['fears', 'expectations', 'beliefs', 'disappointments', 'prison'];
+
+  const rightLabels = lang === 'es'
+    ? ['energía', 'fortalezas', 'don', 'propósito']
+    : ['energy', 'strengths', 'gift', 'purpose'];
+
+  const leftY  = [148, 192, 238, 280, 338];
+  const rightY = [148, 192, 238, 280];
 
   return (
-    <div className="flex justify-center my-8">
-      <svg viewBox="60 15 160 290" width="180" height="320" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="humanLeft">
-            <rect x="0" y="0" width="140" height="400" />
-          </clipPath>
-          <clipPath id="humanRight">
-            <rect x="140" y="0" width="200" height="400" />
-          </clipPath>
-          <radialGradient id="goldGlow2" cx="50%" cy="45%" r="50%">
-            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+    <div className="flex justify-center my-10 px-4">
+      {/* White card — matches reference image style */}
+      <div className="rounded-3xl overflow-hidden shadow-xl"
+        style={{ backgroundColor: '#f5f2ec', padding: '24px 16px' }}>
+        <svg viewBox="10 0 260 568" width="220" height="470" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="sil-left-v3">
+              <rect x="0" y="0" width="140" height="580" />
+            </clipPath>
+            <clipPath id="sil-right-v3">
+              <rect x="140" y="0" width="140" height="580" />
+            </clipPath>
+          </defs>
 
-        {/* Glow */}
-        <ellipse cx="140" cy="160" rx="85" ry="130" fill="url(#goldGlow2)" />
+          {/* Concentric dashed oval rings (gray, like reference) */}
+          {[
+            { rx: 115, ry: 208 },
+            { rx: 95,  ry: 174 },
+            { rx: 74,  ry: 142 },
+            { rx: 54,  ry: 110 },
+          ].map((ring, i) => (
+            <ellipse key={i} cx="140" cy="308"
+              rx={ring.rx} ry={ring.ry}
+              fill="none"
+              stroke="rgba(0,0,0,0.18)"
+              strokeWidth="1.5"
+              strokeDasharray="6 5"
+            />
+          ))}
 
-        {/* Onion layers — concentric ellipses */}
-        {[
-          { rx: 78, ry: 122, op: 0.18, dash: '5 4' },
-          { rx: 65, ry: 105, op: 0.14, dash: '4 4' },
-          { rx: 52, ry: 88,  op: 0.11, dash: '3 4' },
-          { rx: 40, ry: 72,  op: 0.08, dash: '2 4' },
-        ].map((l, i) => (
-          <ellipse key={i} cx="140" cy="163" rx={l.rx} ry={l.ry}
-            fill="none"
-            stroke={`rgba(212,175,55,${l.op})`}
-            strokeWidth="1.2"
-            strokeDasharray={l.dash}
-          />
-        ))}
+          {/* LEFT HALF — solid black fill */}
+          <g clipPath="url(#sil-left-v3)">
+            <circle cx="140" cy="46" r="36" fill="#0f0f0f" />
+            <path d={LEFT_ARM}  fill="#0f0f0f" />
+            <path d={RIGHT_ARM} fill="#0f0f0f" />
+            <path d={BODY}      fill="#0f0f0f" />
+          </g>
 
-        {/* Dark left half */}
-        <g clipPath="url(#humanLeft)">
-          <path d={bodyPath} fill="rgba(10,20,50,0.97)" />
-        </g>
+          {/* RIGHT HALF — outline only (black stroke, no fill) */}
+          <g clipPath="url(#sil-right-v3)">
+            <circle cx="140" cy="46" r="36" fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
+            <path d={LEFT_ARM}  fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
+            <path d={RIGHT_ARM} fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
+            <path d={BODY}      fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
+          </g>
 
-        {/* Outline right half */}
-        <g clipPath="url(#humanRight)">
-          <path d={bodyPath} fill="none" stroke="rgba(212,175,55,0.6)" strokeWidth="1.5" />
-        </g>
+          {/* Left labels — gray, layers that cover us */}
+          {leftLabels.map((label, i) => (
+            <text key={i} x="132" y={leftY[i]}
+              textAnchor="end" fontSize="11"
+              fill="rgba(40,40,40,0.6)"
+              fontFamily="Georgia, 'Times New Roman', serif">
+              {label}
+            </text>
+          ))}
 
-        {/* Center dividing line */}
-        <line x1="140" y1="25" x2="140" y2="295"
-          stroke="rgba(212,175,55,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
-
-        {/* Left labels — layers life adds */}
-        <text x="136" y="108" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.35)" fontFamily="sans-serif">miedos</text>
-        <text x="136" y="128" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.28)" fontFamily="sans-serif">expectativas</text>
-        <text x="136" y="148" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.22)" fontFamily="sans-serif">creencias</text>
-        <text x="136" y="168" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.16)" fontFamily="sans-serif">decepciones</text>
-
-        {/* Right labels — authentic self */}
-        <text x="144" y="108" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.75)" fontFamily="sans-serif">energía</text>
-        <text x="144" y="128" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.65)" fontFamily="sans-serif">fortalezas</text>
-        <text x="144" y="148" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.55)" fontFamily="sans-serif">don</text>
-        <text x="144" y="168" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.5)" fontFamily="sans-serif">propósito</text>
-      </svg>
+          {/* Right labels — gold, authentic self */}
+          {rightLabels.map((label, i) => (
+            <text key={i} x="148" y={rightY[i]}
+              textAnchor="start" fontSize="11"
+              fill="#8B6914"
+              fontFamily="Georgia, 'Times New Roman', serif">
+              {label}
+            </text>
+          ))}
+        </svg>
+      </div>
     </div>
   );
 };
