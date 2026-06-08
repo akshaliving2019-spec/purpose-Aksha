@@ -156,11 +156,11 @@ const PricingPage = () => {
                 </ul>
 
                 {/* CTA Button */}
-                <Link to="/checkout?plan=basic">
+                <a href="https://buy.stripe.com/00w7sE348fUH6LKbt14ZG00" target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="w-full text-base py-6 font-bold transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] active:scale-[0.98]">
                     {isEs ? 'Obtener Mi Reporte Ahora →' : 'Get My Report Now →'}
                   </Button>
-                </Link>
+                </a>
 
                 <p className="text-center text-xs text-white/30 mt-4">
                   {isEs
