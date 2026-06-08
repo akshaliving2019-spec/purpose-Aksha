@@ -191,8 +191,8 @@ const DiscoveryPage = () => {
                 </h1>
                 <p className="text-lg text-muted-foreground leading-relaxed max-w-prose mx-auto">
                   {es
-                    ? 'Introduce tu fecha de nacimiento. Nosotros hacemos el resto — sin astrología, sin dogmas.'
-                    : 'Enter your birth date. We do the rest — no astrology, no dogma.'}
+                    ? 'Introduce tu fecha de nacimiento. Neurociencia · Psicología · Arquetipos · Cronobiología.'
+                    : 'Enter your birth date. Neuroscience · Psychology · Archetypes · Chronobiology.'}
                 </p>
               </div>
 
