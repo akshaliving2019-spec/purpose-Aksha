@@ -13,74 +13,82 @@ import { Calendar, Clock, MapPin, Sparkles, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Human silhouette SVG with layers — dark half / light half
-const HumanSilhouette = () => (
-  <div className="flex justify-center my-10">
-    <svg viewBox="0 0 200 320" width="160" height="256" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="leftHalf">
-          <rect x="0" y="0" width="100" height="320" />
-        </clipPath>
-        <clipPath id="rightHalf">
-          <rect x="100" y="0" width="100" height="320" />
-        </clipPath>
-        <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-        </radialGradient>
-      </defs>
+// Human silhouette — dark left half / outline right half + onion layers
+const HumanSilhouette = () => {
+  // Full human body path centered at cx=140, designed to look like the reference image
+  const bodyPath = `
+    M140,30
+    C128,30 118,40 118,53 C118,66 128,76 140,76 C152,76 162,66 162,53 C162,40 152,30 140,30 Z
+    M118,78 C105,82 96,90 92,102 C88,114 86,126 85,136 L82,158 C80,162 78,178 80,182 L86,182 L90,158 L92,182 L98,182 L100,160
+    L108,220 L106,270 L100,290 L108,292 L114,272 L118,240
+    L122,290 L130,292 L126,270 L124,220
+    L132,160 L134,182 L140,182 L140,160
+    L148,182 L154,182 L156,158 L160,182 L166,182 C168,178 166,162 164,158 L161,136 C160,126 158,114 154,102 C150,90 141,82 128,78 Z
+  `;
 
-      {/* Glow background */}
-      <ellipse cx="100" cy="160" rx="90" ry="130" fill="url(#glowGold)" />
+  return (
+    <div className="flex justify-center my-8">
+      <svg viewBox="60 15 160 290" width="180" height="320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="humanLeft">
+            <rect x="0" y="0" width="140" height="400" />
+          </clipPath>
+          <clipPath id="humanRight">
+            <rect x="140" y="0" width="200" height="400" />
+          </clipPath>
+          <radialGradient id="goldGlow2" cx="50%" cy="45%" r="50%">
+            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+          </radialGradient>
+        </defs>
 
-      {/* Layers / rings around silhouette */}
-      {[85, 70, 55, 40].map((r, i) => (
-        <ellipse key={i} cx="100" cy="170" rx={r + 20} ry={r + 40}
-          fill="none"
-          stroke="rgba(212,175,55,0.15)"
-          strokeWidth="1"
-          strokeDasharray={i % 2 === 0 ? "4 3" : "none"}
-        />
-      ))}
+        {/* Glow */}
+        <ellipse cx="140" cy="160" rx="85" ry="130" fill="url(#goldGlow2)" />
 
-      {/* Silhouette shape — dark left half */}
-      <g clipPath="url(#leftHalf)">
-        {/* Head */}
-        <circle cx="100" cy="60" r="32" fill="rgba(7,20,47,0.95)" />
-        {/* Body */}
-        <path d="M60 95 Q55 130 50 160 L55 240 L95 240 L100 170 L105 240 L145 240 L150 160 Q145 130 140 95 Q120 80 100 80 Q80 80 60 95Z"
-          fill="rgba(7,20,47,0.95)" />
-      </g>
+        {/* Onion layers — concentric ellipses */}
+        {[
+          { rx: 78, ry: 122, op: 0.18, dash: '5 4' },
+          { rx: 65, ry: 105, op: 0.14, dash: '4 4' },
+          { rx: 52, ry: 88,  op: 0.11, dash: '3 4' },
+          { rx: 40, ry: 72,  op: 0.08, dash: '2 4' },
+        ].map((l, i) => (
+          <ellipse key={i} cx="140" cy="163" rx={l.rx} ry={l.ry}
+            fill="none"
+            stroke={`rgba(212,175,55,${l.op})`}
+            strokeWidth="1.2"
+            strokeDasharray={l.dash}
+          />
+        ))}
 
-      {/* Silhouette shape — light right half */}
-      <g clipPath="url(#rightHalf)">
-        {/* Head */}
-        <circle cx="100" cy="60" r="32" fill="rgba(212,175,55,0.15)" />
-        {/* Body */}
-        <path d="M60 95 Q55 130 50 160 L55 240 L95 240 L100 170 L105 240 L145 240 L150 160 Q145 130 140 95 Q120 80 100 80 Q80 80 60 95Z"
-          fill="rgba(212,175,55,0.12)" />
-      </g>
+        {/* Dark left half */}
+        <g clipPath="url(#humanLeft)">
+          <path d={bodyPath} fill="rgba(10,20,50,0.97)" />
+        </g>
 
-      {/* Center dividing line */}
-      <line x1="100" y1="20" x2="100" y2="250" stroke="rgba(212,175,55,0.5)" strokeWidth="1" strokeDasharray="4 3" />
+        {/* Outline right half */}
+        <g clipPath="url(#humanRight)">
+          <path d={bodyPath} fill="none" stroke="rgba(212,175,55,0.6)" strokeWidth="1.5" />
+        </g>
 
-      {/* Small dot at center top */}
-      <circle cx="100" cy="60" r="3" fill="#D4AF37" opacity="0.8" />
+        {/* Center dividing line */}
+        <line x1="140" y1="25" x2="140" y2="295"
+          stroke="rgba(212,175,55,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
 
-      {/* Layer labels — left side (dark = layers life adds) */}
-      <text x="85" y="105" textAnchor="end" fontSize="7" fill="rgba(255,255,255,0.3)" fontFamily="sans-serif">miedos</text>
-      <text x="85" y="125" textAnchor="end" fontSize="7" fill="rgba(255,255,255,0.25)" fontFamily="sans-serif">expectativas</text>
-      <text x="85" y="145" textAnchor="end" fontSize="7" fill="rgba(255,255,255,0.2)" fontFamily="sans-serif">creencias</text>
-      <text x="85" y="165" textAnchor="end" fontSize="7" fill="rgba(255,255,255,0.15)" fontFamily="sans-serif">decepciones</text>
+        {/* Left labels — layers life adds */}
+        <text x="136" y="108" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.35)" fontFamily="sans-serif">miedos</text>
+        <text x="136" y="128" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.28)" fontFamily="sans-serif">expectativas</text>
+        <text x="136" y="148" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.22)" fontFamily="sans-serif">creencias</text>
+        <text x="136" y="168" textAnchor="end" fontSize="6.5" fill="rgba(255,255,255,0.16)" fontFamily="sans-serif">decepciones</text>
 
-      {/* Layer labels — right side (light = authentic self) */}
-      <text x="115" y="105" textAnchor="start" fontSize="7" fill="rgba(212,175,55,0.7)" fontFamily="sans-serif">energía</text>
-      <text x="115" y="125" textAnchor="start" fontSize="7" fill="rgba(212,175,55,0.65)" fontFamily="sans-serif">fortalezas</text>
-      <text x="115" y="145" textAnchor="start" fontSize="7" fill="rgba(212,175,55,0.6)" fontFamily="sans-serif">don</text>
-      <text x="115" y="165" textAnchor="start" fontSize="7" fill="rgba(212,175,55,0.55)" fontFamily="sans-serif">propósito</text>
-    </svg>
-  </div>
-);
+        {/* Right labels — authentic self */}
+        <text x="144" y="108" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.75)" fontFamily="sans-serif">energía</text>
+        <text x="144" y="128" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.65)" fontFamily="sans-serif">fortalezas</text>
+        <text x="144" y="148" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.55)" fontFamily="sans-serif">don</text>
+        <text x="144" y="168" textAnchor="start" fontSize="6.5" fill="rgba(212,175,55,0.5)" fontFamily="sans-serif">propósito</text>
+      </svg>
+    </div>
+  );
+};
 
 const DiscoveryPage = () => {
   const { currentUser } = useAuth();

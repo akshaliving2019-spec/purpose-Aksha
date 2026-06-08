@@ -231,12 +231,12 @@ const PricingPage = () => {
             <p className="text-sm mb-10 font-medium" style={{ color: 'rgba(212,175,55,0.7)' }}>
               {isEs ? '$47 ahora · $79 pronto' : '$47 now · $79 soon'}
             </p>
-            <Link to="/checkout?plan=basic">
+            <a href="https://buy.stripe.com/00w7sE348fUH6LKbt14ZG00" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,168,75,0.3)] active:scale-[0.98]">
                 {isEs ? 'Obtener Mi Reporte — $47' : 'Get My Report — $47'}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-            </Link>
+            </a>
           </motion.div>
         </section>
 
