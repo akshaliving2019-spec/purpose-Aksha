@@ -13,103 +13,91 @@ import { Calendar, Clock, MapPin, Sparkles, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Human silhouette — single-path figure with arms integrated, matching reference image
+// Human silhouette — original dark-background version, +15% bigger, slightly clearer
 const HumanSilhouette = () => {
   const { lang } = useLanguage();
 
-  // ViewBox 0 0 280 580, center x=140
-  // Single path traces: neck → shoulder → outer arm → hand → inner arm → armpit →
-  // torso → hip → outer leg → foot → inner leg → crotch → mirror right → close
-
-  const HEAD_CX = 140, HEAD_CY = 48, HEAD_R = 37;
-
-  // TORSO + LEGS — shoulder at x=90 to leave visible gap from arm inner (x≈78)
-  const TORSO = `M112,86 C98,90 90,98 88,110 C86,122 88,152 90,178 C92,204 90,228 88,248 C86,268 84,286 84,306 C82,322 82,336 88,346 L82,422 L78,486 L74,532 L70,562 L70,572 L108,572 L104,562 L100,532 L98,486 L102,422 L112,352 C122,338 132,332 140,334 C148,332 158,338 168,352 L178,422 L182,486 L180,532 L176,562 L176,572 L210,572 L210,562 L206,532 L202,486 L198,422 L192,346 C198,336 198,322 196,306 C196,286 194,268 192,248 C190,228 188,204 190,178 C192,152 194,122 192,110 C190,98 182,90 168,86 C161,88 151,90 140,90 C129,90 119,88 112,86 Z`;
-
-  // LEFT ARM — narrow ~24px wide, inner x≈76-80, outer x≈52-56, gap from torso=12px
-  const LEFT_ARM = `M78,110 C64,116 52,146 48,182 C44,216 46,252 52,278 C56,294 64,304 72,302 C80,300 84,286 82,268 C78,242 74,206 76,178 C78,152 84,124 86,114 C82,108 78,108 78,110 Z`;
-
-  // RIGHT ARM — exact mirror (x → 280-x)
-  const RIGHT_ARM = `M202,110 C202,108 198,108 194,114 C196,124 202,152 204,178 C206,206 202,242 198,268 C196,286 200,300 208,302 C216,304 224,294 228,278 C234,252 236,216 232,182 C228,146 216,116 202,110 Z`;
-
   const leftLabels = lang === 'es'
-    ? ['miedos', 'expectativas', 'creencias', 'decepciones', 'prisión']
-    : ['fears', 'expectations', 'beliefs', 'disappointments', 'prison'];
+    ? ['miedos', 'expectativas', 'creencias', 'decepciones']
+    : ['fears', 'expectations', 'beliefs', 'disappointments'];
 
   const rightLabels = lang === 'es'
     ? ['energía', 'fortalezas', 'don', 'propósito']
     : ['energy', 'strengths', 'gift', 'purpose'];
 
-  const leftY  = [150, 196, 242, 286, 340];
-  const rightY = [150, 196, 242, 286];
-
   return (
-    <div className="flex justify-center my-10 px-4">
-      <div className="rounded-3xl overflow-hidden shadow-xl"
-        style={{ backgroundColor: '#f5f2ec', padding: '28px 18px' }}>
-        <svg viewBox="20 8 240 570" width="200" height="475" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <clipPath id="sil-left-v4">
-              <rect x="0" y="0" width="140" height="590" />
-            </clipPath>
-            <clipPath id="sil-right-v4">
-              <rect x="140" y="0" width="140" height="590" />
-            </clipPath>
-          </defs>
+    <div className="flex justify-center my-10">
+      <svg viewBox="0 0 200 320" width="207" height="331" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="hs-left-orig">
+            <rect x="0" y="0" width="100" height="320" />
+          </clipPath>
+          <clipPath id="hs-right-orig">
+            <rect x="100" y="0" width="100" height="320" />
+          </clipPath>
+          <radialGradient id="glowGoldOrig" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+          </radialGradient>
+        </defs>
 
-          {/* Concentric dashed oval rings — gray like reference image */}
-          {[
-            { rx: 122, ry: 214 },
-            { rx: 100, ry: 178 },
-            { rx: 78,  ry: 144 },
-            { rx: 56,  ry: 110 },
-          ].map((ring, i) => (
-            <ellipse key={i} cx="140" cy="316"
-              rx={ring.rx} ry={ring.ry}
-              fill="none"
-              stroke="rgba(0,0,0,0.2)"
-              strokeWidth="1.5"
-              strokeDasharray="7 5"
-            />
-          ))}
+        {/* Glow */}
+        <ellipse cx="100" cy="165" rx="88" ry="128" fill="url(#glowGoldOrig)" />
 
-          {/* LEFT HALF — solid black */}
-          <g clipPath="url(#sil-left-v4)">
-            <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill="#0d0d0d" />
-            <path d={LEFT_ARM}  fill="#0d0d0d" />
-            <path d={RIGHT_ARM} fill="#0d0d0d" />
-            <path d={TORSO}     fill="#0d0d0d" />
-          </g>
+        {/* Onion rings — gold dashed, clearly visible */}
+        {[
+          { rx: 105, ry: 145, op: 0.35 },
+          { rx: 88,  ry: 122, op: 0.28 },
+          { rx: 70,  ry: 99,  op: 0.22 },
+          { rx: 52,  ry: 76,  op: 0.16 },
+        ].map((ring, i) => (
+          <ellipse key={i} cx="100" cy="170"
+            rx={ring.rx} ry={ring.ry}
+            fill="none"
+            stroke={`rgba(212,175,55,${ring.op})`}
+            strokeWidth="1.2"
+            strokeDasharray="5 4"
+          />
+        ))}
 
-          {/* RIGHT HALF — outline only */}
-          <g clipPath="url(#sil-right-v4)">
-            <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
-            <path d={LEFT_ARM}  fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
-            <path d={RIGHT_ARM} fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
-            <path d={TORSO}     fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
-          </g>
+        {/* Body paths — head + torso/arms/legs */}
+        {/* LEFT HALF: slightly lighter navy so figure is visible */}
+        <g clipPath="url(#hs-left-orig)">
+          <circle cx="100" cy="50" r="28" fill="rgba(30,55,110,0.98)" />
+          <path d="M82,79 C68,83 58,92 54,104 C50,116 50,132 52,148 L50,190 L48,220 L54,228 L60,220 L64,190 L68,148 L72,220 L70,270 L66,290 L74,292 L78,272 L82,240 L86,272 L90,292 L98,290 L94,270 L92,220 L96,148 L100,220 L104,240 L108,272 L112,290 L120,292 L116,270 L114,220 L118,148 L122,190 L126,220 L132,228 L138,220 L136,190 L134,148 L136,132 L136,116 C136,104 130,94 118,88 L110,83 C106,82 103,81 100,81 C97,81 94,82 90,83 Z"
+            fill="rgba(30,55,110,0.98)" />
+        </g>
 
-          {/* Left labels */}
-          {leftLabels.map((label, i) => (
-            <text key={i} x="132" y={leftY[i]}
-              textAnchor="end" fontSize="10"
-              fill="rgba(30,30,30,0.55)"
-              fontFamily="Georgia, serif">
-              {label}
-            </text>
-          ))}
+        {/* RIGHT HALF: gold outline */}
+        <g clipPath="url(#hs-right-orig)">
+          <circle cx="100" cy="50" r="28" fill="none" stroke="rgba(212,175,55,0.7)" strokeWidth="1.5" />
+          <path d="M82,79 C68,83 58,92 54,104 C50,116 50,132 52,148 L50,190 L48,220 L54,228 L60,220 L64,190 L68,148 L72,220 L70,270 L66,290 L74,292 L78,272 L82,240 L86,272 L90,292 L98,290 L94,270 L92,220 L96,148 L100,220 L104,240 L108,272 L112,290 L120,292 L116,270 L114,220 L118,148 L122,190 L126,220 L132,228 L138,220 L136,190 L134,148 L136,132 L136,116 C136,104 130,94 118,88 L110,83 C106,82 103,81 100,81 C97,81 94,82 90,83 Z"
+            fill="none" stroke="rgba(212,175,55,0.7)" strokeWidth="1.5" />
+        </g>
 
-          {/* Right labels — gold */}
-          {rightLabels.map((label, i) => (
-            <text key={i} x="148" y={rightY[i]}
-              textAnchor="start" fontSize="10"
-              fill="#8B6914"
-              fontFamily="Georgia, serif">
-              {label}
-            </text>
-          ))}
-        </svg>
-      </div>
+        {/* Dividing line */}
+        <line x1="100" y1="18" x2="100" y2="300" stroke="rgba(212,175,55,0.35)" strokeWidth="0.8" strokeDasharray="3 3" />
+
+        {/* Left labels */}
+        {leftLabels.map((label, i) => (
+          <text key={i} x="94" y={108 + i * 22}
+            textAnchor="end" fontSize="7.5"
+            fill="rgba(255,255,255,0.38)"
+            fontFamily="Georgia, serif">
+            {label}
+          </text>
+        ))}
+
+        {/* Right labels — gold */}
+        {rightLabels.map((label, i) => (
+          <text key={i} x="106" y={108 + i * 22}
+            textAnchor="start" fontSize="7.5"
+            fill="rgba(212,175,55,0.75)"
+            fontFamily="Georgia, serif">
+            {label}
+          </text>
+        ))}
+      </svg>
     </div>
   );
 };
