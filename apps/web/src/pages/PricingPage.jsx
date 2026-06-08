@@ -8,26 +8,24 @@ import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
 const features = {
   en: [
-    'Complete Human Blueprint Analysis',
-    'Core Archetypal Profile',
-    'Emotional Processing Pattern',
-    'Talent Pattern Suite (4 dimensions)',
-    'Developmental Destiny Vector',
+    'Purpose Report — 5 sections: Data · Analysis · Synthesis · Discovery · Action',
     'Energy · Strengths · Gift · Impact Map',
-    '30+ page personalized Purpose Report (PDF)',
+    'Hidden Strengths — what you never knew about yourself',
+    'AI Future Relevance — what gets automated vs. what becomes more valuable in your profile',
+    '4 weeks of personalized weekly guidance based on your energy balance',
     'AI-synthesized — unique to your birth data',
-    'Delivered to your email within 24 hours',
+    'Delivered to your email within 24–48 hours',
+    'No astrology. No dogma. Just you.',
   ],
   es: [
-    'Análisis Completo del Mapa Humano',
-    'Perfil Arquetípico Central',
-    'Patrón de Procesamiento Emocional',
-    'Suite de Patrones de Talento (4 dimensiones)',
-    'Vector de Destino de Desarrollo',
+    'Informe de Propósito — 5 secciones: Dato · Análisis · Síntesis · Descubrimiento · Acción',
     'Mapa de Energía · Fortalezas · Don · Impacto',
-    'Reporte de Propósito de 30+ páginas (PDF)',
-    'Sintetizado por IA — único según tu fecha de nacimiento',
-    'Entregado a tu email en menos de 24 horas',
+    'Fortalezas Ocultas — lo que nunca supiste de ti mismo',
+    'Relevancia Futura con IA — qué se automatiza vs. qué se vuelve más valioso en tu perfil',
+    '4 semanas de guía semanal personalizada basada en tu balance energético',
+    'Sintetizado por IA — único según tus datos de nacimiento',
+    'Entregado a tu email en 24–48 horas',
+    'Sin astrología. Sin dogmas. Solo tú.',
   ],
 };
 
@@ -43,7 +41,7 @@ const faqs = {
     },
     {
       q: 'How is this different from other personality tests?',
-      a: 'AKSHA is not a test. It is a map built from your unique birth data — day, time, and place. Every report is generated fresh by AI, synthesizing decades of research into a deeply personal document.',
+      a: 'AKSHA LIFE is not a test. It is a personalized map built from your unique birth data. Every report follows a clear 5-step structure — Data, Analysis, Synthesis, Discovery, Action — so you always know what you are reading and why it matters.',
     },
     {
       q: 'What is your refund policy?',
@@ -61,7 +59,7 @@ const faqs = {
     },
     {
       q: '¿En qué se diferencia de otros tests de personalidad?',
-      a: 'AKSHA no es un test. Es un mapa construido desde tus datos únicos de nacimiento — día, hora y lugar. Cada reporte es generado por IA, sintetizando décadas de investigación en un documento profundamente personal.',
+      a: 'AKSHA LIFE no es un test. Es un mapa personalizado construido desde tus datos únicos de nacimiento. Cada informe sigue una estructura clara de 5 pasos — Dato, Análisis, Síntesis, Descubrimiento, Acción — para que siempre sepas qué estás leyendo y por qué importa.',
     },
     {
       q: '¿Cuál es su política de reembolso?',
