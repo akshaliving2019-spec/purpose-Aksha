@@ -64,9 +64,9 @@ export const translations = {
       translatesTitle: 'Transforma el Conocimiento en Acción',
       translatesText: 'El conocimiento sin acción es simplemente entretenimiento. AKSHA cierra la brecha entre la autoconciencia profunda y la realidad práctica, brindándote una hoja de ruta estructurada para alinear tu carrera y relaciones con tu verdadero propósito.',
       ctaTitle: 'Descubre Tu',
-      ctaHighlight: 'Mapa Humano',
-      ctaSubtitle: 'Transforma tu fecha de nacimiento en conocimientos prácticos sobre tu Energía, Fortalezas, Dones e Impacto.',
-      ctaBtn: 'Generar Mi Perfil de Propósito',
+      ctaHighlight: 'Huella de Propósito',
+      ctaSubtitle: 'Transforma tu fecha de nacimiento en un mapa práctico de tu Energía, Fortalezas, Dones e Impacto — único como tu huella digital.',
+      ctaBtn: 'Generar Mi Mapa de Propósito',
     },
   },
 };

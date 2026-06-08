@@ -206,6 +206,15 @@ const HomePage = () => {
               transition={{ duration: 0.6 }}
               className="max-w-3xl mx-auto text-center"
             >
+              {/* HUELLA IMAGE */}
+              <div className="flex justify-center mb-10">
+                <img
+                  src="/aksha-huella.png"
+                  alt="Tu Huella de Propósito"
+                  className="w-40 h-40 md:w-52 md:h-52 object-contain filter drop-shadow-[0_0_25px_rgba(212,175,55,0.35)]"
+                />
+              </div>
+
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
                 {t.home.ctaTitle} <span className="text-primary">{t.home.ctaHighlight}</span>
               </h2>
