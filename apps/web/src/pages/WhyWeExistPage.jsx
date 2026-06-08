@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
-import HumanBlueprintDiagram from '@/components/HumanBlueprintDiagram';
 
 const questionsEN = ['What do I do now?','Am I still useful?','Where do I fit?','What do I have that a machine doesn\'t?'];
 const questionsES = ['¿Qué hago ahora?','¿Sigo siendo útil?','¿Dónde encajo?','¿Qué tengo yo que una máquina no tiene?'];
@@ -257,9 +256,6 @@ const WhyWeExistPage = () => {
             </motion.p>
           </div>
         </section>
-
-        {/* ── HUMAN BLUEPRINT DIAGRAM ── */}
-        <HumanBlueprintDiagram />
 
         {/* ── CTA ── */}
         <section className="py-28 px-4 text-center relative overflow-hidden border-t"
