@@ -139,26 +139,50 @@ const HumanBlueprintDiagram = () => {
           />
           <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ backgroundColor: 'rgba(7,20,47,0.18)' }} />
 
-          {dimensionsEN.map(dim => (
+          {dimensionsEN.map((dim, i) => (
             <motion.button
               key={dim.id}
               onClick={() => setActivePopup(dim.id)}
-              whileHover={{ backgroundColor: 'rgba(212,175,55,0.12)' }}
-              className="absolute rounded-xl cursor-pointer transition-all duration-300"
+              className="absolute rounded-xl cursor-pointer"
               style={{
                 top: dim.panelTop,
                 left: dim.panelLeft,
                 width: dim.panelWidth,
                 height: dim.panelHeight,
-                border: '2px solid transparent',
               }}
-              onMouseEnter={e => e.currentTarget.style.border = '2px solid rgba(212,175,55,0.8)'}
-              onMouseLeave={e => e.currentTarget.style.border = '2px solid transparent'}
+              whileHover={{ backgroundColor: 'rgba(212,175,55,0.15)', scale: 1.02 }}
               title={`Ver más sobre ${dim.label}`}
-            />
+            >
+              {/* Pulsing border permanente */}
+              <motion.div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{ border: '2px solid rgba(212,175,55,0.7)' }}
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: 'easeInOut' }}
+              />
+              {/* Ícono tap en esquina superior derecha */}
+              <motion.div
+                className="absolute top-1 right-1 text-[10px] pointer-events-none"
+                style={{ color: 'rgba(212,175,55,0.9)' }}
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.4 }}
+              >
+                👆
+              </motion.div>
+            </motion.button>
           ))}
         </div>
       </div>
+
+      {/* Hint interactivo */}
+      <motion.p
+        className="text-center text-xs tracking-widest uppercase pb-6"
+        style={{ color: 'rgba(212,175,55,0.5)' }}
+        animate={{ opacity: [0.4, 0.9, 0.4] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        👆 Toca cada sección para explorar tu perfil
+      </motion.p>
 
       <AnimatePresence>
         {activeDim && (
