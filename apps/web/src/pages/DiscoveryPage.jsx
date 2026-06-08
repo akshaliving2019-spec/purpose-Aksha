@@ -13,21 +13,62 @@ import { Calendar, Clock, MapPin, Sparkles, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Human silhouette — realistic standing figure, dark left / outline right, onion layers
+// Human silhouette — single-path figure with arms integrated, matching reference image
 const HumanSilhouette = () => {
   const { lang } = useLanguage();
 
-  // ViewBox: 0 0 280 580, center x=140
-  // HEAD circle: cx=140 cy=46 r=36
+  // ViewBox 0 0 280 580, center x=140
+  // Single path traces: neck → shoulder → outer arm → hand → inner arm → armpit →
+  // torso → hip → outer leg → foot → inner leg → crotch → mirror right → close
 
-  // BODY: torso + hips + legs (no arms — arms are separate shapes)
-  const BODY = `M108,84 C90,90 72,104 64,116 C62,126 64,155 66,175 C68,200 70,220 70,238 C70,255 68,275 68,295 C68,312 74,326 82,330 L78,428 L74,498 L70,528 L66,538 L98,538 L92,528 L96,498 L100,428 L104,334 L140,334 L176,334 L180,428 L184,498 L188,528 L182,538 L214,538 L210,528 L206,498 L202,428 L198,330 C206,326 212,312 212,295 C212,275 210,255 210,238 C210,220 212,200 214,175 C216,155 218,126 216,116 C208,104 190,90 172,84 C163,86 153,88 140,88 C127,88 117,86 108,84 Z`;
+  const HEAD_CX = 140, HEAD_CY = 46, HEAD_R = 36;
 
-  // LEFT ARM: hangs slightly outward from left shoulder (64,116)
-  const LEFT_ARM = `M64,116 C52,124 42,152 38,186 C34,220 36,256 40,280 C44,296 52,306 62,306 C70,306 76,296 76,280 C74,254 70,218 72,185 C74,154 80,128 84,118 C80,112 72,110 64,116 Z`;
+  // TORSO + LEGS (NO arms — arms are truly separate with a gap)
+  // Torso outer left edge starts at x≈96 to create visible gap from arm inner (x≈74)
+  const TORSO = `
+    M 112,84
+    C 96,88 86,96 80,108
+    C 78,120 80,148 82,172
+    C 84,196 84,220 82,242
+    C 80,262 78,280 78,300
+    C 76,316 76,330 82,340
+    L 76,416 L 72,480 L 68,528 L 64,556 L 64,566
+    L 104,566 L 100,556 L 96,528 L 94,480 L 98,416
+    L 108,348
+    C 118,336 130,330 140,332
+    C 150,330 162,336 172,348
+    L 182,416 L 186,480 L 184,528 L 180,556 L 180,566
+    L 216,566 L 216,556 L 212,528 L 208,480 L 204,416
+    L 198,340
+    C 204,330 204,316 202,300
+    C 202,280 196,262 194,242
+    C 192,220 196,196 198,172
+    C 200,148 202,120 200,108
+    C 194,96 184,88 168,84
+    C 161,86 151,88 140,88
+    C 129,88 119,86 112,84 Z`;
 
-  // RIGHT ARM: mirror of left arm (right shoulder at 216,116)
-  const RIGHT_ARM = `M216,116 C208,110 200,112 196,118 C200,128 206,154 208,185 C210,218 206,254 204,280 C204,296 210,306 218,306 C228,306 236,296 240,280 C244,256 246,220 242,186 C238,152 228,124 216,116 Z`;
+  // LEFT ARM — inner edge at x≈66-74, torso outer at x≈80 → gap ≈14-20px
+  const LEFT_ARM = `
+    M 74,108
+    C 58,116 42,148 36,186
+    C 30,222 32,260 38,288
+    C 42,306 52,318 64,316
+    C 74,314 80,302 78,284
+    C 74,256 70,218 72,184
+    C 74,152 80,122 82,112
+    C 78,106 76,106 74,108 Z`;
+
+  // RIGHT ARM — mirror of left (x → 280-x)
+  const RIGHT_ARM = `
+    M 206,108
+    C 204,106 202,106 198,112
+    C 200,122 206,152 208,184
+    C 210,218 206,256 202,284
+    C 200,302 206,314 216,316
+    C 228,318 238,306 242,288
+    C 248,260 250,222 244,186
+    C 238,148 222,116 206,108 Z`;
 
   const leftLabels = lang === 'es'
     ? ['miedos', 'expectativas', 'creencias', 'decepciones', 'prisión']
@@ -37,72 +78,71 @@ const HumanSilhouette = () => {
     ? ['energía', 'fortalezas', 'don', 'propósito']
     : ['energy', 'strengths', 'gift', 'purpose'];
 
-  const leftY  = [148, 192, 238, 280, 338];
-  const rightY = [148, 192, 238, 280];
+  const leftY  = [150, 196, 242, 286, 340];
+  const rightY = [150, 196, 242, 286];
 
   return (
     <div className="flex justify-center my-10 px-4">
-      {/* White card — matches reference image style */}
       <div className="rounded-3xl overflow-hidden shadow-xl"
-        style={{ backgroundColor: '#f5f2ec', padding: '24px 16px' }}>
-        <svg viewBox="10 0 260 568" width="220" height="470" xmlns="http://www.w3.org/2000/svg">
+        style={{ backgroundColor: '#f5f2ec', padding: '28px 18px' }}>
+        <svg viewBox="20 8 240 570" width="200" height="475" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <clipPath id="sil-left-v3">
-              <rect x="0" y="0" width="140" height="580" />
+            <clipPath id="sil-left-v4">
+              <rect x="0" y="0" width="140" height="590" />
             </clipPath>
-            <clipPath id="sil-right-v3">
-              <rect x="140" y="0" width="140" height="580" />
+            <clipPath id="sil-right-v4">
+              <rect x="140" y="0" width="140" height="590" />
             </clipPath>
           </defs>
 
-          {/* Concentric dashed oval rings (gray, like reference) */}
+          {/* Concentric dashed oval rings — gray like reference image */}
           {[
-            { rx: 115, ry: 208 },
-            { rx: 95,  ry: 174 },
-            { rx: 74,  ry: 142 },
-            { rx: 54,  ry: 110 },
+            { rx: 122, ry: 214 },
+            { rx: 100, ry: 178 },
+            { rx: 78,  ry: 144 },
+            { rx: 56,  ry: 110 },
           ].map((ring, i) => (
-            <ellipse key={i} cx="140" cy="308"
+            <ellipse key={i} cx="140" cy="316"
               rx={ring.rx} ry={ring.ry}
               fill="none"
-              stroke="rgba(0,0,0,0.18)"
+              stroke="rgba(0,0,0,0.2)"
               strokeWidth="1.5"
-              strokeDasharray="6 5"
+              strokeDasharray="7 5"
             />
           ))}
 
-          {/* LEFT HALF — solid black fill */}
-          <g clipPath="url(#sil-left-v3)">
-            <circle cx="140" cy="46" r="36" fill="#0f0f0f" />
-            <path d={LEFT_ARM}  fill="#0f0f0f" />
-            <path d={RIGHT_ARM} fill="#0f0f0f" />
-            <path d={BODY}      fill="#0f0f0f" />
+          {/* LEFT HALF — solid black */}
+          <g clipPath="url(#sil-left-v4)">
+            <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill="#0d0d0d" />
+            <path d={LEFT_ARM}  fill="#0d0d0d" />
+            <path d={RIGHT_ARM} fill="#0d0d0d" />
+            <path d={TORSO}     fill="#0d0d0d" />
           </g>
 
-          {/* RIGHT HALF — outline only (black stroke, no fill) */}
-          <g clipPath="url(#sil-right-v3)">
-            <circle cx="140" cy="46" r="36" fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
-            <path d={LEFT_ARM}  fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
-            <path d={RIGHT_ARM} fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
-            <path d={BODY}      fill="none" stroke="#0f0f0f" strokeWidth="2.2" />
+          {/* RIGHT HALF — outline only */}
+          <g clipPath="url(#sil-right-v4)">
+            <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
+            <path d={LEFT_ARM}  fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
+            <path d={RIGHT_ARM} fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
+            <path d={TORSO}     fill="none" stroke="#0d0d0d" strokeWidth="2.5" />
           </g>
 
-          {/* Left labels — gray, layers that cover us */}
+          {/* Left labels */}
           {leftLabels.map((label, i) => (
             <text key={i} x="132" y={leftY[i]}
-              textAnchor="end" fontSize="11"
-              fill="rgba(40,40,40,0.6)"
-              fontFamily="Georgia, 'Times New Roman', serif">
+              textAnchor="end" fontSize="10"
+              fill="rgba(30,30,30,0.55)"
+              fontFamily="Georgia, serif">
               {label}
             </text>
           ))}
 
-          {/* Right labels — gold, authentic self */}
+          {/* Right labels — gold */}
           {rightLabels.map((label, i) => (
             <text key={i} x="148" y={rightY[i]}
-              textAnchor="start" fontSize="11"
+              textAnchor="start" fontSize="10"
               fill="#8B6914"
-              fontFamily="Georgia, 'Times New Roman', serif">
+              fontFamily="Georgia, serif">
               {label}
             </text>
           ))}
