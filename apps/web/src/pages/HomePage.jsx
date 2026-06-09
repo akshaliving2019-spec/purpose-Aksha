@@ -155,7 +155,7 @@ const HomePage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-2xl mx-auto">
-              <Link to="/discover" className="w-full sm:w-auto">
+              <Link to="/checkout" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full text-lg px-8 py-6 transition-all duration-300 hover:shadow-[0_0_20px_rgba(200,168,75,0.3)] active:scale-[0.98]">
                   {t.home.discoverBtn}
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -316,7 +316,7 @@ const HomePage = () => {
               <p className="text-xl text-muted-foreground mb-12 leading-relaxed whitespace-pre-line text-balance">
                 {t.home.ctaSubtitle}
               </p>
-              <Link to="/discover">
+              <Link to="/checkout">
                 <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,168,75,0.3)] active:scale-[0.98]">
                   {t.home.ctaBtn}
                   <ArrowRight className="ml-2 w-6 h-6" />

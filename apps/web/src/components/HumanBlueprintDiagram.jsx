@@ -183,7 +183,7 @@ const Popup = ({ dim, onClose, lang }) => {
         </div>
 
         <Link
-          to="/discover"
+          to="/checkout"
           onClick={onClose}
           className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]"
           style={{ backgroundColor: '#D4AF37', color: '#07142F' }}
