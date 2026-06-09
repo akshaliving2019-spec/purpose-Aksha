@@ -178,120 +178,179 @@ const SciencePage = () => {
         </section>
 
         {/* ── AI SYNTHESIS VISUAL ── */}
-        <section className="py-24 px-4">
-          <div className="max-w-3xl mx-auto">
-            <motion.div {...fadeUp(0)} className="text-center mb-16">
-              <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.65)' }}>
+        <section className="py-28 px-4 relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 70%)' }} />
+          <div className="max-w-4xl mx-auto relative z-10">
+
+            {/* Title */}
+            <motion.div {...fadeUp(0)} className="text-center mb-20">
+              <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-5" style={{ color: 'rgba(212,175,55,0.65)' }}>
                 {es ? 'El poder de la síntesis' : 'The power of synthesis'}
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6" style={{ letterSpacing: '-0.02em' }}>
                 {es
-                  ? <>Lo que antes tomaba <span className="text-primary">semanas,</span><br />ahora sucede en segundos.</>
-                  : <>What used to take <span className="text-primary">weeks,</span><br />now happens in seconds.</>}
+                  ? <>Lo que antes tomaba <span className="text-primary">semanas,</span><br />ahora sucede en <span className="text-primary">segundos.</span></>
+                  : <>What used to take <span className="text-primary">weeks,</span><br />now happens in <span className="text-primary">seconds.</span></>}
               </h2>
-              <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
                 {es
-                  ? 'Para entenderte profundamente, un especialista humano necesitaría dominar cinco disciplinas distintas, leer miles de estudios y pasar meses integrando ese conocimiento aplicado a tu caso único. La IA hace exactamente eso — pero en el momento en que ingresas tu fecha de nacimiento.'
-                  : 'To understand you deeply, a human specialist would need to master five distinct disciplines, read thousands of studies, and spend months integrating that knowledge applied to your unique case. AI does exactly that — in the moment you enter your birth date.'}
+                  ? 'Un especialista humano necesitaría dominar cinco disciplinas, leer miles de estudios y pasar meses integrando ese conocimiento. La IA lo hace en el momento en que ingresas tu fecha de nacimiento.'
+                  : 'A human specialist would need to master five disciplines, read thousands of studies, and spend months integrating that knowledge. AI does it the moment you enter your birth date.'}
               </p>
             </motion.div>
 
-            {/* Visual: disciplines → AI → you */}
-            <motion.div {...fadeUp(0.1)} className="relative">
-              {/* Disciplines column */}
-              <div className="flex flex-col md:flex-row items-center gap-6 md:gap-0">
+            {/* Radial diagram */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative flex items-center justify-center"
+              style={{ height: '520px' }}
+            >
+              {/* SVG lines */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.7"/>
+                    <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.15"/>
+                  </linearGradient>
+                  <linearGradient id="lineGrad2" x1="100%" y1="0%" x2="0%" y2="0%">
+                    <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.7"/>
+                    <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.15"/>
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                {/* Lines from disciplines to center */}
+                {[52, 130, 208, 286, 364].map((y, i) => (
+                  <motion.line key={i}
+                    x1="210" y1={y} x2="400" y2="260"
+                    stroke="url(#lineGrad1)" strokeWidth="1.5"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.3 + i * 0.1 }}
+                    filter="url(#glow)"
+                  />
+                ))}
+                {/* Lines from center to outputs */}
+                {[80, 170, 260, 350, 440].map((y, i) => (
+                  <motion.line key={i}
+                    x1="400" y1="260" x2="590" y2={y}
+                    stroke="url(#lineGrad2)" strokeWidth="1.5"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.7 + i * 0.1 }}
+                    filter="url(#glow)"
+                  />
+                ))}
+                {/* Orbiting ring */}
+                <motion.circle cx="400" cy="260" r="55"
+                  fill="none" stroke="rgba(212,175,55,0.15)" strokeWidth="1" strokeDasharray="4 6"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                />
+                <motion.circle cx="400" cy="260" r="75"
+                  fill="none" stroke="rgba(212,175,55,0.08)" strokeWidth="1" strokeDasharray="2 8"
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                />
+              </svg>
 
-                {/* Left: 5 disciplines */}
-                <div className="flex flex-col gap-3 md:w-2/5 w-full">
-                  {(es ? [
-                    { label: 'Psicología Junguiana', sub: '100 años de investigación' },
-                    { label: 'Big Five', sub: '50+ años de estudios' },
-                    { label: 'Cronobiología', sub: 'Ciclos y ritmos vitales' },
-                    { label: 'Arquetipos', sub: 'Patrones universales' },
-                    { label: 'Psicología del Desarrollo', sub: 'Trayectorias de crecimiento' },
-                  ] : [
-                    { label: 'Jungian Psychology', sub: '100 years of research' },
-                    { label: 'Big Five', sub: '50+ years of studies' },
-                    { label: 'Chronobiology', sub: 'Life cycles & rhythms' },
-                    { label: 'Archetypes', sub: 'Universal patterns' },
-                    { label: 'Developmental Psychology', sub: 'Growth trajectories' },
-                  ]).map((item, i) => (
-                    <motion.div key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
-                      className="rounded-xl px-4 py-3"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p className="text-sm font-semibold text-white">{item.label}</p>
-                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{item.sub}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Center: AI node */}
-                <div className="md:w-1/5 flex flex-col items-center gap-3 py-4">
-                  {/* Connecting lines (desktop) */}
-                  <div className="hidden md:flex flex-col items-center w-full">
-                    <div className="w-full h-px mb-1" style={{ background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.4))' }} />
-                  </div>
-                  <motion.div
-                    animate={{ boxShadow: ['0 0 20px rgba(212,175,55,0.2)', '0 0 40px rgba(212,175,55,0.5)', '0 0 20px rgba(212,175,55,0.2)'] }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
-                    className="w-16 h-16 rounded-full flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg, #D4AF37, #B8942A)', flexShrink: 0 }}>
-                    <Zap className="w-7 h-7 text-black" />
+              {/* Left: disciplines */}
+              <div className="absolute left-0 flex flex-col gap-3" style={{ width: '200px' }}>
+                {(es ? [
+                  { label: 'Psicología Junguiana', sub: '100 años' },
+                  { label: 'Big Five', sub: '50+ estudios' },
+                  { label: 'Cronobiología', sub: 'Ciclos vitales' },
+                  { label: 'Arquetipos', sub: 'Patrones universales' },
+                  { label: 'Psic. del Desarrollo', sub: 'Trayectorias' },
+                ] : [
+                  { label: 'Jungian Psychology', sub: '100 years' },
+                  { label: 'Big Five', sub: '50+ studies' },
+                  { label: 'Chronobiology', sub: 'Life cycles' },
+                  { label: 'Archetypes', sub: 'Universal patterns' },
+                  { label: 'Dev. Psychology', sub: 'Trajectories' },
+                ]).map((item, i) => (
+                  <motion.div key={i}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
+                    className="rounded-xl px-3 py-2.5 text-right"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
+                    <p className="text-xs font-semibold text-white leading-tight">{item.label}</p>
+                    <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>{item.sub}</p>
                   </motion.div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-center" style={{ color: '#D4AF37' }}>
-                    {es ? 'IA AKSHA' : 'AKSHA AI'}
-                  </p>
-                  <div className="hidden md:flex flex-col items-center w-full">
-                    <div className="w-full h-px mt-1" style={{ background: 'linear-gradient(to left, transparent, rgba(212,175,55,0.4))' }} />
-                  </div>
-                </div>
+                ))}
+              </div>
 
-                {/* Right: output */}
+              {/* Center: AKSHA AI node */}
+              <div className="absolute flex flex-col items-center" style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className="md:w-2/5 w-full rounded-2xl p-6"
-                  style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.04))', border: '1.5px solid rgba(212,175,55,0.35)' }}>
-                  <p className="text-xs uppercase tracking-widest font-bold mb-3" style={{ color: '#D4AF37' }}>
-                    {es ? 'Tu mapa único' : 'Your unique map'}
-                  </p>
-                  {(es ? [
-                    'Quién eres en el núcleo',
-                    'Tus fortalezas reales',
-                    'Tu don específico',
-                    'Tu fase de ciclo vital',
-                    'Tu dirección de propósito',
-                  ] : [
-                    'Who you are at the core',
-                    'Your real strengths',
-                    'Your specific gift',
-                    'Your life cycle phase',
-                    'Your purpose direction',
-                  ]).map((line, i) => (
-                    <motion.div key={i}
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.6 + i * 0.1 }}
-                      className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: '#D4AF37' }} />
-                      <p className="text-sm text-white/80">{line}</p>
-                    </motion.div>
-                  ))}
-                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(212,175,55,0.2)' }}>
-                    <p className="text-xs font-bold" style={{ color: 'rgba(212,175,55,0.7)' }}>
-                      ⚡ {es ? 'Generado en segundos. No en semanas.' : 'Generated in seconds. Not weeks.'}
-                    </p>
-                  </div>
+                  animate={{
+                    boxShadow: [
+                      '0 0 30px rgba(212,175,55,0.3), 0 0 60px rgba(212,175,55,0.1)',
+                      '0 0 50px rgba(212,175,55,0.6), 0 0 100px rgba(212,175,55,0.2)',
+                      '0 0 30px rgba(212,175,55,0.3), 0 0 60px rgba(212,175,55,0.1)',
+                    ]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="w-20 h-20 rounded-full flex items-center justify-center mb-2"
+                  style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #8B6914 100%)' }}>
+                  <Zap className="w-8 h-8 text-black" />
                 </motion.div>
+                <motion.p
+                  animate={{ opacity: [0.6, 1, 0.6] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: '#D4AF37' }}>
+                  AKSHA AI
+                </motion.p>
+              </div>
+
+              {/* Right: outputs */}
+              <div className="absolute right-0 flex flex-col gap-3" style={{ width: '185px' }}>
+                {(es ? [
+                  'Quién eres en el núcleo',
+                  'Tus fortalezas reales',
+                  'Tu don específico',
+                  'Tu fase de ciclo vital',
+                  'Tu dirección de propósito',
+                ] : [
+                  'Who you are at the core',
+                  'Your real strengths',
+                  'Your specific gift',
+                  'Your life cycle phase',
+                  'Your purpose direction',
+                ]).map((line, i) => (
+                  <motion.div key={i}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.7 + i * 0.1 }}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+                    style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.04))', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <motion.div
+                      animate={{ scale: [1, 1.4, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: '#D4AF37' }} />
+                    <p className="text-xs text-white/80 leading-tight">{line}</p>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
+
+            {/* Caption */}
+            <motion.p {...fadeUp(0.3)} className="text-center text-sm mt-8 font-medium" style={{ color: 'rgba(212,175,55,0.6)' }}>
+              ⚡ {es ? 'Generado en segundos. Lo que antes tomaba semanas.' : 'Generated in seconds. What used to take weeks.'}
+            </motion.p>
           </div>
         </section>
 
