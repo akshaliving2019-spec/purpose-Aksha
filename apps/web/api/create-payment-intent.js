@@ -1,7 +1,7 @@
 // Vercel Serverless Function — creates a Stripe PaymentIntent with user birth data
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
