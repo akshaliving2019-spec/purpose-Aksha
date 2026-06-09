@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, Sparkles, ArrowRight, Shield, Zap, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
 const features = {
@@ -156,11 +157,11 @@ const PricingPage = () => {
                 </ul>
 
                 {/* CTA Button */}
-                <a href="https://buy.stripe.com/00w7sE348fUH6LKbt14ZG00" target="_blank" rel="noopener noreferrer">
+                <Link to="/checkout">
                   <Button size="lg" className="w-full text-base py-6 font-bold transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] active:scale-[0.98]">
                     {isEs ? 'Obtener Mi Reporte Ahora →' : 'Get My Report Now →'}
                   </Button>
-                </a>
+                </Link>
 
                 <p className="text-center text-xs text-white/30 mt-4">
                   {isEs
@@ -231,12 +232,12 @@ const PricingPage = () => {
             <p className="text-sm mb-10 font-medium" style={{ color: 'rgba(212,175,55,0.7)' }}>
               {isEs ? '$47 ahora · $79 pronto' : '$47 now · $79 soon'}
             </p>
-            <a href="https://buy.stripe.com/00w7sE348fUH6LKbt14ZG00" target="_blank" rel="noopener noreferrer">
+            <Link to="/checkout">
               <Button size="lg" className="text-lg px-10 py-7 transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,168,75,0.3)] active:scale-[0.98]">
                 {isEs ? 'Obtener Mi Reporte — $47' : 'Get My Report — $47'}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-            </a>
+            </Link>
           </motion.div>
         </section>
 
