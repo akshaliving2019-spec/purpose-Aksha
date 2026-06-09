@@ -177,6 +177,124 @@ const SciencePage = () => {
           </div>
         </section>
 
+        {/* ── AI SYNTHESIS VISUAL ── */}
+        <section className="py-24 px-4">
+          <div className="max-w-3xl mx-auto">
+            <motion.div {...fadeUp(0)} className="text-center mb-16">
+              <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.65)' }}>
+                {es ? 'El poder de la síntesis' : 'The power of synthesis'}
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ letterSpacing: '-0.02em' }}>
+                {es
+                  ? <>Lo que antes tomaba <span className="text-primary">semanas,</span><br />ahora sucede en segundos.</>
+                  : <>What used to take <span className="text-primary">weeks,</span><br />now happens in seconds.</>}
+              </h2>
+              <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {es
+                  ? 'Para entenderte profundamente, un especialista humano necesitaría dominar cinco disciplinas distintas, leer miles de estudios y pasar meses integrando ese conocimiento aplicado a tu caso único. La IA hace exactamente eso — pero en el momento en que ingresas tu fecha de nacimiento.'
+                  : 'To understand you deeply, a human specialist would need to master five distinct disciplines, read thousands of studies, and spend months integrating that knowledge applied to your unique case. AI does exactly that — in the moment you enter your birth date.'}
+              </p>
+            </motion.div>
+
+            {/* Visual: disciplines → AI → you */}
+            <motion.div {...fadeUp(0.1)} className="relative">
+              {/* Disciplines column */}
+              <div className="flex flex-col md:flex-row items-center gap-6 md:gap-0">
+
+                {/* Left: 5 disciplines */}
+                <div className="flex flex-col gap-3 md:w-2/5 w-full">
+                  {(es ? [
+                    { label: 'Psicología Junguiana', sub: '100 años de investigación' },
+                    { label: 'Big Five', sub: '50+ años de estudios' },
+                    { label: 'Cronobiología', sub: 'Ciclos y ritmos vitales' },
+                    { label: 'Arquetipos', sub: 'Patrones universales' },
+                    { label: 'Psicología del Desarrollo', sub: 'Trayectorias de crecimiento' },
+                  ] : [
+                    { label: 'Jungian Psychology', sub: '100 years of research' },
+                    { label: 'Big Five', sub: '50+ years of studies' },
+                    { label: 'Chronobiology', sub: 'Life cycles & rhythms' },
+                    { label: 'Archetypes', sub: 'Universal patterns' },
+                    { label: 'Developmental Psychology', sub: 'Growth trajectories' },
+                  ]).map((item, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
+                      className="rounded-xl px-4 py-3"
+                      style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      <p className="text-sm font-semibold text-white">{item.label}</p>
+                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{item.sub}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Center: AI node */}
+                <div className="md:w-1/5 flex flex-col items-center gap-3 py-4">
+                  {/* Connecting lines (desktop) */}
+                  <div className="hidden md:flex flex-col items-center w-full">
+                    <div className="w-full h-px mb-1" style={{ background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.4))' }} />
+                  </div>
+                  <motion.div
+                    animate={{ boxShadow: ['0 0 20px rgba(212,175,55,0.2)', '0 0 40px rgba(212,175,55,0.5)', '0 0 20px rgba(212,175,55,0.2)'] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                    className="w-16 h-16 rounded-full flex items-center justify-center"
+                    style={{ background: 'linear-gradient(135deg, #D4AF37, #B8942A)', flexShrink: 0 }}>
+                    <Zap className="w-7 h-7 text-black" />
+                  </motion.div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-center" style={{ color: '#D4AF37' }}>
+                    {es ? 'IA AKSHA' : 'AKSHA AI'}
+                  </p>
+                  <div className="hidden md:flex flex-col items-center w-full">
+                    <div className="w-full h-px mt-1" style={{ background: 'linear-gradient(to left, transparent, rgba(212,175,55,0.4))' }} />
+                  </div>
+                </div>
+
+                {/* Right: output */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="md:w-2/5 w-full rounded-2xl p-6"
+                  style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.04))', border: '1.5px solid rgba(212,175,55,0.35)' }}>
+                  <p className="text-xs uppercase tracking-widest font-bold mb-3" style={{ color: '#D4AF37' }}>
+                    {es ? 'Tu mapa único' : 'Your unique map'}
+                  </p>
+                  {(es ? [
+                    'Quién eres en el núcleo',
+                    'Tus fortalezas reales',
+                    'Tu don específico',
+                    'Tu fase de ciclo vital',
+                    'Tu dirección de propósito',
+                  ] : [
+                    'Who you are at the core',
+                    'Your real strengths',
+                    'Your specific gift',
+                    'Your life cycle phase',
+                    'Your purpose direction',
+                  ]).map((line, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.6 + i * 0.1 }}
+                      className="flex items-center gap-2 mb-2">
+                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: '#D4AF37' }} />
+                      <p className="text-sm text-white/80">{line}</p>
+                    </motion.div>
+                  ))}
+                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(212,175,55,0.2)' }}>
+                    <p className="text-xs font-bold" style={{ color: 'rgba(212,175,55,0.7)' }}>
+                      ⚡ {es ? 'Generado en segundos. No en semanas.' : 'Generated in seconds. Not weeks.'}
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* ── PILLARS ── */}
         <section className="py-24 px-4">
           <div className="max-w-3xl mx-auto">
