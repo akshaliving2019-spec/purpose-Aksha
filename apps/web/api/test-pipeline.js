@@ -66,6 +66,12 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('❌ [test] Error en pipeline:', error);
-    return res.status(500).json({ ok: false, pasos, error: String(error) });
+    // No incluir error.cause en la respuesta: puede contener headers con secretos.
+    return res.status(500).json({
+      ok: false,
+      pasos,
+      error: String(error),
+      status: error?.status ?? null,
+    });
   }
 }

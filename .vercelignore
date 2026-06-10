@@ -1,7 +1,10 @@
 # Excluir del upload a Vercel (el proyecto solo construye apps/web)
-prompts/
-apps/pocketbase/
-apps/api/
-dist/
-node_modules/
-.git/
+.git
+**/.git
+prompts
+apps/pocketbase
+apps/api
+apps/carta-service
+dist
+node_modules
+**/node_modules

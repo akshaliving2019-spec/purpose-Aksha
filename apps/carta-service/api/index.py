@@ -415,47 +415,45 @@ def main():
 # ─────────────────────────────────────────────────────────────────────────────
 # Handler para Vercel (Python Serverless Function)
 # ─────────────────────────────────────────────────────────────────────────────
-try:
-    from http.server import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler
 
-    class handler(BaseHTTPRequestHandler):
-        def _responder(self, codigo, cuerpo):
-            datos = json.dumps(cuerpo, ensure_ascii=False).encode("utf-8")
-            self.send_response(codigo)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(datos)))
-            self.end_headers()
-            self.wfile.write(datos)
 
-        def do_GET(self):
-            self._responder(200, {
-                "servicio": "AKSHA calcular_carta",
-                "efemerides": "Swiss Ephemeris " + swe.version,
-                "uso": "POST {fecha, hora, lugar | lat+lon+tz, nombre?, transitos?, lugar_transitos?}",
-            })
+class handler(BaseHTTPRequestHandler):
+    def _responder(self, codigo, cuerpo):
+        datos = json.dumps(cuerpo, ensure_ascii=False).encode("utf-8")
+        self.send_response(codigo)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(datos)))
+        self.end_headers()
+        self.wfile.write(datos)
 
-        def do_POST(self):
-            try:
-                largo = int(self.headers.get("Content-Length", 0))
-                body = json.loads(self.rfile.read(largo).decode("utf-8")) if largo else {}
-                carta = calcular_carta(
-                    body["fecha"], body.get("hora", "12:00"),
-                    lugar=body.get("lugar"), lat=body.get("lat"),
-                    lon=body.get("lon"), tz=body.get("tz"),
-                    nombre=body.get("nombre"),
-                )
-                if body.get("transitos"):
-                    lt = body.get("lugar_transitos", "Miami")
-                    t_lat, t_lon, t_tz = geocodificar(lt)
-                    carta["transitos"] = calcular_transitos(
-                        body["transitos"], body.get("hora_transitos", "12:00"),
-                        t_lat, t_lon, t_tz, carta)
-                    carta["texto"] = formatear_texto(carta)
-                self._responder(200, carta)
-            except Exception as e:  # noqa: BLE001 — el cliente necesita el motivo
-                self._responder(400, {"error": str(e)})
-except ImportError:
-    pass
+    def do_GET(self):
+        self._responder(200, {
+            "servicio": "AKSHA calcular_carta",
+            "efemerides": "Swiss Ephemeris " + swe.version,
+            "uso": "POST {fecha, hora, lugar | lat+lon+tz, nombre?, transitos?, lugar_transitos?}",
+        })
+
+    def do_POST(self):
+        try:
+            largo = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(largo).decode("utf-8")) if largo else {}
+            carta = calcular_carta(
+                body["fecha"], body.get("hora", "12:00"),
+                lugar=body.get("lugar"), lat=body.get("lat"),
+                lon=body.get("lon"), tz=body.get("tz"),
+                nombre=body.get("nombre"),
+            )
+            if body.get("transitos"):
+                lt = body.get("lugar_transitos", "Miami")
+                t_lat, t_lon, t_tz = geocodificar(lt)
+                carta["transitos"] = calcular_transitos(
+                    body["transitos"], body.get("hora_transitos", "12:00"),
+                    t_lat, t_lon, t_tz, carta)
+                carta["texto"] = formatear_texto(carta)
+            self._responder(200, carta)
+        except Exception as e:  # noqa: BLE001 — el cliente necesita el motivo
+            self._responder(400, {"error": str(e)})
 
 
 if __name__ == "__main__":

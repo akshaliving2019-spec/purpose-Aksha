@@ -1,26 +1,16 @@
-// Calcula la carta natal llamando a la función Python de Swiss Ephemeris
-// (api/calcular_carta.py, desplegada como Serverless Function de Vercel).
+// Calcula la carta natal llamando al microservicio Python de Swiss Ephemeris
+// (proyecto Vercel "aksha-carta", código en apps/carta-service).
 // Ya no depende de APIs externas de astrología.
 
-function urlBase() {
-  if (process.env.CARTA_API_URL) return process.env.CARTA_API_URL;
-  if (process.env.VERCEL_ENV === 'production') return 'https://aksha.life';
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return 'http://localhost:3000';
-}
+const CARTA_ENDPOINT =
+  process.env.CARTA_API_URL || 'https://aksha-carta.vercel.app/api/index';
 
 export async function calcularCarta(birthDate, birthTime, birthPlace, opciones = {}) {
   const hoy = new Date().toISOString().slice(0, 10);
 
-  const headers = { 'Content-Type': 'application/json' };
-  // Permite llamadas internas cuando la protección de despliegues está activa
-  if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
-    headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
-  }
-
-  const respuesta = await fetch(`${urlBase()}/api/calcular_carta`, {
+  const respuesta = await fetch(CARTA_ENDPOINT, {
     method: 'POST',
-    headers,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       fecha: birthDate,
       hora: birthTime || '12:00',

@@ -1,8 +1,14 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { PROMPT_SISTEMA_AKSHA, construirMensajeCliente } from './prompt-aksha.js';
 
+// La variable de entorno puede venir con texto extra pegado alrededor de la
+// key (saltos de línea rompen el header HTTP → "Connection error" del SDK).
+// Extraemos estrictamente el patrón sk-ant-...
+const RAW_KEY = process.env.ANTHROPIC_API_KEY || '';
+const API_KEY = (RAW_KEY.match(/sk-ant-[A-Za-z0-9_-]{20,}/) || [RAW_KEY.trim()])[0];
+
 const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey: API_KEY,
 });
 
 export async function generarReporte({ nombre, email, birthDate, birthTime, birthPlace, carta }) {
