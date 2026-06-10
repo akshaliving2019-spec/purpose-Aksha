@@ -1,8 +1,6 @@
 import Stripe from 'stripe';
 import { waitUntil } from '@vercel/functions';
-import { calcularCarta } from './calcular-carta.js';
-import { generarReporte } from './generar-reporte.js';
-import { enviarReporte } from './enviar-reporte.js';
+import { procesarPedido } from './pipeline-reporte.js';
 
 const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY);
 
@@ -26,59 +24,21 @@ export default async function handler(req, res) {
   // Solo procesamos cuando el pago se completa exitosamente
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
-    const metadata = paymentIntent.metadata;
-
     console.log('✅ Pago exitoso:', paymentIntent.id);
-    console.log('📋 Metadata:', metadata);
 
-    const { customer_name, customer_email, birth_date, birth_place } = metadata;
-
-    if (!customer_name || !customer_email || !birth_date || !birth_place) {
-      console.error('❌ Datos incompletos en metadata');
-      return res.status(200).json({ received: true, warning: 'Datos incompletos' });
-    }
-
-    // Respondemos a Stripe de inmediato (su timeout es ~10s y reintentaría,
-    // duplicando reportes). El pipeline sigue corriendo hasta maxDuration.
-    waitUntil(procesarReporte(metadata));
+    // Respondemos a Stripe de inmediato (su timeout es ~10s). El pipeline
+    // sigue en background hasta maxDuration. procesarPedido registra estado
+    // en la metadata del PaymentIntent: si esta entrega del evento está
+    // duplicada, o si algo falla, queda constancia y el cron lo reintenta.
+    waitUntil(
+      procesarPedido(paymentIntent.id).catch((error) => {
+        // procesarPedido ya registró el fallo y envió la alerta interna
+        console.error('Pipeline falló para', paymentIntent.id, error);
+      })
+    );
   }
 
   return res.status(200).json({ received: true });
-}
-
-async function procesarReporte(metadata) {
-  const { customer_name, customer_email, birth_date, birth_time, birth_place } = metadata;
-
-  try {
-    // 1. Calcular carta natal con Swiss Ephemeris (+ tránsitos de hoy)
-    console.log('🔭 Calculando carta natal...');
-    const carta = await calcularCarta(birth_date, birth_time, birth_place, {
-      nombre: customer_name,
-    });
-
-    // 2. Generar reporte con Claude
-    console.log('🤖 Generando reporte con Claude...');
-    const reporte = await generarReporte({
-      nombre: customer_name,
-      email: customer_email,
-      birthDate: birth_date,
-      birthTime: birth_time,
-      birthPlace: birth_place,
-      carta,
-    });
-
-    // 3. Enviar reporte por email
-    console.log('📧 Enviando reporte a:', customer_email);
-    await enviarReporte({
-      nombre: customer_name,
-      email: customer_email,
-      reporte,
-    });
-
-    console.log('✅ Reporte enviado exitosamente a', customer_email);
-  } catch (error) {
-    console.error('❌ Error generando reporte:', error);
-  }
 }
 
 // Helper para obtener el body raw (necesario para verificar firma de Stripe)

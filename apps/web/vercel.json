@@ -5,6 +5,10 @@
   ],
   "functions": {
     "api/stripe-webhook.js": { "maxDuration": 300 },
-    "api/test-pipeline.js": { "maxDuration": 300 }
-  }
+    "api/test-pipeline.js": { "maxDuration": 300 },
+    "api/reprocesar-pendientes.js": { "maxDuration": 300 }
+  },
+  "crons": [
+    { "path": "/api/reprocesar-pendientes", "schedule": "0 13 * * *" }
+  ]
 }

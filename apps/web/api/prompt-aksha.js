@@ -124,6 +124,25 @@ REGLAS DE LENGUAJE (INNEGOCIABLES)
 
 export function construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta }) {
   const edad = calcularEdad(birthDate);
+
+  const avisoSinHora = birthTime ? '' : `
+
+⚠️ ATENCIÓN — HORA DE NACIMIENTO NO PROPORCIONADA:
+La carta fue calculada a las 12:00 por convención. Esto significa que las
+CASAS, el ASCENDENTE y el MEDIO CIELO de los datos NO son confiables y NO
+debes usarlos ni mencionarlos. Adapta el análisis así:
+- Basa los 4 módulos solo en SIGNOS, dignidades y ASPECTOS entre planetas
+  (la tabla de aspectos sigue siendo válida, salvo los que involucran ASC/MC
+  — descártalos).
+- En la capa de Presencia, puntúa solo por signo (no por casa) y ajusta el
+  máximo proporcionalmente; en el IPN omite "Receptividad de Casas" y
+  promedia las otras dos dimensiones.
+- La Luna puede variar hasta ±6°: si está cerca de un cambio de signo,
+  menciona ambas posibilidades con delicadeza.
+- En la apertura, di con calidez que el mapa se construyó sin hora exacta y
+  que con la hora de nacimiento (consta en el registro civil o certificado
+  de nacimiento) el mapa ganaría un nivel adicional de precisión.`;
+
   return `DATOS DEL CLIENTE:
 ─────────────────────────────────────────
 Nombre completo: ${nombre}
@@ -131,7 +150,7 @@ Email: ${email}
 Fecha de nacimiento: ${birthDate}${edad ? ` (edad actual: ${edad} años)` : ''}
 Hora de nacimiento: ${birthTime || 'No proporcionada'}
 Lugar de nacimiento: ${birthPlace}
-─────────────────────────────────────────
+─────────────────────────────────────────${avisoSinHora}
 
 ${carta.texto}
 

@@ -10,40 +10,70 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-export async function enviarReporte({ nombre, email, reporte }) {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// La variable puede venir con texto extra pegado; extraemos la key re_...
+const RESEND_API_KEY = ((process.env.RESEND_API_KEY || '').match(/re_[A-Za-z0-9_-]{10,}/) ||
+  [(process.env.RESEND_API_KEY || '').trim()])[0];
 
+async function enviarConResend(payload, descripcion) {
+  let ultimoError;
+  for (let intento = 1; intento <= 3; intento++) {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) return await response.json();
+      const cuerpo = await response.text();
+      ultimoError = new Error(`Resend ${response.status}: ${cuerpo}`);
+      // 4xx no se resuelve reintentando (key inválida, destinatario mal, etc.)
+      if (response.status < 500) throw ultimoError;
+    } catch (error) {
+      ultimoError = error;
+      if (String(error).includes('Resend 4')) throw error;
+    }
+    console.warn(`Reintentando ${descripcion} (intento ${intento}/3)...`);
+    await new Promise((r) => setTimeout(r, intento * 2000));
+  }
+  throw ultimoError;
+}
+
+export async function enviarReporte({ nombre, email, reporte }) {
   if (!RESEND_API_KEY) {
     console.error('❌ RESEND_API_KEY no configurada');
-    // Por ahora enviamos a tu email como respaldo
     await enviarNotificacionInterna({ nombre, email, reporte });
-    return;
+    throw new Error('RESEND_API_KEY no configurada — email no enviado');
   }
 
   const primerNombre = nombre.split(' ')[0];
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'AKSHA LIFE <reportes@aksha.life>',
-      to: [email],
-      subject: `${primerNombre}, tu Mapa de Propósito está listo ✨`,
-      html: formatearEmailHTML(nombre, reporte),
-      text: reporte,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Error enviando email: ${error}`);
-  }
+  const resultado = await enviarConResend({
+    from: 'AKSHA LIFE <reportes@aksha.life>',
+    to: [email],
+    subject: `${primerNombre}, tu Mapa de Propósito está listo ✨`,
+    html: formatearEmailHTML(nombre, reporte),
+    text: reporte,
+  }, `email a ${email}`);
 
   console.log('✅ Email enviado a:', email);
-  return await response.json();
+  return resultado;
+}
+
+// Aviso operativo al buzón interno de AKSHA (fallos del pipeline, etc.)
+export async function enviarAlertaInterna({ asunto, texto }) {
+  if (!RESEND_API_KEY) {
+    console.error('❌ Sin RESEND_API_KEY — alerta interna solo en logs:', asunto);
+    return;
+  }
+  return enviarConResend({
+    from: 'Sistema AKSHA <sistema@aksha.life>',
+    to: ['Purpose@aksha.life'],
+    subject: asunto,
+    text: texto,
+  }, 'alerta interna');
 }
 
 // Notificación interna mientras Resend no está configurado

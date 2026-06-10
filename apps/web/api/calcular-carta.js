@@ -7,29 +7,42 @@ const CARTA_ENDPOINT =
 
 export async function calcularCarta(birthDate, birthTime, birthPlace, opciones = {}) {
   const hoy = new Date().toISOString().slice(0, 10);
-
-  const respuesta = await fetch(CARTA_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      fecha: birthDate,
-      hora: birthTime || '12:00',
-      lugar: birthPlace,
-      nombre: opciones.nombre,
-      transitos: opciones.transitos || hoy,
-      lugar_transitos: opciones.lugarTransitos || 'Miami',
-    }),
+  const cuerpo = JSON.stringify({
+    fecha: birthDate,
+    hora: birthTime || '12:00',
+    lugar: birthPlace,
+    nombre: opciones.nombre,
+    transitos: opciones.transitos || hoy,
+    lugar_transitos: opciones.lugarTransitos || 'Miami',
   });
 
-  if (!respuesta.ok) {
-    const detalle = await respuesta.text().catch(() => '');
-    console.error('❌ Swiss Ephemeris API falló:', respuesta.status, detalle);
-    return cartaFallback(birthDate, birthTime, birthPlace);
+  for (let intento = 1; intento <= 3; intento++) {
+    try {
+      const respuesta = await fetch(CARTA_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: cuerpo,
+      });
+      if (respuesta.ok) {
+        const carta = await respuesta.json();
+        console.log('🔭 Carta calculada con', carta.efemerides);
+        return carta;
+      }
+      const detalle = await respuesta.text().catch(() => '');
+      // 400 = datos de nacimiento inválidos; reintentar no lo arregla
+      if (respuesta.status < 500) {
+        throw new Error(`Carta inválida (${respuesta.status}): ${detalle}`);
+      }
+      console.warn(`Swiss Ephemeris ${respuesta.status}, reintento ${intento}/3...`);
+    } catch (error) {
+      if (String(error).startsWith('Error: Carta inválida')) throw error;
+      console.warn(`Swiss Ephemeris no respondió (intento ${intento}/3):`, String(error));
+    }
+    await new Promise((r) => setTimeout(r, intento * 2000));
   }
 
-  const carta = await respuesta.json();
-  console.log('🔭 Carta calculada con', carta.efemerides);
-  return carta;
+  console.error('❌ Swiss Ephemeris agotó reintentos — usando fallback');
+  return cartaFallback(birthDate, birthTime, birthPlace);
 }
 
 // Respaldo si la función Python no responde: Claude recibe los datos crudos

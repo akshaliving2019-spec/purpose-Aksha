@@ -9,6 +9,7 @@ const API_KEY = (RAW_KEY.match(/sk-ant-[A-Za-z0-9_-]{20,}/) || [RAW_KEY.trim()])
 
 const client = new Anthropic({
   apiKey: API_KEY,
+  maxRetries: 3, // errores 429/5xx transitorios se reintentan solos
 });
 
 export async function generarReporte({ nombre, email, birthDate, birthTime, birthPlace, carta }) {
