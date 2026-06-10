@@ -1,114 +1,60 @@
-// Calcula posiciones planetarias usando Swiss Ephemeris
-// Para Vercel usamos una API externa ya que Swiss Ephemeris requiere binarios nativos
+// Calcula la carta natal llamando a la función Python de Swiss Ephemeris
+// (api/calcular_carta.py, desplegada como Serverless Function de Vercel).
+// Ya no depende de APIs externas de astrología.
 
-const SIGNOS = [
-  'Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo',
-  'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'
-];
-
-// Coordenadas de ciudades comunes LATAM
-const CIUDADES = {
-  'bogota': { lat: 4.711, lon: -74.0721 },
-  'bogotá': { lat: 4.711, lon: -74.0721 },
-  'medellín': { lat: 6.2442, lon: -75.5812 },
-  'medellin': { lat: 6.2442, lon: -75.5812 },
-  'cali': { lat: 3.4516, lon: -76.5320 },
-  'miami': { lat: 25.7617, lon: -80.1918 },
-  'new york': { lat: 40.7128, lon: -74.0060 },
-  'nueva york': { lat: 40.7128, lon: -74.0060 },
-  'caracas': { lat: 10.4806, lon: -66.9036 },
-  'buenos aires': { lat: -34.6037, lon: -58.3816 },
-  'ciudad de mexico': { lat: 19.4326, lon: -99.1332 },
-  'ciudad de méxico': { lat: 19.4326, lon: -99.1332 },
-  'santiago': { lat: -33.4489, lon: -70.6693 },
-  'lima': { lat: -12.0464, lon: -77.0428 },
-  'madrid': { lat: 40.4168, lon: -3.7038 },
-  'barcelona': { lat: 41.3851, lon: 2.1734 },
-};
-
-function obtenerCoordenadas(lugar) {
-  const lugarLower = lugar.toLowerCase().trim();
-  for (const [ciudad, coords] of Object.entries(CIUDADES)) {
-    if (lugarLower.includes(ciudad)) {
-      return coords;
-    }
-  }
-  // Default: Colombia si no encuentra la ciudad
-  return { lat: 4.711, lon: -74.0721 };
+function urlBase() {
+  if (process.env.CARTA_API_URL) return process.env.CARTA_API_URL;
+  if (process.env.VERCEL_ENV === 'production') return 'https://aksha.life';
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://localhost:3000';
 }
 
-function gradosASigmo(grados) {
-  const signoIndex = Math.floor(grados / 30) % 12;
-  const gradosEnSigno = grados % 30;
-  return `${gradosEnSigno.toFixed(1)}° ${SIGNOS[signoIndex]}`;
-}
+export async function calcularCarta(birthDate, birthTime, birthPlace, opciones = {}) {
+  const hoy = new Date().toISOString().slice(0, 10);
 
-export async function calcularCarta(birthDate, birthTime, birthPlace) {
-  // Parsear fecha DD/MM/YYYY
-  const [dia, mes, anio] = birthDate.split('/').map(Number);
-  const [hora, minutos] = (birthTime || '12:00').split(':').map(Number);
-
-  const coords = obtenerCoordenadas(birthPlace);
-
-  // Llamar a una API de astrología gratuita
-  // Usamos Astrology API de RapidAPI o calculamos con algoritmos simplificados
-  try {
-    const response = await fetch(
-      `https://json.astrologyapi.com/v1/planets/extended`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `Basic ${Buffer.from(`${process.env.ASTROLOGY_API_USER}:${process.env.ASTROLOGY_API_KEY}`).toString('base64')}`,
-        },
-        body: JSON.stringify({
-          day: dia,
-          month: mes,
-          year: anio,
-          hour: hora,
-          min: minutos,
-          lat: coords.lat,
-          lon: coords.lon,
-          tzone: -5, // Colombia UTC-5
-        }),
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return formatearCarta(data, birthDate, birthTime, birthPlace);
-    }
-  } catch (error) {
-    console.log('API externa falló, usando cálculo simplificado');
+  const headers = { 'Content-Type': 'application/json' };
+  // Permite llamadas internas cuando la protección de despliegues está activa
+  if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
+    headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   }
 
-  // Fallback: devolver datos básicos para que Claude complete el análisis
+  const respuesta = await fetch(`${urlBase()}/api/calcular_carta`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      fecha: birthDate,
+      hora: birthTime || '12:00',
+      lugar: birthPlace,
+      nombre: opciones.nombre,
+      transitos: opciones.transitos || hoy,
+      lugar_transitos: opciones.lugarTransitos || 'Miami',
+    }),
+  });
+
+  if (!respuesta.ok) {
+    const detalle = await respuesta.text().catch(() => '');
+    console.error('❌ Swiss Ephemeris API falló:', respuesta.status, detalle);
+    return cartaFallback(birthDate, birthTime, birthPlace);
+  }
+
+  const carta = await respuesta.json();
+  console.log('🔭 Carta calculada con', carta.efemerides);
+  return carta;
+}
+
+// Respaldo si la función Python no responde: Claude recibe los datos crudos
+// y la instrucción de calcular posiciones (menos preciso — solo emergencia).
+function cartaFallback(birthDate, birthTime, birthPlace) {
   return {
     texto: `DATOS DE NACIMIENTO PARA ANÁLISIS ASTROLÓGICO
 ─────────────────────────────────────────
 Fecha: ${birthDate}
 Hora: ${birthTime || 'No proporcionada'}
 Lugar: ${birthPlace}
-Coordenadas: Lat ${coords.lat}, Lon ${coords.lon}
 ─────────────────────────────────────────
-NOTA: Calcular posiciones planetarias exactas para esta fecha y hora.`,
-    coords,
-    fecha: { dia, mes, anio, hora: hora || 12, minutos: minutos || 0 },
+NOTA: El motor Swiss Ephemeris no respondió. Calcular posiciones planetarias
+aproximadas para esta fecha y hora, indicando en el reporte que los grados
+exactos serán confirmados.`,
+    fallback: true,
   };
-}
-
-function formatearCarta(data, birthDate, birthTime, birthPlace) {
-  let texto = `CARTA NATAL CALCULADA
-─────────────────────────────────────────
-Fecha: ${birthDate} · Hora: ${birthTime} · Lugar: ${birthPlace}
-─────────────────────────────────────────\n`;
-
-  if (Array.isArray(data)) {
-    data.forEach(planeta => {
-      const rx = planeta.isRetro === 'true' ? ' Rx' : '';
-      texto += `${planeta.name}: ${planeta.sign} ${planeta.normDegree.toFixed(1)}°${rx} · Casa ${planeta.house}\n`;
-    });
-  }
-
-  return { texto };
 }

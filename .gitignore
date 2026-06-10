@@ -1,1 +1,26 @@
-apps/api/.env 
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+
+# PocketBase data
+apps/pocketbase/pb_data/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+.vercel

@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { waitUntil } from '@vercel/functions';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte } from './enviar-reporte.js';
@@ -30,52 +31,54 @@ export default async function handler(req, res) {
     console.log('✅ Pago exitoso:', paymentIntent.id);
     console.log('📋 Metadata:', metadata);
 
-    const {
-      customer_name,
-      customer_email,
-      birth_date,
-      birth_time,
-      birth_place,
-    } = metadata;
+    const { customer_name, customer_email, birth_date, birth_place } = metadata;
 
-    // Validar que tenemos los datos necesarios
     if (!customer_name || !customer_email || !birth_date || !birth_place) {
       console.error('❌ Datos incompletos en metadata');
       return res.status(200).json({ received: true, warning: 'Datos incompletos' });
     }
 
-    try {
-      // 1. Calcular carta natal
-      console.log('🔭 Calculando carta natal...');
-      const carta = await calcularCarta(birth_date, birth_time, birth_place);
-
-      // 2. Generar reporte con Claude
-      console.log('🤖 Generando reporte con Claude...');
-      const reporte = await generarReporte({
-        nombre: customer_name,
-        email: customer_email,
-        birthDate: birth_date,
-        birthTime: birth_time,
-        birthPlace: birth_place,
-        carta,
-      });
-
-      // 3. Enviar reporte por email
-      console.log('📧 Enviando reporte a:', customer_email);
-      await enviarReporte({
-        nombre: customer_name,
-        email: customer_email,
-        reporte,
-      });
-
-      console.log('✅ Reporte enviado exitosamente a', customer_email);
-    } catch (error) {
-      console.error('❌ Error generando reporte:', error);
-      // No fallamos el webhook — Stripe no reintentará innecesariamente
-    }
+    // Respondemos a Stripe de inmediato (su timeout es ~10s y reintentaría,
+    // duplicando reportes). El pipeline sigue corriendo hasta maxDuration.
+    waitUntil(procesarReporte(metadata));
   }
 
   return res.status(200).json({ received: true });
+}
+
+async function procesarReporte(metadata) {
+  const { customer_name, customer_email, birth_date, birth_time, birth_place } = metadata;
+
+  try {
+    // 1. Calcular carta natal con Swiss Ephemeris (+ tránsitos de hoy)
+    console.log('🔭 Calculando carta natal...');
+    const carta = await calcularCarta(birth_date, birth_time, birth_place, {
+      nombre: customer_name,
+    });
+
+    // 2. Generar reporte con Claude
+    console.log('🤖 Generando reporte con Claude...');
+    const reporte = await generarReporte({
+      nombre: customer_name,
+      email: customer_email,
+      birthDate: birth_date,
+      birthTime: birth_time,
+      birthPlace: birth_place,
+      carta,
+    });
+
+    // 3. Enviar reporte por email
+    console.log('📧 Enviando reporte a:', customer_email);
+    await enviarReporte({
+      nombre: customer_name,
+      email: customer_email,
+      reporte,
+    });
+
+    console.log('✅ Reporte enviado exitosamente a', customer_email);
+  } catch (error) {
+    console.error('❌ Error generando reporte:', error);
+  }
 }
 
 // Helper para obtener el body raw (necesario para verificar firma de Stripe)

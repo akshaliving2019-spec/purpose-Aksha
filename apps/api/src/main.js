@@ -46,6 +46,10 @@ app.use(morgan('combined'));
 app.use(globalRateLimit);
 app.use(express.json({
 	limit: BodyLimit,
+	// Stripe webhook signature verification requires the raw request body
+	verify: (req, res, buf) => {
+		req.rawBody = buf;
+	},
 }));
 app.use(express.urlencoded({ 
 	extended: true,

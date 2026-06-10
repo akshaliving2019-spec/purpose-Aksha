@@ -3,8 +3,17 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY);
 
+const ALLOWED_ORIGINS = [
+  'https://aksha.life',
+  'https://www.aksha.life',
+  'http://localhost:3000',
+];
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -14,6 +23,14 @@ export default async function handler(req, res) {
 
   if (!name || !email || !birthDate || !birthPlace) {
     return res.status(400).json({ error: 'Missing required fields.' });
+  }
+
+  if (typeof name !== 'string' || name.length > 200 ||
+      typeof email !== 'string' || email.length > 254 || !/^\S+@\S+\.\S+$/.test(email) ||
+      typeof birthDate !== 'string' || birthDate.length > 20 ||
+      (birthTime && (typeof birthTime !== 'string' || birthTime.length > 20)) ||
+      typeof birthPlace !== 'string' || birthPlace.length > 200) {
+    return res.status(400).json({ error: 'Invalid field format.' });
   }
 
   try {

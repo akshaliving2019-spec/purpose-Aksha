@@ -1,6 +1,15 @@
 // Servicio de email usando Resend (gratis hasta 3,000 emails/mes)
 // Instalar: npm install resend
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function enviarReporte({ nombre, email, reporte }) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
@@ -63,16 +72,17 @@ async function enviarNotificacionInterna({ nombre, email, reporte }) {
 }
 
 function formatearEmailHTML(nombre, reporte) {
-  const primerNombre = nombre.split(' ')[0];
-  // Convertir el texto del reporte a HTML básico
-  const reporteHTML = reporte
-    .replace(/\n/g, '<br>')
-    .replace(/#{1,3} (.+)/g, '<h2 style="color:#D4AF37">$1</h2>')
+  const primerNombre = escapeHtml(nombre.split(' ')[0]);
+  // Convertir el Markdown ligero del reporte a HTML básico
+  // (escapado primero; títulos antes de convertir saltos de línea)
+  const reporteHTML = escapeHtml(reporte)
+    .replace(/^### (.+)$/gm, '<h3 style="color:#D4AF37">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="color:#D4AF37">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h2 style="color:#D4AF37">$1</h2>')
+    .replace(/^(?:---+|─{3,})$/gm, '<hr style="border:none;border-top:1px solid rgba(212,175,55,0.3)">')
+    .replace(/^- (.+)$/gm, '<div style="margin:4px 0 4px 16px">• $1</div>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/❤️/g, '❤️')
-    .replace(/⭐/g, '⭐')
-    .replace(/✦/g, '✦')
-    .replace(/■/g, '■');
+    .replace(/\n/g, '<br>');
 
   return `
 <!DOCTYPE html>

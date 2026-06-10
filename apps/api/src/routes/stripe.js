@@ -33,7 +33,7 @@ router.post('/create-payment-intent', async (req, res) => {
     res.json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {
     console.error('Stripe error:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Failed to create payment intent.' });
   }
 });
 
@@ -44,7 +44,7 @@ router.post('/webhook', async (req, res) => {
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    event = stripe.webhooks.constructEvent(req.rawBody, sig, webhookSecret);
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
