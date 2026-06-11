@@ -9,7 +9,7 @@ import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte, enviarAlertaInterna } from './enviar-reporte.js';
 
-const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const MAX_INTENTOS = 3;
 const PROCESANDO_TIMEOUT_MS = 10 * 60 * 1000; // tras 10 min, un "procesando" se considera muerto

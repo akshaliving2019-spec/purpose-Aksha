@@ -9,9 +9,16 @@
 //     "enviar": true }
 // Si "enviar" es false, devuelve el reporte sin mandar el email.
 
+import { timingSafeEqual } from 'node:crypto';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte } from './enviar-reporte.js';
+
+function tokenValido(recibido, esperado) {
+  const a = Buffer.from(String(recibido));
+  const b = Buffer.from(String(esperado));
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,7 +26,7 @@ export default async function handler(req, res) {
   }
 
   const token = (req.headers['authorization'] || '').replace('Bearer ', '');
-  if (!process.env.TEST_PIPELINE_TOKEN || token !== process.env.TEST_PIPELINE_TOKEN) {
+  if (!process.env.TEST_PIPELINE_TOKEN || !tokenValido(token, process.env.TEST_PIPELINE_TOKEN)) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 

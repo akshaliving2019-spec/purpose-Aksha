@@ -5,6 +5,10 @@
 const CARTA_ENDPOINT =
   process.env.CARTA_API_URL || 'https://aksha-carta.vercel.app/api/index';
 
+// Secreto compartido con el microservicio (CARTA_SHARED_SECRET en ambos
+// proyectos de Vercel). Si está configurado, se envía como Bearer token.
+const CARTA_SECRET = (process.env.CARTA_SHARED_SECRET || '').trim();
+
 export async function calcularCarta(birthDate, birthTime, birthPlace, opciones = {}) {
   const hoy = new Date().toISOString().slice(0, 10);
   const cuerpo = JSON.stringify({
@@ -20,7 +24,10 @@ export async function calcularCarta(birthDate, birthTime, birthPlace, opciones =
     try {
       const respuesta = await fetch(CARTA_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(CARTA_SECRET ? { Authorization: `Bearer ${CARTA_SECRET}` } : {}),
+        },
         body: cuerpo,
       });
       if (respuesta.ok) {

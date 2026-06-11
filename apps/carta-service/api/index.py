@@ -17,6 +17,7 @@ Este mismo archivo funciona como Serverless Function de Vercel (runtime Python):
 """
 
 import argparse
+import hmac
 import json
 import os
 import sys
@@ -417,6 +418,12 @@ def main():
 # ─────────────────────────────────────────────────────────────────────────────
 from http.server import BaseHTTPRequestHandler
 
+# Secreto compartido con el orquestador (CARTA_SHARED_SECRET en ambos
+# proyectos de Vercel). Si está configurado, el POST exige
+# Authorization: Bearer <secreto>; si no, el servicio queda abierto
+# (solo para desarrollo / transición).
+SECRETO_SERVICIO = os.environ.get("CARTA_SHARED_SECRET", "").strip()
+
 
 class handler(BaseHTTPRequestHandler):
     def _responder(self, codigo, cuerpo):
@@ -427,6 +434,12 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(datos)
 
+    def _autorizado(self):
+        if not SECRETO_SERVICIO:
+            return True
+        auth = self.headers.get("Authorization", "")
+        return hmac.compare_digest(auth, "Bearer " + SECRETO_SERVICIO)
+
     def do_GET(self):
         self._responder(200, {
             "servicio": "AKSHA calcular_carta",
@@ -435,6 +448,8 @@ class handler(BaseHTTPRequestHandler):
         })
 
     def do_POST(self):
+        if not self._autorizado():
+            return self._responder(401, {"error": "No autorizado"})
         try:
             largo = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(largo).decode("utf-8")) if largo else {}
