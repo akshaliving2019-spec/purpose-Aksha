@@ -53,7 +53,7 @@ export async function enviarReporte({ nombre, email, reporte }) {
   const resultado = await enviarConResend({
     from: 'AKSHA LIFE <reportes@aksha.life>',
     to: [email],
-    subject: `${primerNombre}, tu Mapa de Propósito está listo ✨`,
+    subject: `${primerNombre}, tu Mapa de Propósito está listo`,
     html: formatearEmailHTML(nombre, reporte),
     text: reporte,
   }, `email a ${email}`);
@@ -74,9 +74,9 @@ export async function enviarReporteRevision({
   const bloqueValidacion = !validacion
     ? ''
     : validacion.ok
-      ? `<p style="color:#7ddf9a;font-size:14px;margin:0 0 16px;">✅ Validación de efemérides: todas las posiciones mencionadas coinciden con Swiss Ephemeris.</p>`
+      ? `<p style="color:#7ddf9a;font-size:14px;margin:0 0 16px;">✅ Validación automática: posiciones coherentes con Swiss Ephemeris y estilo editorial limpio (sin emojis).</p>`
       : `<div style="background:rgba(220,60,60,0.12);border:1px solid rgba(220,60,60,0.5);border-radius:6px;padding:12px;margin:0 0 16px;">
-          <p style="color:#ff9b9b;font-size:14px;margin:0 0 8px;"><strong>⚠️ La validación contra las efemérides encontró discrepancias:</strong></p>
+          <p style="color:#ff9b9b;font-size:14px;margin:0 0 8px;"><strong>⚠️ La validación automática (efemérides + estilo) encontró observaciones:</strong></p>
           ${validacion.errores.map((e) => `<p style="color:#ff9b9b;font-size:13px;margin:0 0 4px;">• ${escapeHtml(e)}</p>`).join('')}
           <p style="color:rgba(255,255,255,0.6);font-size:12px;margin:8px 0 0;">Revisa estos puntos antes de aprobar.</p>
         </div>`;

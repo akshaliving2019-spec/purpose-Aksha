@@ -547,7 +547,7 @@ def formatear_texto(carta):
             lineas.append(f"{p['nombre']} tránsito: {p['posicion']}{rx}")
         lineas.append("ASPECTOS DE TRÁNSITO A LA CARTA NATAL:")
         for a in t["aspectos_a_natal"]:
-            ex = " ⚡EXACTO" if a["exacto"] else ""
+            ex = " [EXACTO]" if a["exacto"] else ""
             lineas.append(
                 f"{a['transito']} ({a['posicion_transito']}) {a['simbolo']} "
                 f"{a['natal']} natal — {a['aspecto']} (orbe {a['orbe']}°){ex}"

@@ -70,17 +70,41 @@ function construirPuntos(carta) {
   return puntos;
 }
 
+// Estándar editorial AKSHA 2026: el reporte al cliente es tipografía limpia.
+// Emojis y glifos decorativos (🟢, ❤️, ⚡, ✦, →, ☌...) quedan prohibidos:
+// en email y móvil se renderizan como emojis de colores y rompen el tono
+// premium. Permitidos solo letras, números, puntuación y ° — ·
+const PATRON_GLIFO_PROHIBIDO =
+  // ⁂ · flechas · técnicos (⌘) · geométricos/dingbats/astrológicos (■✦❋☌⚡)
+  // · flechas suplementarias · símbolos misceláneos (⬡⭐) · selectores de
+  // variación emoji · bloques emoji (🟢❤️🌊...)
+  /[⁂←-⇿⌀-⏿■-⟿⤀-⥿⬀-⯿︎️\u{1F000}-\u{1FAFF}]/gu;
+
+function detectarGlifosProhibidos(reporte) {
+  const unicos = [...new Set(String(reporte || '').match(PATRON_GLIFO_PROHIBIDO) || [])];
+  if (unicos.length === 0) return [];
+  return [
+    `El reporte contiene emojis o símbolos decorativos prohibidos (${unicos.join(' ')}) — ` +
+    'el estándar AKSHA es tipografía limpia, sin emojis ni glifos.',
+  ];
+}
+
 export function validarReporte(reporte, carta) {
+  const erroresEstilo = detectarGlifosProhibidos(reporte);
+
   if (!reporte || !carta || carta.fallback || !Array.isArray(carta.planetas)) {
     return {
       ok: false,
-      errores: ['Carta no verificable: sin datos de Swiss Ephemeris (fallback o respuesta incompleta).'],
+      errores: [
+        ...erroresEstilo,
+        'Carta no verificable: sin datos de Swiss Ephemeris (fallback o respuesta incompleta).',
+      ],
     };
   }
 
   const texto = normalizar(reporte);
   const puntos = construirPuntos(carta);
-  const errores = [];
+  const errores = [...erroresEstilo];
   const grupoSignos = SIGNOS_NORM.join('|');
 
   for (const [clave, punto] of puntos) {
