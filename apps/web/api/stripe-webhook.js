@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { waitUntil } from '@vercel/functions';
-import { procesarPedido } from './pipeline-reporte.js';
+import { procesarPedido } from './_lib/pipeline-reporte.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 

@@ -10,10 +10,10 @@
 // Si "enviar" es false, devuelve el reporte sin mandar el email.
 
 import { timingSafeEqual } from 'node:crypto';
-import { calcularCarta } from './calcular-carta.js';
-import { generarReporte } from './generar-reporte.js';
-import { enviarReporte } from './enviar-reporte.js';
-import { validarReporte } from './validar-reporte.js';
+import { calcularCarta } from './_lib/calcular-carta.js';
+import { generarReporte } from './_lib/generar-reporte.js';
+import { enviarReporte } from './_lib/enviar-reporte.js';
+import { validarReporte } from './_lib/validar-reporte.js';
 
 function tokenValido(recibido, esperado) {
   const a = Buffer.from(String(recibido));

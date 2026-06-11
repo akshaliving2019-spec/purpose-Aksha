@@ -11,9 +11,9 @@ import Stripe from 'stripe';
 import { timingSafeEqual } from 'node:crypto';
 import { put, list } from '@vercel/blob';
 import { waitUntil } from '@vercel/functions';
-import { tokenAprobacion } from './revision-reporte.js';
-import { enviarAlertaInterna } from './enviar-reporte.js';
-import { procesarPedido } from './pipeline-reporte.js';
+import { tokenAprobacion } from './_lib/revision-reporte.js';
+import { enviarAlertaInterna } from './_lib/enviar-reporte.js';
+import { procesarPedido } from './_lib/pipeline-reporte.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 

@@ -9,7 +9,7 @@ Toda carta natal se calcula con **Swiss Ephemeris** (microservicio
 con orbes AKSHA, tránsitos del día. Si el motor no responde tras 3 intentos,
 el pedido queda **fallido** y el cron diario lo reintenta (máx. 3 veces) —
 **nunca** se le pide a la IA que calcule posiciones por su cuenta
-(`apps/web/api/calcular-carta.js`).
+(`apps/web/api/_lib/calcular-carta.js`).
 
 ## 2. La IA interpreta, no calcula
 El prompt recibe la carta ya calculada como texto verificado y tiene
@@ -19,7 +19,7 @@ tabla de aspectos: el semáforo y la "Libertad aspectual" están calibrados con
 los 12 puntos clásicos.
 
 ## 3. Validación automática del texto generado
-Antes de cualquier envío, `apps/web/api/validar-reporte.js` compara el
+Antes de cualquier envío, `apps/web/api/_lib/validar-reporte.js` compara el
 reporte contra la carta:
 - Cada "**planeta en signo**" mencionado debe coincidir con la posición natal
   **o** la de tránsito del día (ambas son legítimas en el reporte).
@@ -57,7 +57,7 @@ que quedan registradas y se incorporan de forma controlada.
   observaciones** (sin mencionarlas) y llega de nuevo a revisión.
 - Cada cierto número de reportes, las entradas del registro se revisan y las
   recurrentes se convierten en reglas permanentes del prompt maestro
-  (`apps/web/api/prompt-aksha.js`) o del validador. Así cada corrección de la
+  (`apps/web/api/_lib/prompt-aksha.js`) o del validador. Así cada corrección de la
   revisora mejora TODOS los reportes futuros.
 - Registro acumulado: `/api/feedback-reporte?listar=1&token=<HMAC de
   "listado-mejoras" con REVISION_SECRET>`.

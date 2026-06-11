@@ -10,7 +10,7 @@
 // quedar abierta al público.
 
 import { timingSafeEqual } from 'node:crypto';
-import { reprocesarPendientes } from './pipeline-reporte.js';
+import { reprocesarPendientes } from './_lib/pipeline-reporte.js';
 
 function tokenValido(recibido, esperado) {
   const a = Buffer.from(String(recibido));

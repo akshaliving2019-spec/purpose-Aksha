@@ -4,7 +4,7 @@
 
 import Stripe from 'stripe';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { enviarReporte } from './enviar-reporte.js';
+import { enviarReporte } from './_lib/enviar-reporte.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 

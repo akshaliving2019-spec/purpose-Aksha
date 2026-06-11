@@ -3,7 +3,7 @@
 // La carta debe venir del microservicio Swiss Ephemeris (con o sin tránsitos).
 
 import { readFileSync } from 'node:fs';
-import { validarReporte } from '../api/validar-reporte.js';
+import { validarReporte } from '../api/_lib/validar-reporte.js';
 
 const rutaCarta = process.argv[2];
 if (!rutaCarta) {
