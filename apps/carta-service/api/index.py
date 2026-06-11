@@ -39,6 +39,15 @@ if HAY_ARCHIVOS_EFEMERIDES:
 else:
     FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED
 
+
+def asegurar_efemerides():
+    """Refija la ruta de efemérides antes de cada cálculo. En el runtime de
+    Vercel la ruta fijada al importar se pierde (los planetas caen en
+    silencio a Moshier y Quirón/asteroides fallan), así que no basta con
+    configurarla una sola vez a nivel de módulo."""
+    if HAY_ARCHIVOS_EFEMERIDES:
+        swe.set_ephe_path(EPHE_PATH)
+
 SIGNOS = [
     "Aries", "Tauro", "Géminis", "Cáncer", "Leo", "Virgo",
     "Libra", "Escorpio", "Sagitario", "Capricornio", "Acuario", "Piscis",
@@ -202,6 +211,7 @@ def a_jd_utc(fecha, hora, lat, lon, tz):
 
 def calcular_posiciones(jd, cuerpos=PLANETAS):
     """Posiciones eclípticas de los cuerpos dados para un día juliano."""
+    asegurar_efemerides()
     posiciones = []
     for nombre, codigo in cuerpos:
         try:
@@ -461,11 +471,30 @@ class handler(BaseHTTPRequestHandler):
         return hmac.compare_digest(auth, "Bearer " + SECRETO_SERVICIO)
 
     def do_GET(self):
-        self._responder(200, {
+        info = {
             "servicio": "AKSHA calcular_carta",
             "efemerides": "Swiss Ephemeris " + swe.version,
             "uso": "POST {fecha, hora, lugar | lat+lon+tz, nombre?, transitos?, lugar_transitos?}",
-        })
+        }
+        # Diagnóstico de efemérides (solo con el secreto compartido)
+        if SECRETO_SERVICIO and self._autorizado():
+            try:
+                archivos = sorted(os.listdir(EPHE_PATH)) if os.path.isdir(EPHE_PATH) else []
+            except OSError as e:
+                archivos = ["error: " + str(e)]
+            try:
+                asegurar_efemerides()
+                swe.calc_ut(swe.julday(2000, 1, 1, 12.0), swe.CHIRON, FLAGS)
+                prueba_quiron = "ok"
+            except swe.Error as e:
+                prueba_quiron = "error: " + str(e)
+            info["diagnostico"] = {
+                "ephe_path": EPHE_PATH,
+                "archivos_ephe": archivos,
+                "flags_swieph": bool(HAY_ARCHIVOS_EFEMERIDES),
+                "prueba_quiron": prueba_quiron,
+            }
+        self._responder(200, info)
 
     def do_POST(self):
         if not self._autorizado():
