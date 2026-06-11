@@ -59,6 +59,19 @@ PLANETAS = [
     ("Quirón", swe.CHIRON),
 ]
 
+# Asteroides mayores — se reportan con posición, signo y casa, pero NO entran
+# en la tabla de aspectos AKSHA: el semáforo y la "Libertad aspectual" del
+# prompt están calibrados con los 12 puntos clásicos.
+ASTEROIDES = [
+    ("Ceres", swe.CERES),
+    ("Pallas", swe.PALLAS),
+    ("Juno", swe.JUNO),
+    ("Vesta", swe.VESTA),
+]
+
+# Cuerpos que requieren seas_18.se1; si el archivo falta, se omiten con aviso.
+REQUIEREN_SEAS = {"Quirón", "Ceres", "Pallas", "Juno", "Vesta"}
+
 # Ciudades frecuentes (lat, lon, zona horaria IANA). Para cualquier otra ciudad
 # se usa geocodificación gratuita de Open-Meteo (sin API key).
 CIUDADES = {
@@ -187,15 +200,14 @@ def a_jd_utc(fecha, hora, lat, lon, tz):
     return swe.julday(utc.year, utc.month, utc.day, hora_decimal), utc
 
 
-def calcular_posiciones(jd):
-    """Posiciones eclípticas de los 12 puntos AKSHA para un día juliano dado."""
+def calcular_posiciones(jd, cuerpos=PLANETAS):
+    """Posiciones eclípticas de los cuerpos dados para un día juliano."""
     posiciones = []
-    for nombre, codigo in PLANETAS:
+    for nombre, codigo in cuerpos:
         try:
             datos, _ = swe.calc_ut(jd, codigo, FLAGS)
         except swe.Error:
-            # Quirón requiere seas_18.se1; si falta, lo omitimos con aviso.
-            if nombre == "Quirón":
+            if nombre in REQUIEREN_SEAS:
                 continue
             raise
         lon_e, velocidad = datos[0], datos[3]
@@ -248,12 +260,13 @@ def calcular_carta(fecha, hora, lugar=None, lat=None, lon=None, tz=None, nombre=
     jd, utc = a_jd_utc(fecha, hora, lat, lon, tz)
 
     planetas = calcular_posiciones(jd)
+    asteroides = calcular_posiciones(jd, ASTEROIDES)
 
     cuspides, ascmc = swe.houses(jd, lat, lon, b"P")
     cuspides = list(cuspides[:12])
     asc, mc = ascmc[0], ascmc[1]
 
-    for p in planetas:
+    for p in planetas + asteroides:
         p["casa"] = casa_de(p["longitud"], cuspides)
 
     signo_asc, g_asc, m_asc, etiqueta_asc = grados_a_signo(asc)
@@ -286,6 +299,7 @@ def calcular_carta(fecha, hora, lugar=None, lat=None, lon=None, tz=None, nombre=
                         "grados": g_mc, "minutos": m_mc, "posicion": etiqueta_mc},
         "cuspides_casas": {f"casa_{i+1}": round(c, 4) for i, c in enumerate(cuspides)},
         "planetas": planetas,
+        "asteroides": asteroides,
         "aspectos_natales": aspectos,
     }
     carta["texto"] = formatear_texto(carta)
@@ -347,6 +361,12 @@ def formatear_texto(carta):
         rx = " Rx" if p["retrogrado"] else ""
         lineas.append(f"{p['nombre']}: {p['posicion']}{rx} · Casa {p['casa']}")
     lineas.append(f"ASC: {carta['ascendente']['posicion']} · MC: {carta['medio_cielo']['posicion']}")
+    if carta.get("asteroides"):
+        lineas.append("─────────────────────────────────────────")
+        lineas.append("ASTEROIDES (posición y casa; NO incluidos en la tabla de aspectos):")
+        for p in carta["asteroides"]:
+            rx = " Rx" if p["retrogrado"] else ""
+            lineas.append(f"{p['nombre']}: {p['posicion']}{rx} · Casa {p['casa']}")
     lineas.append("─────────────────────────────────────────")
     lineas.append("ASPECTOS NATALES VERIFICADOS (algoritmo AKSHA A1→A2→A3):")
     for a in carta["aspectos_natales"]:

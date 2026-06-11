@@ -62,6 +62,53 @@ export async function enviarReporte({ nombre, email, reporte }) {
   return resultado;
 }
 
+// Reporte en modo revisión: va a la revisora (no al cliente) con el reporte
+// completo tal como lo recibiría el cliente y un botón "Aprobar y enviar".
+export async function enviarReporteRevision({
+  nombre, emailCliente, emailRevisora, reporte, linkAprobacion, linkFeedback, paymentIntentId, validacion,
+}) {
+  if (!RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY no configurada — email de revisión no enviado');
+  }
+
+  const bloqueValidacion = !validacion
+    ? ''
+    : validacion.ok
+      ? `<p style="color:#7ddf9a;font-size:14px;margin:0 0 16px;">✅ Validación de efemérides: todas las posiciones mencionadas coinciden con Swiss Ephemeris.</p>`
+      : `<div style="background:rgba(220,60,60,0.12);border:1px solid rgba(220,60,60,0.5);border-radius:6px;padding:12px;margin:0 0 16px;">
+          <p style="color:#ff9b9b;font-size:14px;margin:0 0 8px;"><strong>⚠️ La validación contra las efemérides encontró discrepancias:</strong></p>
+          ${validacion.errores.map((e) => `<p style="color:#ff9b9b;font-size:13px;margin:0 0 4px;">• ${escapeHtml(e)}</p>`).join('')}
+          <p style="color:rgba(255,255,255,0.6);font-size:12px;margin:8px 0 0;">Revisa estos puntos antes de aprobar.</p>
+        </div>`;
+
+  const banner = `
+    <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.45);border-radius:8px;padding:20px;margin-bottom:32px;">
+      <p style="color:#D4AF37;font-size:16px;margin:0 0 8px;"><strong>🔍 MODO REVISIÓN — este reporte aún NO se ha enviado al cliente</strong></p>
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;margin:0 0 4px;">Cliente: <strong>${escapeHtml(nombre)}</strong> &lt;${escapeHtml(emailCliente)}&gt;</p>
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;margin:0 0 16px;">Pedido: ${escapeHtml(paymentIntentId || '')}</p>
+      ${bloqueValidacion}
+      <a href="${linkAprobacion}" style="display:inline-block;background:#D4AF37;color:#07142F;font-weight:bold;padding:12px 24px;border-radius:6px;text-decoration:none;margin-right:12px;">✅ Aprobar y enviar al cliente</a>
+      ${linkFeedback ? `<a href="${linkFeedback}" style="display:inline-block;background:transparent;border:1px solid #D4AF37;color:#D4AF37;font-weight:bold;padding:12px 24px;border-radius:6px;text-decoration:none;">✍️ Observaciones / Rechazar</a>` : ''}
+      <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:12px 0 0;">Con "Observaciones" registras qué mejorar y, si quieres, el reporte se regenera incorporándolas.</p>
+    </div>`;
+
+  const resultado = await enviarConResend({
+    from: 'Sistema AKSHA <sistema@aksha.life>',
+    to: [emailRevisora],
+    subject: `🔍 Para tu revisión: Mapa de Propósito de ${nombre.split(' ')[0]}`,
+    html: formatearEmailHTML(nombre, reporte, banner),
+    text:
+      `REVISIÓN PENDIENTE — ${nombre} <${emailCliente}>\n` +
+      `Pedido: ${paymentIntentId || ''}\n` +
+      `Aprobar y enviar al cliente: ${linkAprobacion}\n` +
+      (linkFeedback ? `Observaciones / rechazar: ${linkFeedback}\n` : '') +
+      `\n${reporte}`,
+  }, `email de revisión a ${emailRevisora}`);
+
+  console.log('✅ Email de revisión enviado a:', emailRevisora);
+  return resultado;
+}
+
 // Aviso operativo al buzón interno de AKSHA (fallos del pipeline, etc.)
 export async function enviarAlertaInterna({ asunto, texto }) {
   if (!RESEND_API_KEY) {
@@ -101,7 +148,7 @@ async function enviarNotificacionInterna({ nombre, email, reporte }) {
   });
 }
 
-function formatearEmailHTML(nombre, reporte) {
+function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
   const primerNombre = escapeHtml(nombre.split(' ')[0]);
   // Convertir el Markdown ligero del reporte a HTML básico
   // (escapado primero; títulos antes de convertir saltos de línea)
@@ -135,6 +182,7 @@ function formatearEmailHTML(nombre, reporte) {
 </head>
 <body>
   <div class="container">
+    ${encabezadoExtra}
     <div class="header">
       <div class="logo">AKSHA LIFE</div>
       <div class="subtitle">TU MAPA DE PROPÓSITO</div>

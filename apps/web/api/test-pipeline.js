@@ -13,6 +13,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte } from './enviar-reporte.js';
+import { validarReporte } from './validar-reporte.js';
 
 function tokenValido(recibido, esperado) {
   const a = Buffer.from(String(recibido));
@@ -55,8 +56,15 @@ export default async function handler(req, res) {
     });
     pasos.reporte = `ok (${reporte.length} caracteres)`;
 
+    const validacion = validarReporte(reporte, carta);
+    pasos.validacion = validacion.ok
+      ? 'ok — posiciones coinciden con Swiss Ephemeris'
+      : `⚠️ discrepancias: ${validacion.errores.join(' | ')}`;
+
     let resultadoEnvio = null;
-    if (enviar) {
+    if (enviar && !validacion.ok) {
+      pasos.email = 'bloqueado por validación (lineamiento AKSHA)';
+    } else if (enviar) {
       console.log('📧 [test] Enviando email a:', email);
       resultadoEnvio = await enviarReporte({ nombre, email, reporte });
       pasos.email = 'ok';
@@ -67,6 +75,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       pasos,
+      validacion,
       carta_texto: carta.texto,
       reporte,
       envio: resultadoEnvio,

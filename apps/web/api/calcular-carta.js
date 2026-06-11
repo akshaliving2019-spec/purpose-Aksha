@@ -48,23 +48,10 @@ export async function calcularCarta(birthDate, birthTime, birthPlace, opciones =
     await new Promise((r) => setTimeout(r, intento * 2000));
   }
 
-  console.error('❌ Swiss Ephemeris agotó reintentos — usando fallback');
-  return cartaFallback(birthDate, birthTime, birthPlace);
-}
-
-// Respaldo si la función Python no responde: Claude recibe los datos crudos
-// y la instrucción de calcular posiciones (menos preciso — solo emergencia).
-function cartaFallback(birthDate, birthTime, birthPlace) {
-  return {
-    texto: `DATOS DE NACIMIENTO PARA ANÁLISIS ASTROLÓGICO
-─────────────────────────────────────────
-Fecha: ${birthDate}
-Hora: ${birthTime || 'No proporcionada'}
-Lugar: ${birthPlace}
-─────────────────────────────────────────
-NOTA: El motor Swiss Ephemeris no respondió. Calcular posiciones planetarias
-aproximadas para esta fecha y hora, indicando en el reporte que los grados
-exactos serán confirmados.`,
-    fallback: true,
-  };
+  // Lineamiento AKSHA: sin carta verificada por Swiss Ephemeris NO se genera
+  // reporte. El pedido queda 'fallido' y el cron diario lo reintenta (máx 3).
+  throw new Error(
+    'Swiss Ephemeris no disponible tras 3 intentos — el reporte no se genera ' +
+    'sin carta verificada; el pedido queda para reintento automático.',
+  );
 }

@@ -12,7 +12,7 @@ const client = new Anthropic({
   maxRetries: 3, // errores 429/5xx transitorios se reintentan solos
 });
 
-export async function generarReporte({ nombre, email, birthDate, birthTime, birthPlace, carta }) {
+export async function generarReporte({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }) {
   // Streaming obligatorio: el reporte completo supera con holgura lo que un
   // request sin streaming puede generar antes del timeout HTTP del SDK.
   const stream = client.messages.stream({
@@ -23,7 +23,7 @@ export async function generarReporte({ nombre, email, birthDate, birthTime, birt
     messages: [
       {
         role: 'user',
-        content: construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta }),
+        content: construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }),
       },
     ],
   });

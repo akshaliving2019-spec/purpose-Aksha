@@ -7,14 +7,18 @@
 import Stripe from 'stripe';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
-import { enviarReporte, enviarAlertaInterna } from './enviar-reporte.js';
+import { enviarReporte, enviarAlertaInterna, enviarReporteRevision } from './enviar-reporte.js';
+import { validarReporte } from './validar-reporte.js';
+import {
+  modoRevisionActivo, emailRevision, guardarReportePendiente, urlAprobacion, urlFeedback,
+} from './revision-reporte.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const MAX_INTENTOS = 3;
 const PROCESANDO_TIMEOUT_MS = 10 * 60 * 1000; // tras 10 min, un "procesando" se considera muerto
 
-export async function procesarPedido(paymentIntentId, { forzar = false } = {}) {
+export async function procesarPedido(paymentIntentId, { forzar = false, observaciones = '' } = {}) {
   const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
   const md = pi.metadata || {};
   const { customer_name, customer_email, birth_date, birth_time, birth_place } = md;
@@ -27,6 +31,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false } = {}) {
 
   if (!forzar) {
     if (md.reporte_status === 'enviado') return { estado: 'ya_enviado' };
+    if (md.reporte_status === 'en_revision') return { estado: 'en_revision' };
     if (md.reporte_status === 'procesando') {
       const inicio = Date.parse(md.reporte_inicio_at || 0);
       if (Date.now() - inicio < PROCESANDO_TIMEOUT_MS) return { estado: 'en_proceso' };
@@ -56,7 +61,52 @@ export async function procesarPedido(paymentIntentId, { forzar = false } = {}) {
       birthTime: birth_time,
       birthPlace: birth_place,
       carta,
+      observaciones,
     });
+
+    // Lineamiento AKSHA: el texto generado se valida contra la carta Swiss
+    // Ephemeris. En modo directo una discrepancia bloquea el envío (el cron
+    // reintenta con una generación nueva); en modo revisión va marcada.
+    const validacion = validarReporte(reporte, carta);
+    if (!validacion.ok) {
+      console.warn(`⚠️ [${paymentIntentId}] Validación:`, validacion.errores);
+    }
+
+    // Modo revisión: el reporte va primero a la revisora con link de
+    // aprobación; el cliente lo recibe cuando ella aprueba (/api/aprobar-reporte).
+    if (modoRevisionActivo()) {
+      console.log(`🔍 [${paymentIntentId}] Modo revisión: enviando a`, emailRevision());
+      const blobUrl = await guardarReportePendiente(paymentIntentId, reporte);
+      const envioRevision = await enviarReporteRevision({
+        nombre: customer_name,
+        emailCliente: customer_email,
+        emailRevisora: emailRevision(),
+        reporte,
+        linkAprobacion: urlAprobacion(paymentIntentId),
+        linkFeedback: urlFeedback(paymentIntentId),
+        paymentIntentId,
+        validacion,
+      });
+
+      await stripe.paymentIntents.update(paymentIntentId, {
+        metadata: {
+          reporte_status: 'en_revision',
+          reporte_blob_url: blobUrl,
+          reporte_revision_resend_id: envioRevision?.id || '',
+          reporte_revision_at: new Date().toISOString(),
+          reporte_error: '',
+        },
+      });
+
+      console.log(`✅ [${paymentIntentId}] Reporte en revisión (${emailRevision()})`);
+      return { estado: 'en_revision', resend_id: envioRevision?.id };
+    }
+
+    if (!validacion.ok) {
+      throw new Error(
+        `Validación astrológica falló — envío bloqueado: ${validacion.errores.join(' | ')}`,
+      );
+    }
 
     console.log(`📧 [${paymentIntentId}] Enviando reporte a:`, customer_email);
     const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte });
@@ -113,6 +163,7 @@ export async function reprocesarPendientes({ maxPedidos = 1, dryRun = false } = 
     if (pi.status !== 'succeeded') return false;
     if (!md.customer_email || !md.birth_date) return false;
     if (md.reporte_status === 'enviado') return false;
+    if (md.reporte_status === 'en_revision') return false; // espera aprobación, no reprocesar
     if (parseInt(md.reporte_intentos || '0', 10) >= MAX_INTENTOS) return false;
     if (md.reporte_status === 'procesando') {
       const inicio = Date.parse(md.reporte_inicio_at || 0);
