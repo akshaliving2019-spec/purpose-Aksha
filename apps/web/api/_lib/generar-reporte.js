@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { PROMPT_SISTEMA_AKSHA, construirMensajeCliente } from './prompt-aksha.js';
+import { obtenerProducto } from './productos.js';
 
 // La variable de entorno puede venir con texto extra pegado alrededor de la
 // key (saltos de línea rompen el header HTTP → "Connection error" del SDK).
@@ -12,18 +12,21 @@ const client = new Anthropic({
   maxRetries: 3, // errores 429/5xx transitorios se reintentan solos
 });
 
-export async function generarReporte({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }) {
+export async function generarReporte({
+  nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, producto,
+}) {
+  const prod = obtenerProducto(producto);
   // Streaming obligatorio: el reporte completo supera con holgura lo que un
   // request sin streaming puede generar antes del timeout HTTP del SDK.
   const stream = client.messages.stream({
     model: 'claude-opus-4-8',
     max_tokens: 32000,
     thinking: { type: 'adaptive' },
-    system: PROMPT_SISTEMA_AKSHA,
+    system: prod.promptSistema,
     messages: [
       {
         role: 'user',
-        content: construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }),
+        content: prod.construirMensaje({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }),
       },
     ],
   });

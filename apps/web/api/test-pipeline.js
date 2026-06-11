@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
   const {
     nombre, email, fecha, hora, lugar,
-    transitos, lugar_transitos, enviar = false,
+    transitos, lugar_transitos, enviar = false, producto,
   } = req.body || {};
 
   if (!nombre || !email || !fecha || !lugar) {
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
     console.log('🤖 [test] Generando reporte con Claude...');
     const reporte = await generarReporte({
-      nombre, email, birthDate: fecha, birthTime: hora, birthPlace: lugar, carta,
+      nombre, email, birthDate: fecha, birthTime: hora, birthPlace: lugar, carta, producto,
     });
     pasos.reporte = `ok (${reporte.length} caracteres)`;
 

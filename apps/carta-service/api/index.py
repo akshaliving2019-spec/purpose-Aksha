@@ -81,6 +81,16 @@ ASTEROIDES = [
 # Cuerpos que requieren seas_18.se1; si el archivo falta, se omiten con aviso.
 REQUIEREN_SEAS = {"Quirón", "Ceres", "Pallas", "Juno", "Vesta"}
 
+# Estrellas fijas (catálogo sefstars.txt). Solo se reportan sus CONJUNCIONES
+# con puntos natales (orbe ≤ 1.5°), que es como se usan en interpretación.
+ESTRELLAS_FIJAS = [
+    "Regulus", "Spica", "Algol", "Aldebaran", "Antares", "Fomalhaut",
+    "Sirius", "Vega", "Altair", "Pollux", "Procyon", "Betelgeuse",
+    "Rigel", "Alcyone",
+]
+HAY_SEFSTARS = os.path.isfile(os.path.join(EPHE_PATH, "sefstars.txt"))
+ORBE_ESTRELLA = 1.5
+
 # Ciudades frecuentes (lat, lon, zona horaria IANA). Para cualquier otra ciudad
 # se usa geocodificación gratuita de Open-Meteo (sin API key).
 CIUDADES = {
@@ -302,6 +312,73 @@ def calcular_aspectos(puntos):
     return aspectos
 
 
+def calcular_puntos_adicionales(jd, planetas, asc):
+    """Lilith (Luna Negra media), Nodo Sur y Parte de la Fortuna. Igual que
+    los asteroides: posición, signo y casa, fuera de la tabla de aspectos."""
+    asegurar_efemerides()
+    puntos = []
+
+    try:
+        datos, _ = swe.calc_ut(jd, swe.MEAN_APOG, FLAGS)
+        signo, g, m, etiqueta = grados_a_signo(datos[0])
+        puntos.append({"nombre": "Lilith", "longitud": round(datos[0] % 360.0, 4),
+                       "signo": signo, "grados": g, "minutos": m,
+                       "posicion": etiqueta, "retrogrado": datos[3] < 0})
+    except swe.Error:
+        pass
+
+    por_nombre = {p["nombre"]: p for p in planetas}
+    nn = por_nombre.get("Nodo Norte")
+    if nn:
+        lon_ns = (nn["longitud"] + 180.0) % 360.0
+        signo, g, m, etiqueta = grados_a_signo(lon_ns)
+        puntos.append({"nombre": "Nodo Sur", "longitud": round(lon_ns, 4),
+                       "signo": signo, "grados": g, "minutos": m,
+                       "posicion": etiqueta, "retrogrado": nn["retrogrado"]})
+
+    sol, luna = por_nombre.get("Sol"), por_nombre.get("Luna")
+    if sol and luna and sol.get("casa"):
+        # Carta diurna si el Sol está sobre el horizonte (casas 7 a 12)
+        es_diurna = 7 <= sol["casa"] <= 12
+        if es_diurna:
+            lon_pf = (asc + luna["longitud"] - sol["longitud"]) % 360.0
+        else:
+            lon_pf = (asc + sol["longitud"] - luna["longitud"]) % 360.0
+        signo, g, m, etiqueta = grados_a_signo(lon_pf)
+        puntos.append({"nombre": "Parte de la Fortuna", "longitud": round(lon_pf, 4),
+                       "signo": signo, "grados": g, "minutos": m,
+                       "posicion": etiqueta, "retrogrado": False,
+                       "formula": "diurna" if es_diurna else "nocturna"})
+    return puntos
+
+
+def calcular_estrellas_fijas(jd, puntos_natales):
+    """Conjunciones de estrellas fijas con puntos natales (orbe ≤1.5°).
+    Requiere sefstars.txt en ephe/; si falta, devuelve lista vacía."""
+    if not HAY_SEFSTARS:
+        return []
+    asegurar_efemerides()
+    estrellas = []
+    for nombre in ESTRELLAS_FIJAS:
+        try:
+            res = swe.fixstar_ut(nombre, jd, FLAGS)
+        except swe.Error:
+            continue
+        lon_e = res[0][0] % 360.0
+        signo, g, m, etiqueta = grados_a_signo(lon_e)
+        conjunciones = []
+        for p in puntos_natales:
+            d = abs(lon_e - p["longitud"]) % 360.0
+            if d > 180.0:
+                d = 360.0 - d
+            if d <= ORBE_ESTRELLA:
+                conjunciones.append({"punto": p["nombre"], "orbe": round(d, 2)})
+        estrellas.append({"nombre": nombre, "longitud": round(lon_e, 4),
+                          "signo": signo, "posicion": etiqueta,
+                          "conjunciones": conjunciones})
+    return estrellas
+
+
 def calcular_carta(fecha, hora, lugar=None, lat=None, lon=None, tz=None, nombre=None):
     """Carta natal completa para cualquier persona. Devuelve dict listo para JSON."""
     if lat is None or lon is None or tz is None:
@@ -320,6 +397,18 @@ def calcular_carta(fecha, hora, lugar=None, lat=None, lon=None, tz=None, nombre=
 
     for p in planetas + asteroides:
         p["casa"] = casa_de(p["longitud"], cuspides)
+
+    puntos_adicionales = calcular_puntos_adicionales(jd, planetas, asc)
+    for p in puntos_adicionales:
+        p["casa"] = casa_de(p["longitud"], cuspides)
+
+    estrellas_fijas = calcular_estrellas_fijas(
+        jd,
+        planetas + asteroides + puntos_adicionales + [
+            {"nombre": "ASC", "longitud": asc},
+            {"nombre": "MC", "longitud": mc},
+        ],
+    )
 
     signo_asc, g_asc, m_asc, etiqueta_asc = grados_a_signo(asc)
     signo_mc, g_mc, m_mc, etiqueta_mc = grados_a_signo(mc)
@@ -352,6 +441,8 @@ def calcular_carta(fecha, hora, lugar=None, lat=None, lon=None, tz=None, nombre=
         "cuspides_casas": {f"casa_{i+1}": round(c, 4) for i, c in enumerate(cuspides)},
         "planetas": planetas,
         "asteroides": asteroides,
+        "puntos_adicionales": puntos_adicionales,
+        "estrellas_fijas": estrellas_fijas,
         "aspectos_natales": aspectos,
     }
     carta["texto"] = formatear_texto(carta)
@@ -419,6 +510,25 @@ def formatear_texto(carta):
         for p in carta["asteroides"]:
             rx = " Rx" if p["retrogrado"] else ""
             lineas.append(f"{p['nombre']}: {p['posicion']}{rx} · Casa {p['casa']}")
+    if carta.get("puntos_adicionales"):
+        lineas.append("─────────────────────────────────────────")
+        lineas.append("PUNTOS ADICIONALES (posición y casa; NO incluidos en la tabla de aspectos):")
+        for p in carta["puntos_adicionales"]:
+            rx = " Rx" if p["retrogrado"] else ""
+            extra = f" (fórmula {p['formula']})" if p.get("formula") else ""
+            lineas.append(f"{p['nombre']}: {p['posicion']}{rx} · Casa {p['casa']}{extra}")
+    if carta.get("estrellas_fijas"):
+        con_contacto = [e for e in carta["estrellas_fijas"] if e["conjunciones"]]
+        lineas.append("─────────────────────────────────────────")
+        if con_contacto:
+            lineas.append("ESTRELLAS FIJAS EN CONJUNCIÓN CON PUNTOS NATALES (orbe ≤1°30'):")
+            for e in con_contacto:
+                for c in e["conjunciones"]:
+                    lineas.append(
+                        f"{e['nombre']} ({e['posicion']}) ☌ {c['punto']} natal — orbe {c['orbe']}°"
+                    )
+        else:
+            lineas.append("ESTRELLAS FIJAS: sin conjunciones relevantes (orbe ≤1°30').")
     lineas.append("─────────────────────────────────────────")
     lineas.append("ASPECTOS NATALES VERIFICADOS (algoritmo AKSHA A1→A2→A3):")
     for a in carta["aspectos_natales"]:

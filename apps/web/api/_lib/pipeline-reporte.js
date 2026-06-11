@@ -21,7 +21,7 @@ const PROCESANDO_TIMEOUT_MS = 10 * 60 * 1000; // tras 10 min, un "procesando" se
 export async function procesarPedido(paymentIntentId, { forzar = false, observaciones = '' } = {}) {
   const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
   const md = pi.metadata || {};
-  const { customer_name, customer_email, birth_date, birth_time, birth_place } = md;
+  const { customer_name, customer_email, birth_date, birth_time, birth_place, producto } = md;
 
   if (!customer_name || !customer_email || !birth_date || !birth_place) {
     return { estado: 'datos_incompletos' };
@@ -62,6 +62,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       birthPlace: birth_place,
       carta,
       observaciones,
+      producto,
     });
 
     // Lineamiento AKSHA: el texto generado se valida contra la carta Swiss

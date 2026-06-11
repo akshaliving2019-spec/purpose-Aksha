@@ -50,6 +50,8 @@ function construirPuntos(carta) {
 
   for (const p of carta.planetas || []) agregar(p.nombre, p.signo, p.casa);
   for (const p of carta.asteroides || []) agregar(p.nombre, p.signo, p.casa);
+  for (const p of carta.puntos_adicionales || []) agregar(p.nombre, p.signo, p.casa);
+  for (const e of carta.estrellas_fijas || []) agregar(e.nombre, e.signo, null);
 
   const cuspides = Object.values(carta.cuspides_casas || {});
   for (const t of carta.transitos?.posiciones || []) {
