@@ -91,6 +91,21 @@ CIUDADES = {
     "cali": (3.4516, -76.5320, "America/Bogota"),
     "barranquilla": (10.9685, -74.7813, "America/Bogota"),
     "cartagena": (10.3910, -75.4794, "America/Bogota"),
+    "santa marta": (11.2408, -74.1990, "America/Bogota"),
+    "bucaramanga": (7.1254, -73.1198, "America/Bogota"),
+    "cucuta": (7.8939, -72.5078, "America/Bogota"),
+    "cúcuta": (7.8939, -72.5078, "America/Bogota"),
+    "pereira": (4.8087, -75.6906, "America/Bogota"),
+    "manizales": (5.0703, -75.5138, "America/Bogota"),
+    "ibague": (4.4389, -75.2322, "America/Bogota"),
+    "ibagué": (4.4389, -75.2322, "America/Bogota"),
+    "villavicencio": (4.1420, -73.6266, "America/Bogota"),
+    "pasto": (1.2136, -77.2811, "America/Bogota"),
+    "monteria": (8.7479, -75.8814, "America/Bogota"),
+    "montería": (8.7479, -75.8814, "America/Bogota"),
+    "valledupar": (10.4631, -73.2532, "America/Bogota"),
+    "neiva": (2.9273, -75.2819, "America/Bogota"),
+    "sincelejo": (9.3047, -75.3978, "America/Bogota"),
     "miami": (25.7617, -80.1918, "America/New_York"),
     "new york": (40.7128, -74.0060, "America/New_York"),
     "nueva york": (40.7128, -74.0060, "America/New_York"),
@@ -167,26 +182,53 @@ def casa_de(lon_planeta, cuspides):
     return 0
 
 
+def _buscar_open_meteo(nombre):
+    url = (
+        "https://geocoding-api.open-meteo.com/v1/search?name="
+        + urllib.parse.quote(nombre)
+        + "&count=5&language=es&format=json"
+    )
+    with urllib.request.urlopen(url, timeout=10) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    return data.get("results") or []
+
+
 def geocodificar(lugar):
     """Resuelve cualquier lugar a (lat, lon, tz IANA). Tabla local primero,
-    después Open-Meteo (gratis, sin key). Lanza ValueError si no se encuentra."""
+    después Open-Meteo (gratis, sin key). Lanza ValueError si no se encuentra.
+
+    Mucha gente escribe ciudad + departamento juntos ("Santa Marta Magdalena,
+    Colombia"), así que se prueban candidatos quitando palabras del final, y
+    si el texto trae país se prefiere el resultado de ese país."""
     clave = lugar.lower().strip()
     for ciudad, datos in CIUDADES.items():
         if ciudad in clave:
             return datos
-    nombre = lugar.split(",")[0].strip()
-    url = (
-        "https://geocoding-api.open-meteo.com/v1/search?name="
-        + urllib.parse.quote(nombre)
-        + "&count=1&language=es&format=json"
-    )
-    with urllib.request.urlopen(url, timeout=10) as r:
-        data = json.loads(r.read().decode("utf-8"))
-    if not data.get("results"):
-        raise ValueError(f"No se pudo geocodificar el lugar: {lugar!r}. "
-                         "Proporciona lat/lon/tz explícitos.")
-    res = data["results"][0]
-    return res["latitude"], res["longitude"], res.get("timezone", "UTC")
+
+    partes = [p.strip() for p in lugar.split(",") if p.strip()]
+    palabras = partes[0].split() if partes else []
+    pais = partes[-1].lower() if len(partes) > 1 else ""
+    candidatos = [" ".join(palabras[:n]) for n in range(len(palabras), 0, -1)]
+
+    primer_resultado = None
+    for candidato in candidatos:
+        try:
+            resultados = _buscar_open_meteo(candidato)
+        except OSError:
+            continue
+        for res in resultados:
+            if pais and res.get("country", "").lower() == pais:
+                return res["latitude"], res["longitude"], res.get("timezone", "UTC")
+        if resultados and primer_resultado is None:
+            primer_resultado = resultados[0]
+        if resultados and not pais:
+            break
+
+    if primer_resultado:
+        return (primer_resultado["latitude"], primer_resultado["longitude"],
+                primer_resultado.get("timezone", "UTC"))
+    raise ValueError(f"No se pudo geocodificar el lugar: {lugar!r}. "
+                     "Proporciona lat/lon/tz explícitos.")
 
 
 def a_jd_utc(fecha, hora, lat, lon, tz):
