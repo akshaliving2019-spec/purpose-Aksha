@@ -152,12 +152,14 @@ CIUDADES = {
 }
 
 # Aspectos AKSHA — ángulo exacto, orbe, símbolo y tipo
+# Orbes según Hand, Horoscope Symbols (tabla 2): mayores 5°, sextil 3°,
+# quincuncio 1.5° (base-conocimiento/03-aspectos-y-orbes.md, decisión §1)
 ASPECTOS = [
     ("Conjunción", 0, 5, "☌", "NEUTRO"),
-    ("Sextil", 60, 4, "✶", "MOTOR"),
+    ("Sextil", 60, 3, "✶", "MOTOR"),
     ("Cuadratura", 90, 5, "□", "FRENO"),
     ("Trígono", 120, 5, "△", "MOTOR"),
-    ("Quincuncio", 150, 3, "⚻", "AJUSTE"),
+    ("Quincuncio", 150, 1.5, "⚻", "AJUSTE"),
     ("Oposición", 180, 5, "☍", "FRENO MAYOR"),
 ]
 
@@ -288,7 +290,7 @@ def calcular_posiciones(jd, cuerpos=PLANETAS):
 
 def calcular_aspectos(puntos):
     """Algoritmo AKSHA A1→A2→A3: distancias angulares entre todos los pares y
-    clasificación con orbes (Conj/Op/Cuad/Tríg ±5°, Sextil ±4°, Quinc ±3°)."""
+    clasificación con orbes (Conj/Op/Cuad/Tríg ±5°, Sextil ±3°, Quinc ±1.5°)."""
     aspectos = []
     for i in range(len(puntos)):
         for j in range(i + 1, len(puntos)):
