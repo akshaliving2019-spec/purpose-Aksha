@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { name, email, birthDate, birthTime, birthPlace } = req.body || {};
+  const { name, email, birthDate, birthTime, birthPlace, historiaVida } = req.body || {};
 
   if (!name || !email || !birthDate || !birthPlace) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -29,8 +29,21 @@ export default async function handler(req, res) {
       typeof email !== 'string' || email.length > 254 || !/^\S+@\S+\.\S+$/.test(email) ||
       typeof birthDate !== 'string' || birthDate.length > 20 ||
       (birthTime && (typeof birthTime !== 'string' || birthTime.length > 20)) ||
+      (historiaVida && (typeof historiaVida !== 'string' || historiaVida.length > 2500)) ||
       typeof birthPlace !== 'string' || birthPlace.length > 200) {
     return res.status(400).json({ error: 'Invalid field format.' });
+  }
+
+  // La metadata de Stripe acepta máx. 500 caracteres por valor: la historia
+  // de vida viaja troceada en historia_vida_1..N y el pipeline la rearma.
+  const historia = (historiaVida || '').trim();
+  const metadataHistoria = {};
+  for (let inicio = 0, n = 1; inicio < historia.length; n++) {
+    let fin = Math.min(inicio + 450, historia.length);
+    // No partir un par sustituto (emoji) en el borde del trozo
+    if (fin < historia.length && /[\uD800-\uDBFF]/.test(historia[fin - 1])) fin--;
+    metadataHistoria[`historia_vida_${n}`] = historia.slice(inicio, fin);
+    inicio = fin;
   }
 
   try {
@@ -44,8 +57,12 @@ export default async function handler(req, res) {
         customer_name: name,
         customer_email: email,
         birth_date: birthDate,
-        birth_time: birthTime || 'Not provided',
+        // Vacío cuando el cliente no la conoce: el pipeline activa el
+        // protocolo de Historia de Vida con valor falsy ('Not provided'
+        // truthy lo rompía).
+        birth_time: birthTime || '',
         birth_place: birthPlace,
+        ...metadataHistoria,
       },
     });
 

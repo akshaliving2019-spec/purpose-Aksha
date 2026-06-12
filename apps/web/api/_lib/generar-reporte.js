@@ -13,7 +13,7 @@ const client = new Anthropic({
 });
 
 export async function generarReporte({
-  nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, producto,
+  nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, historiaVida, producto,
 }) {
   const prod = obtenerProducto(producto);
   // Streaming obligatorio: el reporte completo supera con holgura lo que un
@@ -26,7 +26,7 @@ export async function generarReporte({
     messages: [
       {
         role: 'user',
-        content: prod.construirMensaje({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones }),
+        content: prod.construirMensaje({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, historiaVida }),
       },
     ],
   });

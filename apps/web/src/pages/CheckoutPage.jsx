@@ -117,6 +117,7 @@ const CheckoutPage = () => {
   const [birthYear, setBirthYear] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [birthPlace, setBirthPlace] = useState('');
+  const [historiaVida, setHistoriaVida] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [step, setStep] = useState('info');
   const [formError, setFormError] = useState('');
@@ -145,7 +146,7 @@ const CheckoutPage = () => {
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, birthDate, birthTime, birthPlace }),
+        body: JSON.stringify({ name, email, birthDate, birthTime, birthPlace, historiaVida }),
       });
       const data = await res.json();
       if (data.error) { setFormError(data.error); setSubmitting(false); return; }
@@ -284,7 +285,7 @@ const CheckoutPage = () => {
                     <input type="time" value={birthTime} onChange={e => setBirthTime(e.target.value)}
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                     <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                      {es ? 'Genera un análisis cronobiológico más profundo' : 'Enables deeper chronobiological analysis'}
+                      {es ? 'Si la conoces, aparece en tu registro civil o certificado de nacimiento' : 'If you know it, it appears on your birth certificate'}
                     </p>
                   </div>
 
@@ -295,6 +296,22 @@ const CheckoutPage = () => {
                     <input type="text" value={birthPlace} onChange={e => setBirthPlace(e.target.value)}
                       placeholder={es ? 'Ciudad, País' : 'City, Country'}
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5 uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                      {es ? 'Tu historia de vida (opcional)' : 'Your life story (optional)'}
+                    </label>
+                    <textarea value={historiaVida} onChange={e => setHistoriaVida(e.target.value)}
+                      maxLength={2500} rows={4}
+                      placeholder={es
+                        ? 'Eventos importantes con fechas aproximadas (cambios de carrera, mudanzas, relaciones, logros, giros de rumbo) y patrones que se te repiten'
+                        : 'Key events with approximate dates (career changes, moves, relationships, achievements, turning points) and patterns that repeat in your life'}
+                      className={`w-full rounded-lg px-4 py-3 text-sm outline-none transition-all duration-200 resize-none ${inputFocusStyle}`}
+                      style={inputStyle} />
+                    <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      {es ? 'Tu experiencia vivida también alimenta tu mapa: lo hace único para ti' : 'Your lived experience also feeds your map: it makes it unique to you'}
+                    </p>
                   </div>
 
                   {formError && (

@@ -47,6 +47,18 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     return { estado: 'datos_incompletos' };
   }
 
+  // Pedidos antiguos guardaban 'Not provided' cuando faltaba la hora; el
+  // protocolo sin hora del prompt se activa solo con valor vacío.
+  const birthTime = !birth_time || birth_time === 'Not provided' ? '' : birth_time;
+
+  // La historia de vida viaja troceada en historia_vida_1..N porque la
+  // metadata de Stripe limita cada valor a 500 caracteres.
+  const historiaVida = Object.keys(md)
+    .filter((k) => /^historia_vida_\d+$/.test(k))
+    .sort((a, b) => parseInt(a.slice(14), 10) - parseInt(b.slice(14), 10))
+    .map((k) => md[k])
+    .join('');
+
   const intentos = parseInt(md.reporte_intentos || '0', 10);
 
   if (!forzar) {
@@ -69,7 +81,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
 
   try {
     console.log(`🔭 [${paymentIntentId}] Calculando carta natal...`);
-    const carta = await calcularCarta(birth_date, birth_time, birth_place, {
+    const carta = await calcularCarta(birth_date, birthTime, birth_place, {
       nombre: customer_name,
     });
 
@@ -78,10 +90,11 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       nombre: customer_name,
       email: customer_email,
       birthDate: birth_date,
-      birthTime: birth_time,
+      birthTime,
       birthPlace: birth_place,
       carta,
       observaciones,
+      historiaVida,
       producto,
     });
 
@@ -165,7 +178,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         `El pipeline de reporte falló.\n\n` +
         `PaymentIntent: ${paymentIntentId}\n` +
         `Cliente: ${customer_name} <${customer_email}>\n` +
-        `Nacimiento: ${birth_date} ${birth_time || '(sin hora)'} · ${birth_place}\n` +
+        `Nacimiento: ${birth_date} ${birthTime || '(sin hora)'} · ${birth_place}\n` +
         `Intento: ${intentos + 1} de ${MAX_INTENTOS}\n\n` +
         `Error:\n${detalle}\n\n` +
         (intentos + 1 < MAX_INTENTOS
