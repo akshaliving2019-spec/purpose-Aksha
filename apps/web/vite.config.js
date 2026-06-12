@@ -218,7 +218,11 @@ if (window.navigation && window.self !== window.top) {
 const addTransformIndexHtml = {
 	name: 'add-transform-index-html',
 	transformIndexHtml(html) {
-		const tags = [
+		// Los handlers de Horizons existen para el iframe de preview del builder:
+		// monkey-patchean fetch/console.error y reportan errores vía postMessage.
+		// En producción son peso muerto y obligarían a una CSP con
+		// script-src 'unsafe-inline', así que solo se inyectan en desarrollo.
+		const tags = isDev ? [
 			{
 				tag: 'script',
 				attrs: { type: 'module' },
@@ -249,7 +253,7 @@ const addTransformIndexHtml = {
 				children: configNavigationHandler,
 				injectTo: 'head',
 			},
-		];
+		] : [];
 
 		if (!isDev && process.env.TEMPLATE_BANNER_SCRIPT_URL && process.env.TEMPLATE_REDIRECT_URL) {
 			tags.push(

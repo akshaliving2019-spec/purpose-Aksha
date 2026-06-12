@@ -1,3 +1,57 @@
+# AKSHA LIFE — https://aksha.life
+# Crawlers de búsqueda y de IA son bienvenidos en el contenido público.
+# Guía para LLMs: https://aksha.life/llms.txt
+
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /payment-success
+Disallow: /thank-you
+Disallow: /api/
+Disallow: /reportes/
+
+# Motores generativos / asistentes de IA (GEO): acceso explícito
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://aksha.life/sitemap.xml

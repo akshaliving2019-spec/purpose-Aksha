@@ -19,6 +19,8 @@ const PaymentSuccessPage = () => {
     <>
       <Helmet>
         <title>Payment Successful — AKSHA</title>
+        <meta name="description" content="Your payment was received. Your personalized AKSHA Purpose Map is on its way to your inbox." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen bg-background flex items-center justify-center px-4 py-20">

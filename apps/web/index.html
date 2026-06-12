@@ -1,17 +1,83 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
-		<meta name="generator" content="Hostinger Horizons" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="google-site-verification" content="6C0JgULGaNdiZExtoK_5NYWqGKy7pCXn-6PqprDsjY0" />
+		<title>AKSHA · Mapa de Propósito</title>
 		<meta name="description" content="AKSHA Purpose Mapping System — Descubre tu propósito con ciencia del comportamiento." />
+		<!-- El canonical lo gestiona src/components/Seo.jsx por ruta; uno estático
+		     aquí apuntaría todas las rutas internas a "/" para crawlers sin JS. -->
+		<link rel="icon" type="image/png" href="/aksha-logo.png" />
+		<link rel="apple-touch-icon" href="/aksha-logo.png" />
+		<meta name="theme-color" content="#07142F" />
+		<meta name="google-site-verification" content="6C0JgULGaNdiZExtoK_5NYWqGKy7pCXn-6PqprDsjY0" />
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="AKSHA LIFE" />
 		<meta property="og:title" content="AKSHA · Mapa de Propósito" />
 		<meta property="og:description" content="Sistema de mapeo de propósito basado en ciencia del comportamiento." />
 		<meta property="og:image" content="https://aksha.life/aksha-logo-hero.png" />
-		<meta property="og:url" content="https://aksha.life" />
-		<title>AKSHA · Mapa de Propósito</title>
+		<meta property="og:image:alt" content="AKSHA LIFE — Mapa de Propósito" />
+		<meta property="og:url" content="https://aksha.life/" />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale:alternate" content="en_US" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="AKSHA · Mapa de Propósito" />
+		<meta name="twitter:description" content="Sistema de mapeo de propósito basado en ciencia del comportamiento." />
+		<meta name="twitter:image" content="https://aksha.life/aksha-logo-hero.png" />
+
+		<!-- Fuentes: preconnect + link (en vez de @import en CSS, que bloquea el render) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "Organization",
+					"@id": "https://aksha.life/#organization",
+					"name": "AKSHA LIFE",
+					"url": "https://aksha.life/",
+					"logo": "https://aksha.life/aksha-logo.png",
+					"contactPoint": {
+						"@type": "ContactPoint",
+						"email": "Purpose@aksha.life",
+						"contactType": "customer support",
+						"availableLanguage": ["es", "en"]
+					}
+				},
+				{
+					"@type": "WebSite",
+					"@id": "https://aksha.life/#website",
+					"url": "https://aksha.life/",
+					"name": "AKSHA LIFE",
+					"description": "Sistema de mapeo de propósito basado en ciencia del comportamiento.",
+					"inLanguage": ["es", "en"],
+					"publisher": { "@id": "https://aksha.life/#organization" }
+				},
+				{
+					"@type": "Product",
+					"@id": "https://aksha.life/#purpose-map",
+					"name": "Mapa de Propósito AKSHA",
+					"description": "Reporte personalizado que sintetiza neurociencia, psicología, arquetipos y cronobiología para revelar tus talentos naturales, fortalezas y propósito.",
+					"image": "https://aksha.life/aksha-logo-hero.png",
+					"brand": { "@id": "https://aksha.life/#organization" },
+					"offers": {
+						"@type": "Offer",
+						"price": "47.00",
+						"priceCurrency": "USD",
+						"availability": "https://schema.org/InStock",
+						"url": "https://aksha.life/checkout"
+					}
+				}
+			]
+		}
+		</script>
 	</head>
 	<body>
 		<div id="root"></div>

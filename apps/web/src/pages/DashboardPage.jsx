@@ -128,6 +128,7 @@ const DashboardPage = () => {
       <Helmet>
         <title>Dashboard - AKSHA</title>
         <meta name="description" content="View your purpose profile, career roadmap, and personalized insights." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen bg-background">

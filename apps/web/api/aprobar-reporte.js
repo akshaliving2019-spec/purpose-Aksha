@@ -8,6 +8,14 @@ import { enviarReporte } from './_lib/enviar-reporte.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// El nombre y email vienen del formulario de checkout (controlados por el
+// cliente) y se interpolan en HTML: hay que escaparlos siempre.
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function pagina(titulo, mensaje) {
   return `<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,11 +62,11 @@ export default async function handler(req, res) {
 
   if (md.reporte_status === 'enviado') {
     return responder(res, 200, 'Ya enviado ✅',
-      `Este reporte ya fue aprobado y enviado a <strong>${md.customer_email || 'el cliente'}</strong>. No se envió de nuevo.`);
+      `Este reporte ya fue aprobado y enviado a <strong>${escapeHtml(md.customer_email || 'el cliente')}</strong>. No se envió de nuevo.`);
   }
   if (md.reporte_status !== 'en_revision' || !md.reporte_blob_url) {
     return responder(res, 409, 'No disponible',
-      `Este pedido no tiene un reporte pendiente de aprobación (estado: ${md.reporte_status || 'sin procesar'}).`);
+      `Este pedido no tiene un reporte pendiente de aprobación (estado: ${escapeHtml(md.reporte_status || 'sin procesar')}).`);
   }
 
   const respuesta = await fetch(md.reporte_blob_url);
@@ -84,5 +92,5 @@ export default async function handler(req, res) {
   });
 
   return responder(res, 200, 'Reporte aprobado ✅',
-    `El Mapa de Propósito de <strong>${md.customer_name}</strong> fue enviado a <strong>${md.customer_email}</strong>.`);
+    `El Mapa de Propósito de <strong>${escapeHtml(md.customer_name)}</strong> fue enviado a <strong>${escapeHtml(md.customer_email)}</strong>.`);
 }

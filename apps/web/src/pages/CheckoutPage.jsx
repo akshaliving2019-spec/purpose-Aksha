@@ -11,7 +11,12 @@ import { motion } from 'framer-motion';
 import { Shield, Clock, Sparkles, Lock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
-const stripePromise = loadStripe('pk_live_51TfsG96y6I83avZFL6Fcsd8dShmyjOanlq965RPu8wuCXLHfkddQsgKvZ9oFpgImdRUZIkXGERGQQycSvK4QQmET00dx2VOtsN');
+// La clave publicable de Stripe puede vivir en el cliente; la env var permite
+// apuntar a test/live por entorno sin tocar código.
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ||
+  'pk_live_51TfsG96y6I83avZFL6Fcsd8dShmyjOanlq965RPu8wuCXLHfkddQsgKvZ9oFpgImdRUZIkXGERGQQycSvK4QQmET00dx2VOtsN'
+);
 
 const MONTHS_ES = [
   { v:'01', label:'Enero' },{ v:'02', label:'Febrero' },{ v:'03', label:'Marzo' },
@@ -181,6 +186,10 @@ const CheckoutPage = () => {
     <>
       <Helmet>
         <title>{es ? 'Obtener Mi Reporte — AKSHA' : 'Get My Report — AKSHA'}</title>
+        <meta name="description" content={es
+          ? 'Obtén tu Mapa de Propósito personalizado: un análisis profundo de tus talentos naturales, fortalezas y propósito.'
+          : 'Get your personalized Purpose Map: a deep analysis of your natural talents, strengths and purpose.'} />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen bg-background">

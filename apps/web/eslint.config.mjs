@@ -51,4 +51,6 @@ export default [
 		},
 	},
 	{ files: ['tools/**/*.js', 'tailwind.config.js'], languageOptions: { globals: globals.node } },
+	// Las funciones de api/ corren en Node (Vercel Serverless), no en el navegador.
+	{ files: ['api/**/*.js'], languageOptions: { globals: globals.node } },
 ];
