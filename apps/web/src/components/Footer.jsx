@@ -10,9 +10,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-6">
-              <img 
-                src="https://horizons-cdn.hostinger.com/3b1220b8-90b4-4363-97a3-2c8f1d706937/59d9dbf7e952f6b63f78ee82c7a83d1e.png" 
-                alt="AKSHA Logo" 
+              <img
+                src="/aksha-logo-mark.png"
+                alt="AKSHA Logo"
+                width="200"
+                height="200"
                 className="h-12 w-auto"
               />
             </Link>
