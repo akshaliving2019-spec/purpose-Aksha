@@ -74,28 +74,28 @@ export async function enviarReporteRevision({
   const bloqueValidacion = !validacion
     ? ''
     : validacion.ok
-      ? `<p style="color:#7ddf9a;font-size:14px;margin:0 0 16px;">✅ Validación automática: posiciones coherentes con Swiss Ephemeris y estilo editorial limpio (sin emojis).</p>`
-      : `<div style="background:rgba(220,60,60,0.12);border:1px solid rgba(220,60,60,0.5);border-radius:6px;padding:12px;margin:0 0 16px;">
-          <p style="color:#ff9b9b;font-size:14px;margin:0 0 8px;"><strong>⚠️ La validación automática (efemérides + estilo) encontró observaciones:</strong></p>
-          ${validacion.errores.map((e) => `<p style="color:#ff9b9b;font-size:13px;margin:0 0 4px;">• ${escapeHtml(e)}</p>`).join('')}
-          <p style="color:rgba(255,255,255,0.6);font-size:12px;margin:8px 0 0;">Revisa estos puntos antes de aprobar.</p>
+      ? `<p style="color:#7DDF9A;font-size:14px;margin:0 0 16px;">Validación automática: posiciones coherentes con Swiss Ephemeris y estilo editorial limpio (sin emojis).</p>`
+      : `<div style="background-color:#211931;border:1px solid #712835;border-radius:6px;padding:12px 16px;margin:0 0 16px;">
+          <p style="color:#FF9B9B;font-size:14px;margin:0 0 8px;"><strong>La validación automática (efemérides + estilo) encontró observaciones:</strong></p>
+          ${validacion.errores.map((e) => `<p style="color:#FF9B9B;font-size:13px;margin:0 0 4px;">&#8226; ${escapeHtml(e)}</p>`).join('')}
+          <p style="color:#8E94A6;font-size:12px;margin:8px 0 0;">Revisa estos puntos antes de aprobar.</p>
         </div>`;
 
   const banner = `
-    <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.45);border-radius:8px;padding:20px;margin-bottom:32px;">
-      <p style="color:#D4AF37;font-size:16px;margin:0 0 8px;"><strong>🔍 MODO REVISIÓN — este reporte aún NO se ha enviado al cliente</strong></p>
-      <p style="color:rgba(255,255,255,0.8);font-size:14px;margin:0 0 4px;">Cliente: <strong>${escapeHtml(nombre)}</strong> &lt;${escapeHtml(emailCliente)}&gt;</p>
-      <p style="color:rgba(255,255,255,0.8);font-size:14px;margin:0 0 16px;">Pedido: ${escapeHtml(paymentIntentId || '')}</p>
+    <div style="background-color:#172031;border:1px solid #635A33;border-radius:8px;padding:22px 24px;margin-bottom:8px;">
+      <p style="color:#C9A84C;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 10px;"><strong>Modo revisión — aún no enviado al cliente</strong></p>
+      <p style="color:#D9D5C9;font-size:14px;margin:0 0 4px;">Cliente: <strong>${escapeHtml(nombre)}</strong> &lt;${escapeHtml(emailCliente)}&gt;</p>
+      <p style="color:#D9D5C9;font-size:14px;margin:0 0 16px;">Pedido: ${escapeHtml(paymentIntentId || '')}</p>
       ${bloqueValidacion}
-      <a href="${linkAprobacion}" style="display:inline-block;background:#D4AF37;color:#07142F;font-weight:bold;padding:12px 24px;border-radius:6px;text-decoration:none;margin-right:12px;">✅ Aprobar y enviar al cliente</a>
-      ${linkFeedback ? `<a href="${linkFeedback}" style="display:inline-block;background:transparent;border:1px solid #D4AF37;color:#D4AF37;font-weight:bold;padding:12px 24px;border-radius:6px;text-decoration:none;">✍️ Observaciones / Rechazar</a>` : ''}
-      <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:12px 0 0;">Con "Observaciones" registras qué mejorar y, si quieres, el reporte se regenera incorporándolas.</p>
+      <a href="${linkAprobacion}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:6px;text-decoration:none;margin:0 12px 10px 0;">Aprobar y enviar al cliente</a>
+      ${linkFeedback ? `<a href="${linkFeedback}" style="display:inline-block;background-color:transparent;border:1px solid #C9A84C;color:#C9A84C;font-weight:bold;font-size:15px;padding:11px 24px;border-radius:6px;text-decoration:none;margin:0 0 10px;">Observaciones / Rechazar</a>` : ''}
+      <p style="color:#8E94A6;font-size:12px;margin:8px 0 0;">Con "Observaciones" registras qué mejorar y, si quieres, el reporte se regenera incorporándolas.</p>
     </div>`;
 
   const resultado = await enviarConResend({
     from: 'Sistema AKSHA <sistema@aksha.life>',
     to: [emailRevisora],
-    subject: `🔍 Para tu revisión: Mapa de Propósito de ${nombre.split(' ')[0]}`,
+    subject: `Para tu revisión: Mapa de Propósito de ${nombre.split(' ')[0]}`,
     html: formatearEmailHTML(nombre, reporte, banner),
     text:
       `REVISIÓN PENDIENTE — ${nombre} <${emailCliente}>\n` +
@@ -148,65 +148,152 @@ async function enviarNotificacionInterna({ nombre, email, reporte }) {
   });
 }
 
-function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
-  const primerNombre = escapeHtml(nombre.split(' ')[0]);
-  // Convertir el Markdown ligero del reporte a HTML básico
-  // (escapado primero; títulos antes de convertir saltos de línea)
-  const reporteHTML = escapeHtml(reporte)
-    .replace(/^### (.+)$/gm, '<h3 style="color:#D4AF37">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 style="color:#D4AF37">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h2 style="color:#D4AF37">$1</h2>')
-    .replace(/^(?:---+|─{3,})$/gm, '<hr style="border:none;border-top:1px solid rgba(212,175,55,0.3)">')
-    .replace(/^- (.+)$/gm, '<div style="margin:4px 0 4px 16px">• $1</div>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br>');
+// ─────────────────────────────────────────────────────────────────────────────
+// Render del reporte (Markdown ligero → HTML de email)
+//
+// Paleta y tipografía alineadas con los Purpose Maps publicados en
+// /public/reportes (navy #07142F, oro #C9A84C/#E8C97A, marfil #F0ECE4).
+// Todo va con estilos inline y layout de tablas porque los clientes de correo
+// (Gmail, Outlook) recortan o ignoran <style>; los webfonts no cargan en email,
+// por eso Georgia hace de serif editorial.
 
-  return `
-<!DOCTYPE html>
-<html>
+const FUENTE_SERIF = "Georgia,'Times New Roman',serif";
+
+const ESTILO = {
+  p: `margin:0 0 18px;color:#D9D5C9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;`,
+  h2: `margin:38px 0 16px;padding:30px 0 0;border-top:1px solid #1C2B4D;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:23px;line-height:1.35;font-weight:normal;letter-spacing:0.03em;`,
+  h3: `margin:28px 0 10px;color:#E8C97A;font-family:${FUENTE_SERIF};font-size:18px;line-height:1.45;font-weight:bold;letter-spacing:0.02em;`,
+  ul: `margin:0 0 20px;padding:0 0 0 22px;`,
+  li: `margin:0 0 10px;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.8;`,
+  liTexto: `color:#D9D5C9;`,
+  hr: `border:none;border-top:1px solid #1C2B4D;margin:34px 0;font-size:0;line-height:0;`,
+  strong: `color:#F3EFE3;`,
+};
+
+// Convierte el Markdown ligero del reporte (##/###, **negritas**, listas con -,
+// separadores ---) en bloques HTML reales: párrafos con aire, listas agrupadas
+// y jerarquía tipográfica, en lugar de un muro de <br>.
+export function reporteAHtml(reporte) {
+  const negritas = (s) => s.replace(/\*\*([^*]+)\*\*/g, `<strong style="${ESTILO.strong}">$1</strong>`);
+  const lineas = escapeHtml(reporte).split(/\r?\n/);
+
+  const bloques = [];
+  let parrafo = [];
+  let lista = [];
+
+  const cerrarParrafo = () => {
+    if (!parrafo.length) return;
+    bloques.push(`<p style="${ESTILO.p}">${parrafo.map(negritas).join('<br>')}</p>`);
+    parrafo = [];
+  };
+  const cerrarLista = () => {
+    if (!lista.length) return;
+    const items = lista
+      .map((item) => `<li style="${ESTILO.li}"><span style="${ESTILO.liTexto}">${negritas(item)}</span></li>`)
+      .join('');
+    bloques.push(`<ul style="${ESTILO.ul}">${items}</ul>`);
+    lista = [];
+  };
+
+  for (const cruda of lineas) {
+    const linea = cruda.trim();
+    if (!linea) {
+      cerrarParrafo();
+      cerrarLista();
+      continue;
+    }
+    let m;
+    if ((m = linea.match(/^###\s+(.+)$/))) {
+      cerrarParrafo(); cerrarLista();
+      bloques.push(`<h3 style="${ESTILO.h3}">${negritas(m[1])}</h3>`);
+    } else if ((m = linea.match(/^##?\s+(.+)$/))) {
+      cerrarParrafo(); cerrarLista();
+      bloques.push(`<h2 style="${ESTILO.h2}">${negritas(m[1])}</h2>`);
+    } else if (/^(?:-{3,}|─{3,}|═{3,}|_{3,})$/.test(linea)) {
+      cerrarParrafo(); cerrarLista();
+      bloques.push(`<hr style="${ESTILO.hr}">`);
+    } else if ((m = linea.match(/^[-•·]\s+(.+)$/))) {
+      cerrarParrafo();
+      lista.push(m[1]);
+    } else {
+      cerrarLista();
+      parrafo.push(linea);
+    }
+  }
+  cerrarParrafo();
+  cerrarLista();
+
+  return bloques.join('\n');
+}
+
+export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
+  const primerNombre = escapeHtml(nombre.split(' ')[0]);
+  const reporteHTML = reporteAHtml(reporte);
+  const preheader =
+    'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.';
+
+  return `<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>AKSHA · Mapa de Propósito</title>
   <style>
-    body { font-family: Georgia, serif; background: #07142F; color: #ffffff; margin: 0; padding: 0; }
-    .container { max-width: 680px; margin: 0 auto; padding: 40px 24px; }
-    .header { text-align: center; margin-bottom: 40px; }
-    .logo { color: #D4AF37; font-size: 28px; font-weight: bold; letter-spacing: 4px; }
-    .subtitle { color: rgba(212,175,55,0.7); font-size: 14px; letter-spacing: 2px; }
-    .greeting { font-size: 22px; color: #ffffff; margin-bottom: 8px; }
-    .intro { color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.8; margin-bottom: 32px; }
-    .reporte { color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.9; }
-    .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(212,175,55,0.2); text-align: center; }
-    .footer p { color: rgba(255,255,255,0.4); font-size: 13px; }
-    h2 { color: #D4AF37; margin-top: 32px; }
+    body { margin:0; padding:0; background-color:#07142F; }
+    a { color:#E8C97A; }
+    @media (max-width:520px) {
+      .pad-lateral { padding-left:22px !important; padding-right:22px !important; }
+    }
   </style>
 </head>
-<body>
-  <div class="container">
-    ${encabezadoExtra}
-    <div class="header">
-      <div class="logo">AKSHA LIFE</div>
-      <div class="subtitle">TU MAPA DE PROPÓSITO</div>
-    </div>
-
-    <p class="greeting">${primerNombre},</p>
-    <p class="intro">
-      Tu Mapa de Propósito ha sido generado. Lo que encontrarás en este reporte
-      es el resultado de conectar los patrones únicos de tu nacimiento con el contexto
-      actual del mundo — para que puedas actuar con claridad.
-    </p>
-
-    <div class="reporte">
-      ${reporteHTML}
-    </div>
-
-    <div class="footer">
-      <p>AKSHA LIFE · aksha.life</p>
-      <p>Si tienes preguntas, escríbenos a Purpose@aksha.life</p>
-      <p style="color:rgba(212,175,55,0.5); margin-top:16px;">
-        "La IA no crea el conocimiento. Lo conecta."
-      </p>
-    </div>
+<body style="margin:0;padding:0;background-color:#07142F;" bgcolor="#07142F">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    ${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
   </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#07142F" style="background-color:#07142F;">
+    <tr>
+      <td align="center" style="padding:8px 12px 48px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;">
+          ${encabezadoExtra ? `<tr><td class="pad-lateral" style="padding:32px 36px 0;">${encabezadoExtra}</td></tr>` : ''}
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:56px 36px 0;">
+              <div style="color:#C9A84C;font-family:${FUENTE_SERIF};font-size:26px;font-weight:bold;letter-spacing:0.4em;">AKSHA&nbsp;LIFE</div>
+              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">Mapa de Propósito</div>
+              <div style="width:64px;border-top:1px solid #C9A84C;margin:28px auto 0;font-size:0;line-height:0;">&nbsp;</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="pad-lateral" style="padding:46px 36px 0;">
+              <p style="margin:0 0 14px;color:#F0ECE4;font-family:${FUENTE_SERIF};font-size:25px;line-height:1.3;">${primerNombre},</p>
+              <p style="margin:0;color:#A9AEB9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;">
+                Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
+                los patrones únicos de tu nacimiento con el contexto actual del mundo —
+                para que puedas actuar con claridad.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="pad-lateral" style="padding:10px 36px 0;">
+              ${reporteHTML}
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:44px 36px 0;">
+              <div style="width:64px;border-top:1px solid #1C2B4D;margin:0 auto 26px;font-size:0;line-height:0;">&nbsp;</div>
+              <p style="margin:0 0 8px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;letter-spacing:0.08em;">AKSHA LIFE · aksha.life</p>
+              <p style="margin:0 0 20px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">
+                Si tienes preguntas, escríbenos a
+                <a href="mailto:Purpose@aksha.life" style="color:#C9A84C;text-decoration:none;">Purpose@aksha.life</a>
+              </p>
+              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">La IA no crea el conocimiento. Lo conecta.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }
