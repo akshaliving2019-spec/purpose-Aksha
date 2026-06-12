@@ -248,7 +248,7 @@ const HomePage = () => {
             className="w-full flex justify-center px-4 md:px-8 py-8"
           >
             <img
-              src="/lo-que-el-mapa-revela.jpg"
+              src={lang === 'es' ? '/lo-que-el-mapa-revela-es.jpg' : '/lo-que-el-mapa-revela-en.jpg'}
               alt={lang === 'es' ? 'Lo que el mapa revela acerca de ti' : 'What your map reveals about you'}
               className="w-full max-w-[88%] h-auto block rounded-xl"
             />
