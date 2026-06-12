@@ -298,6 +298,30 @@ const CheckoutPage = () => {
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                   </div>
 
+                  {!birthTime && (
+                    <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      <div className="flex items-start gap-2.5">
+                        <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#D4AF37' }} />
+                        <div>
+                          <p className="text-sm font-semibold text-white mb-1">
+                            {es ? '¿No conoces tu hora exacta?' : "Don't know your exact time?"}
+                          </p>
+                          <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                            {es
+                              ? 'Tu mapa se construye completo igual: la IA de AKSHA te hace estas preguntas y usa tu historia de vida en el análisis. Respóndelas abajo:'
+                              : "Your map is built just as complete: AKSHA's AI asks you these questions and uses your life story in the analysis. Answer them below:"}
+                          </p>
+                          <ul className="text-xs space-y-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                            <li>· {es ? '¿Qué eventos marcaron tu camino? (carrera, mudanzas, relaciones, logros, giros — con fechas aproximadas)' : 'Which events shaped your path? (career, moves, relationships, achievements, turning points — with approximate dates)'}</li>
+                            <li>· {es ? '¿Qué se te repite una y otra vez?' : 'What keeps repeating in your life?'}</li>
+                            <li>· {es ? '¿Cómo reaccionas bajo presión?' : 'How do you react under pressure?'}</li>
+                            <li>· {es ? '¿Dónde fluyes sin esfuerzo y dónde te frenas?' : 'Where do you flow effortlessly, and where do you hold back?'}</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-xs font-medium mb-1.5 uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.45)' }}>
                       {es ? 'Tu historia de vida (opcional)' : 'Your life story (optional)'}
