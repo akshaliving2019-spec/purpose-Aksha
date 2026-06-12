@@ -5,13 +5,33 @@
 // pedidos fallidos sin base de datos adicional.
 
 import Stripe from 'stripe';
+import { put } from '@vercel/blob';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte, enviarAlertaInterna, enviarReporteRevision } from './enviar-reporte.js';
 import { validarReporte } from './validar-reporte.js';
+import { renderReporteWeb } from './plantilla-reporte-web.js';
 import {
   modoRevisionActivo, emailRevision, guardarReportePendiente, urlAprobacion, urlFeedback,
 } from './revision-reporte.js';
+
+// Versión web del Mapa (plantilla top-tier): se genera SIEMPRE y se guarda en
+// Blob con URL impredecible; el email lleva el botón "Abrir tu Mapa". Si el
+// render o el Blob fallan, el reporte sigue su curso solo por email.
+async function generarMapaWeb(paymentIntentId, nombre, reporte) {
+  try {
+    const html = renderReporteWeb({ nombre, reporte });
+    const { url } = await put(`mapas/${paymentIntentId}.html`, html, {
+      access: 'public',
+      addRandomSuffix: true,
+      contentType: 'text/html; charset=utf-8',
+    });
+    return url;
+  } catch (error) {
+    console.warn(`⚠️ [${paymentIntentId}] Mapa web no generado (continúa solo email):`, String(error).slice(0, 200));
+    return '';
+  }
+}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -73,6 +93,8 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       console.warn(`⚠️ [${paymentIntentId}] Validación:`, validacion.errores);
     }
 
+    const urlWeb = await generarMapaWeb(paymentIntentId, customer_name, reporte);
+
     // Modo revisión: el reporte va primero a la revisora con link de
     // aprobación; el cliente lo recibe cuando ella aprueba (/api/aprobar-reporte).
     if (modoRevisionActivo()) {
@@ -83,6 +105,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         emailCliente: customer_email,
         emailRevisora: emailRevision(),
         reporte,
+        urlWeb,
         linkAprobacion: urlAprobacion(paymentIntentId),
         linkFeedback: urlFeedback(paymentIntentId),
         paymentIntentId,
@@ -93,6 +116,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         metadata: {
           reporte_status: 'en_revision',
           reporte_blob_url: blobUrl,
+          reporte_web_url: urlWeb,
           reporte_revision_resend_id: envioRevision?.id || '',
           reporte_revision_at: new Date().toISOString(),
           reporte_error: '',
@@ -110,11 +134,12 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     }
 
     console.log(`📧 [${paymentIntentId}] Enviando reporte a:`, customer_email);
-    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte });
+    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte, urlWeb });
 
     await stripe.paymentIntents.update(paymentIntentId, {
       metadata: {
         reporte_status: 'enviado',
+        reporte_web_url: urlWeb,
         reporte_resend_id: envio?.id || '',
         reporte_enviado_at: new Date().toISOString(),
         reporte_error: '',

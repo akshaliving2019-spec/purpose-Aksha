@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>AKSHA · María Fernanda · Mapa de Propósito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080d19;
+  --bg-2:#0a1020;
+  --card:#0d1530;
+  --card-soft:rgba(18,28,58,.55);
+  --line:rgba(201,168,76,.16);
+  --line-soft:rgba(154,161,181,.14);
+  --ink:#ece9e0;
+  --ink-2:#c9cdd9;
+  --muted:#8d94aa;
+  --gold:#c9a84c;
+  --gold-2:#e8c97a;
+  --pasion:#ff6b6e;
+  --profesion:#3ddc97;
+  --vocacion:#7e9cff;
+  --mision:#b07bff;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink-2);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.75;
+  font-weight:300;
+  overflow-x:hidden;
+}
+/* Atmósfera: grano + luz, nunca color plano */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 50% -120px, rgba(201,168,76,.07), transparent 60%),
+    radial-gradient(900px 700px at 85% 38%, rgba(126,156,255,.045), transparent 60%),
+    radial-gradient(900px 700px at 12% 72%, rgba(176,123,255,.04), transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+main{position:relative;z-index:1}
+.wrap{max-width:880px;margin:0 auto;padding:0 32px}
+
+/* ===== Huella dactilar (imagen de fondo, portada) ===== */
+.fondo-huella{
+  position:absolute;top:0;left:0;right:0;height:96vh;z-index:0;pointer-events:none;
+  background:url("fondo-huella.png") center 22%/cover no-repeat;
+  mix-blend-mode:screen;
+  opacity:.6;
+  -webkit-mask-image:linear-gradient(180deg,#000 36%,transparent 94%);
+  mask-image:linear-gradient(180deg,#000 36%,transparent 94%);
+}
+@media(max-width:780px){.fondo-huella{opacity:.45;height:88vh}}
+
+/* ===== Tipografía ===== */
+h1,h2,h3{font-family:var(--serif);font-weight:500;color:var(--ink);line-height:1.16}
+em{font-style:italic}
+.overline{
+  font-family:var(--sans);font-size:11px;font-weight:600;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--gold);
+}
+.overline .dim{color:var(--muted);font-weight:500}
+.sec-title{font-size:clamp(34px,5vw,46px);margin:14px 0 18px;letter-spacing:.01em}
+.sec-intro{font-size:18px;color:var(--muted);max-width:620px;font-weight:300}
+
+/* ===== Revelado al hacer scroll ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)}
+.rv.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .bar i{transition:none !important}
+}
+
+/* ===== Hero ===== */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:90px 0 70px;position:relative}
+.hero::after{
+  content:"";position:absolute;left:50%;bottom:42px;transform:translateX(-50%);
+  width:1px;height:54px;background:linear-gradient(var(--gold),transparent);opacity:.6;
+}
+.logo-hero{
+  width:190px;height:190px;display:block;margin:0 auto 34px;
+  filter:drop-shadow(0 0 38px rgba(201,168,76,.3));
+}
+.marca-sub{font-size:10.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin-bottom:64px}
+.hero h1{font-size:clamp(58px,9vw,108px);font-weight:400;letter-spacing:.01em;margin-bottom:18px}
+.hero h1 .apellido{color:var(--gold-2)}
+.hero-meta{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--muted);margin-bottom:46px}
+.hero-frase{
+  font-family:var(--serif);font-size:clamp(24px,3.4vw,32px);line-height:1.45;
+  color:var(--ink);max-width:680px;margin:0 auto;font-weight:400;
+}
+.hero-frase em{color:var(--gold-2)}
+.etapa{
+  display:inline-flex;align-items:center;gap:14px;margin:54px auto 0;
+  padding:10px 26px;border:1px solid var(--line);border-radius:999px;
+  font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-2);
+}
+.etapa b{color:var(--gold);font-weight:600}
+.etapa span.sep{width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.7}
+
+/* Carga inicial escalonada */
+.hero .ld{opacity:0;transform:translateY(18px);animation:ld 1.1s cubic-bezier(.22,.61,.36,1) forwards}
+.hero .ld:nth-child(1){animation-delay:.05s}.hero .ld:nth-child(2){animation-delay:.22s}
+.hero .ld:nth-child(3){animation-delay:.34s}.hero .ld:nth-child(4){animation-delay:.52s}
+.hero .ld:nth-child(5){animation-delay:.7s}.hero .ld:nth-child(6){animation-delay:.88s}
+.hero .ld:nth-child(7){animation-delay:1.08s}
+@keyframes ld{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero .ld{animation:none;opacity:1;transform:none}}
+
+/* ===== Secciones ===== */
+section{padding:108px 0}
+section.tight{padding:84px 0}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line) 18%,var(--line) 82%,transparent);border:0}
+
+/* ===== Cómo leer ===== */
+.leyenda{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;margin-top:48px}
+.leyenda div{background:var(--bg-2);padding:26px 24px}
+.leyenda dt{font-family:var(--serif);font-size:21px;color:var(--ink);margin-bottom:6px}
+.leyenda dd{font-size:14px;color:var(--muted);line-height:1.6}
+@media(max-width:780px){.leyenda{grid-template-columns:1fr 1fr}}
+
+/* ===== Los números (barras) ===== */
+.medidas{display:flex;flex-direction:column;gap:18px;margin-top:54px}
+.medida{
+  border:1px solid var(--line-soft);border-left:2px solid var(--c,var(--gold));
+  border-radius:12px;padding:26px 30px 30px;background:var(--card-soft);
+  backdrop-filter:blur(6px);
+}
+.medida-top{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:4px}
+.medida-nombre{font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--c,var(--gold))}
+.medida-num{font-family:var(--serif);font-size:44px;color:var(--ink);line-height:1}
+.medida-num small{font-size:19px;color:var(--muted);font-family:var(--sans);font-weight:300;margin-left:6px}
+.bar{height:3px;background:rgba(141,148,170,.18);border-radius:99px;margin:16px 0 18px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 55%,#fff 18%));transition:width 1.6s cubic-bezier(.22,.61,.36,1) .15s}
+.on .bar i{width:var(--w)}
+.medida h3{font-size:25px;margin-bottom:6px}
+.medida p{font-size:15.5px;color:var(--muted);max-width:640px}
+.medida .estado{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-2);margin-top:14px}
+.medida .estado b{color:var(--c);font-weight:600}
+
+/* ===== Módulos ===== */
+.modulo{padding:96px 0;border-top:1px solid var(--line-soft)}
+.modulo .grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:64px;align-items:start}
+.modulo.flip .grid{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)}
+.modulo.flip .col-lead{order:2}
+.modulo.flip .col-side{order:1}
+@media(max-width:840px){.modulo .grid,{grid-template-columns:1fr}.modulo .grid{grid-template-columns:1fr}.modulo.flip .col-lead{order:1}.modulo.flip .col-side{order:2}}
+.mod-overline{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--c)}
+.mod-overline::before{content:"";width:26px;height:1px;background:var(--c)}
+.mod-overline .q{color:var(--muted);font-weight:500;letter-spacing:.18em}
+.modulo h2{font-size:clamp(30px,4.2vw,40px);margin:16px 0 24px;max-width:560px}
+.elemental{font-family:var(--serif);font-size:21.5px;line-height:1.6;color:var(--ink);font-weight:400}
+.elemental + .elemental{margin-top:14px}
+.mod-lectura{margin-top:30px;font-size:16px;color:var(--ink-2)}
+.mod-lectura p+p{margin-top:14px}
+.ficha{border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;background:var(--card-soft)}
+.ficha-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line-soft)}
+.ficha-head .v{font-family:var(--serif);font-size:30px;color:var(--ink)}
+.ficha-head .v small{font-size:15px;color:var(--muted);font-family:var(--sans)}
+.ficha-head .sem{font-size:11px;font-weight:600;letter-spacing:.24em;color:var(--c)}
+.ficha-body{padding:22px 24px 26px}
+.ficha-body h4{font-size:11px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:18px 0 8px}
+.ficha-body h4:first-child{margin-top:0}
+.ficha-body p{font-size:15px;line-height:1.7;color:var(--ink-2)}
+.ipn-line{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:14px;color:var(--muted)}
+.ipn-line b{color:var(--ink);font-weight:500;font-family:var(--serif);font-size:19px}
+
+/* ===== Herida (editorial, sin caja) ===== */
+.herida{text-align:center;padding:130px 0;position:relative}
+.herida::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(640px 380px at 50% 42%, rgba(201,168,76,.07), transparent 70%);
+}
+.herida .overline{color:var(--gold)}
+.herida h2{font-size:clamp(36px,5.4vw,52px);max-width:720px;margin:18px auto 40px}
+.herida p{max-width:600px;margin:0 auto 22px;font-size:17.5px;text-align:left}
+.herida .vuelta{
+  font-family:var(--serif);font-style:italic;font-size:24px;color:var(--gold-2);
+  max-width:560px;margin:44px auto 0;line-height:1.5;text-align:center;
+}
+
+/* ===== Convergencia ===== */
+.converge{padding:120px 0;text-align:center}
+.converge-card{
+  border:1px solid var(--line);border-radius:18px;padding:74px 56px;
+  background:linear-gradient(180deg,rgba(201,168,76,.05),rgba(13,21,48,.4));
+  position:relative;overflow:hidden;
+}
+.converge-card::before{content:"";position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-2),transparent)}
+.converge-card .overline{margin-bottom:26px;display:block}
+.converge-frase{font-family:var(--serif);font-size:clamp(28px,4.4vw,40px);color:var(--ink);line-height:1.4;max-width:660px;margin:0 auto}
+.converge-frase em{color:var(--gold-2)}
+.converge-nota{margin-top:30px;font-size:15px;color:var(--muted);max-width:560px;margin-left:auto;margin-right:auto}
+
+/* ===== Ahora (ventanas) ===== */
+.ventanas{margin-top:50px;display:flex;flex-direction:column}
+.ventana{display:grid;grid-template-columns:72px 1fr;gap:26px;padding:34px 8px;border-top:1px solid var(--line-soft);align-items:start}
+.ventana:last-child{border-bottom:1px solid var(--line-soft)}
+.ventana .num{font-family:var(--serif);font-size:40px;color:var(--gold);opacity:.55;line-height:1}
+.ventana h3{font-size:23px;margin-bottom:8px}
+.ventana p{font-size:15.5px;color:var(--muted);max-width:620px}
+
+/* ===== Rutas 2026 ===== */
+.ruta{
+  border:1px solid var(--line-soft);border-radius:14px;background:var(--card-soft);
+  padding:38px 40px;margin-top:22px;display:grid;grid-template-columns:86px 1fr;gap:10px 26px;
+}
+.ruta .num{font-family:var(--serif);font-size:52px;color:var(--gold);opacity:.4;line-height:.9}
+.ruta h3{font-size:24px;margin-bottom:10px}
+.ruta p{font-size:15.5px;color:var(--ink-2);max-width:640px}
+.ruta .tags{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+.tag{
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);
+  border:1px solid var(--line);border-radius:999px;padding:6px 16px;
+}
+.ruta .paso{margin-top:12px;font-size:15px;color:var(--muted)}
+.ruta .paso b{color:var(--ink);font-weight:500}
+@media(max-width:680px){.ruta{grid-template-columns:1fr}.ruta .num{font-size:38px}}
+
+/* ===== Cierre ===== */
+.cierre{text-align:center;padding:140px 0 120px}
+.cierre h2{font-size:clamp(32px,4.8vw,44px);max-width:700px;margin:16px auto 34px}
+.cierre p{max-width:560px;margin:0 auto 20px;font-size:17.5px}
+.cierre .tres{font-family:var(--serif);font-size:22px;color:var(--ink);line-height:1.7;max-width:620px;margin:0 auto 34px}
+.firma{margin-top:70px}
+.firma .sello{font-family:var(--serif);letter-spacing:.5em;text-transform:uppercase;font-size:13px;color:var(--gold)}
+.firma .lema{margin-top:10px;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted)}
+
+/* ===== Impresión (máx 8 hojas) ===== */
+@media print{
+  body{background:#fff;color:#1c2233;font-size:11.5pt}
+  body::before,body::after,.fondo-huella{display:none}
+  .hero{min-height:auto;padding:40px 0}
+  section,.modulo,.herida,.converge,.cierre{padding:28px 0;page-break-inside:avoid}
+  .rv{opacity:1;transform:none}
+  h1,h2,h3,.elemental,.converge-frase{color:#141a2e}
+  .medida,.ficha,.ruta,.converge-card{background:#fff;border-color:#d8d3c4}
+}
+</style>
+</head>
+<body>
+
+<!-- Huella dactilar: imagen de fondo de la portada, fundida con el navy
+     del reporte (blend screen) y desvanecida hacia el contenido. -->
+<div class="fondo-huella" aria-hidden="true"></div>
+
+<main>
+
+<!-- ════════ PORTADA ════════ -->
+<header class="hero wrap">
+  <img class="ld logo-hero" src="aksha-logo.png" width="190" height="190" alt="AKSHA">
+  <div class="ld marca-sub">Mapa de Propósito · Junio 2026</div>
+  <h1 class="ld">María <span class="apellido">Fernanda</span></h1>
+  <div class="ld hero-meta">42 años · Bogotá · mapa activo</div>
+  <p class="ld hero-frase">Hay una escena que se repite en tu historia: empiezas algo por puro impulso, lo sostienes con una intensidad que te sorprende hasta a ti, y solo cuando baja el polvo descubres qué estabas defendiendo. <em>Este mapa le pone nombre a ese movimiento.</em></p>
+  <div class="ld" style="display:flex;justify-content:center"><span class="etapa">Etapa de vida <span class="sep"></span> <b>Revisión</b> <span class="sep"></span> qué merece tu fuego de aquí en adelante</span></div>
+</header>
+
+<!-- ════════ CÓMO LEER ════════ -->
+<section class="tight">
+  <div class="wrap rv">
+    <div class="overline">Antes de empezar <span class="dim">· cómo leer tu mapa</span></div>
+    <h2 class="sec-title">Cuatro marcadores, una sola pregunta</h2>
+    <p class="sec-intro">Cada módulo de tu vida viene medido con lo mismo. Ninguno de estos números te califica: te ubican.</p>
+    <dl class="leyenda">
+      <div><dt>Puntuación /20</dt><dd>La fuerza disponible en esa área de tu vida.</dd></div>
+      <div><dt>Semáforo</dt><dd>FLUJO corre sola · TENSIÓN la energía roza con algo · FRENO conviene trabajar antes de empujar.</dd></div>
+      <div><dt>Diagnóstico</dt><dd>El momento del área: activa, en desarrollo, bloqueada o trascendida.</dd></div>
+      <div><dt>IPN</dt><dd>Índice de Potencial Natal: cuánto de ese potencial traes disponible de origen.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ════════ LOS NÚMEROS ════════ -->
+<section>
+  <div class="wrap">
+    <div class="rv">
+      <div class="overline">Primero <span class="dim">· los números</span></div>
+      <h2 class="sec-title">Tus cuatro dimensiones, medidas</h2>
+      <p class="sec-intro">El detalle de cada una viene después. Esta es la foto completa.</p>
+    </div>
+    <div class="medidas">
+      <article class="medida rv" style="--c:var(--pasion);--w:78%">
+        <div class="medida-top"><span class="medida-nombre">Pasión · lo que amas</span><span class="medida-num">78<small>% IPN</small></span></div>
+        <div class="bar"><i></i></div>
+        <h3>Cuando algo lleva tu sello, el reloj desaparece</h3>
+        <p>16/20 de fuerza disponible. Casi todo el circuito está encendido; lo que pide trabajo es el cauce, la constancia que convierte la ráfaga en obra.</p>
+        <div class="estado">16/20 · <b>Tensión</b> · en desarrollo</div>
+      </article>
+      <article class="medida rv" style="--c:var(--profesion);--w:66%">
+        <div class="medida-top"><span class="medida-nombre">Profesión · en lo que eres buena</span><span class="medida-num">66<small>% IPN</small></span></div>
+        <div class="bar"><i></i></div>
+        <h3>Eres a quien llaman cuando algo se enredó</h3>
+        <p>13/20 y sin fricción interna: es el módulo donde menos dudas de ti. La única pregunta pendiente aquí es de dirección, al servicio de qué pones este oficio.</p>
+        <div class="estado">13/20 · <b>Flujo</b> · activo</div>
+      </article>
+      <article class="medida rv" style="--c:var(--vocacion);--w:58%">
+        <div class="medida-top"><span class="medida-nombre">Vocación · por lo que te pagan</span><span class="medida-num">58<small>% IPN</small></span></div>
+        <div class="bar"><i></i></div>
+        <h3>Te pagan por organizar; te buscan para ver claro</h3>
+        <p>11/20. La brecha de esta área es precisa: el mercado te conoce por un oficio, y tu don más cotizable circula gratis.</p>
+        <div class="estado">11/20 · <b>Tensión</b> · en desarrollo</div>
+      </article>
+      <article class="medida rv" style="--c:var(--mision);--w:41%">
+        <div class="medida-top"><span class="medida-nombre">Misión · lo que el mundo necesita</span><span class="medida-num">41<small>% IPN</small></span></div>
+        <div class="bar"><i></i></div>
+        <h3>Tu teléfono suena en las peores noches de otros</h3>
+        <p>8/20 hoy, y es coherente: nadie desarrolla en público lo que guarda en secreto. Donde más freno hay es donde más hondo llega el potencial una vez trabajado.</p>
+        <div class="estado">8/20 · <b>Freno</b> · bloqueado</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ MÓDULO 1 · PASIÓN ════════ -->
+<section class="modulo" style="--c:var(--pasion)">
+  <div class="wrap grid">
+    <div class="col-lead rv">
+      <div class="mod-overline">Pasión <span class="q">· lo que amas</span></div>
+      <h2>Lo que amas, lo amas entero</h2>
+      <p class="elemental">Cuando algo lleva tu sello trabajas horas sin mirar el reloj y terminas con más energía de la que tenías al empezar. Si una idea te entusiasma, ya la estás haciendo antes de tener el plan completo.</p>
+      <p class="elemental">Tu casa es donde lo que amas toma cuerpo: una mesa puesta para gente querida te llena de un modo que ningún logro de afuera iguala. La tibieza nunca fue tu idioma.</p>
+      <div class="mod-lectura">
+        <p>El semáforo marca TENSIÓN por algo que conoces de memoria: tu manera de llegar. Entras con tanta fuerza que el otro a veces se defiende antes de entender qué traes, y terminas gastando en deshacer resistencias la energía que era para crear.</p>
+        <p>EN DESARROLLO quiere decir que el área está viva y bien alimentada, pero opera en ráfagas. Le falta el cauce que convierta el fuego en obra sostenida.</p>
+      </div>
+    </div>
+    <aside class="col-side rv">
+      <div class="ficha">
+        <div class="ficha-head"><span class="v">16<small>/20</small></span><span class="sem">Tensión · en desarrollo</span></div>
+        <div class="ficha-body">
+          <h4>Dones de nacimiento</h4>
+          <p>Creas con firma propia, y lo tuyo se reconoce sin explicación. Tu calidez abre puertas: la gente vuelve a tu mesa, y de esas vueltas han salido oportunidades concretas. Tienes el arranque que a otros les toma años, porque no esperas permiso para empezar. Y lo que sientes alimenta lo que haces: tus mejores creaciones nacieron en tus épocas de emoción más honda.</p>
+          <h4>Desafíos de nacimiento</h4>
+          <p>La llegada brusca, que se lee como imposición; trabajada, esa franqueza se vuelve autoridad serena. El fuego corto: cuando la novedad baja, sueltas; integrado, se convierte en la constancia que termina. Proteges tanto lo que amas que lo escondes, muestras resultados y nunca procesos. Y el todo o nada: lo que no te apasiona por completo no recibe ni el mínimo; maduro, es el criterio que elige pocas cosas y les da todo.</p>
+          <div class="ipn-line"><b>IPN 78%</b> · el trabajo de esta etapa: escoger uno de esos proyectos a medias y llevarlo hasta el final.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ════════ MÓDULO 2 · PROFESIÓN ════════ -->
+<section class="modulo flip" style="--c:var(--profesion)">
+  <div class="wrap grid">
+    <div class="col-lead rv">
+      <div class="mod-overline">Profesión <span class="q">· en lo que eres buena</span></div>
+      <h2>Ves el desorden y tu cabeza ya está armando la secuencia</h2>
+      <p class="elemental">Eres la persona a la que llaman cuando algo se enredó: qué va primero, qué sobra, quién hace qué. Lo has hecho en cada trabajo que has tenido, casi siempre sin que figure en tu cargo.</p>
+      <p class="elemental">Y cuando entregas, entregas completo: revisado, a tiempo, mejor de lo que pidieron.</p>
+      <div class="mod-lectura">
+        <p>FLUJO: esta área corre sola, sin fricción interna entre lo que sabes hacer y cómo lo haces. Por eso es el módulo donde menos dudas de ti. ACTIVO confirma lo que ya sabes: aquí estás en pleno uso de tus capacidades, hoy.</p>
+      </div>
+    </div>
+    <aside class="col-side rv">
+      <div class="ficha">
+        <div class="ficha-head"><span class="v">13<small>/20</small></span><span class="sem">Flujo · activo</span></div>
+        <div class="ficha-body">
+          <h4>Dones de nacimiento</h4>
+          <p>Orden bajo presión: mientras otros se agitan, tú priorizas. Oficio de terminar: tus entregas no necesitan excusas. Olfato para lo que falta, esa incomodidad ante un plan incompleto que casi siempre tiene razón. Y manos que enseñan: explicas haciendo, y quien trabaja contigo sale sabiendo más.</p>
+          <h4>Desafíos de nacimiento</h4>
+          <p>El perfeccionismo silencioso, que te hace rehacer de noche lo que otros dieron por bueno. Cargar más de lo que corresponde, porque pedir te cuesta más que resolver; trabajado, se vuelve la capacidad de delegar sin culpa. Medirte con la vara de los demás, como si lo tuyo contara menos por salirte fácil. Y postergar lo propio por lo urgente ajeno: la agenda llena de compromisos de otros mientras tu proyecto espera.</p>
+          <div class="ipn-line"><b>IPN 66%</b> · queda una pregunta de dirección: al servicio de qué, y de quién, pones un oficio que ya está probado.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ════════ MÓDULO 3 · VOCACIÓN ════════ -->
+<section class="modulo" style="--c:var(--vocacion)">
+  <div class="wrap grid">
+    <div class="col-lead rv">
+      <div class="mod-overline">Vocación <span class="q">· por lo que te pagan</span></div>
+      <h2>Tienes una manera de preguntar que ordena al otro por dentro</h2>
+      <p class="elemental">Te pagan por organizar, ejecutar, resolver. Te buscan, en cambio, para algo que casi nunca facturas: esa hora de conversación después de la cual la gente dice que ve claro.</p>
+      <p class="elemental">Pasa con amigas, con colegas, con desconocidos que a los diez minutos te están contando lo que no le cuentan a nadie.</p>
+      <div class="mod-lectura">
+        <p>La TENSIÓN de esta área vive en esa brecha: el mercado te conoce por un oficio, y tu don más cotizable circula gratis. EN DESARROLLO: el puente entre los dos ya se ve, todavía no se camina.</p>
+      </div>
+    </div>
+    <aside class="col-side rv">
+      <div class="ficha">
+        <div class="ficha-head"><span class="v">11<small>/20</small></span><span class="sem">Tensión · en desarrollo</span></div>
+        <div class="ficha-body">
+          <h4>Dones de nacimiento</h4>
+          <p>La pregunta exacta en el momento exacto. Una memoria afectiva que hace sentir a la gente importante, porque recuerdas lo que te contaron hace meses. La traducción: vuelves simple lo enredado cuando se lo explicas a alguien. Y la red: las personas que has conectado entre sí siguen agradeciéndotelo.</p>
+          <h4>Desafíos de nacimiento</h4>
+          <p>Cobrar te incomoda cuando lo que das se siente natural; integrado, entiendes que fácil para ti no significa barato. La modestia que se vuelve invisibilidad: nadie compra lo que no sabe que existe. Decir que sí a trabajos que ya no te corresponden, por seguridad. Y esperar a sentirte lista, cuando la claridad de esta área solo llega haciendo.</p>
+          <div class="ipn-line"><b>IPN 58%</b> · primer movimiento: ponerle precio a una sola de esas conversaciones antes de fin de año.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ════════ MÓDULO 4 · MISIÓN ════════ -->
+<section class="modulo flip" style="--c:var(--mision)">
+  <div class="wrap grid">
+    <div class="col-lead rv">
+      <div class="mod-overline">Misión <span class="q">· lo que el mundo necesita</span></div>
+      <h2>Sabes estar donde los demás no saben qué decir</h2>
+      <p class="elemental">Hay un teléfono que suena en las peores noches de otros, y es el tuyo. Has acompañado duelos, separaciones, diagnósticos, quiebras; el dolor ajeno no te espanta.</p>
+      <p class="elemental">Y sin embargo, si alguien te pregunta a qué te dedicas, nada de eso aparece en la respuesta.</p>
+      <div class="mod-lectura">
+        <p>El FRENO de esta área tiene raíz honda: aprendiste temprano que tu profundidad incomodaba, y la guardaste para emergencias. BLOQUEADO describe un área que opera en secreto, sin nombre, sin lugar en tu identidad pública y sin retorno.</p>
+        <p>En tu mapa, donde más freno hay es donde más hondo llega el potencial una vez trabajado: este es el módulo con más futuro de los cuatro.</p>
+      </div>
+    </div>
+    <aside class="col-side rv">
+      <div class="ficha">
+        <div class="ficha-head"><span class="v">8<small>/20</small></span><span class="sem">Freno · bloqueado</span></div>
+        <div class="ficha-body">
+          <h4>Dones de nacimiento</h4>
+          <p>Presencia en la oscuridad: no huyes cuando otros sufren. Lectura de lo no dicho: escuchas lo que la persona todavía no puede nombrar. Resistencia de fondo: sostienes procesos largos sin quemarte, cuando son tuyos por elección. Y regeneración: has atravesado tus propias pérdidas y volviste distinta, no rota; ese recorrido es credencial, aunque no aparezca en tu hoja de vida.</p>
+          <h4>Desafíos de nacimiento</h4>
+          <p>No considerar trabajo lo que haces mejor. La frontera difusa: acompañar sin vaciarte sigue pendiente, y más de una vez pagaste con semanas de agotamiento. El secretismo de tu propia hondura, que muestra fortaleza y esconde necesidad. Y la urgencia selectiva: solo apareces en crisis, cuando tu compañía sostenida vale más que tu rescate puntual.</p>
+          <div class="ipn-line"><b>IPN 41%</b> · este módulo pide, antes que acción, un nombre. Empieza por decirlo en voz alta: acompaño bien.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ════════ LA HERIDA ════════ -->
+<section class="herida">
+  <div class="wrap rv">
+    <div class="overline">La herida que se vuelve don</div>
+    <h2>Ser mucho, y haber aprendido a pedir perdón por serlo</h2>
+    <p>Hubo una niña a la que le dijeron, de mil maneras, que sentía demasiado. Aprendiste rápido: la intensidad se castiga, la serenidad se premia. Así que construiste una versión tuya que funciona, resuelve y no necesita, y la verdadera quedó para los espacios seguros, que con los años fueron cada vez menos.</p>
+    <p>Su otra cara es tu don más fino. Precisamente porque sabes lo que cuesta esconder intensidad, la detectas en otros al instante. Ves a la persona detrás del personaje funcional, porque tú también llevas uno puesto. Por eso te buscan en las peores noches: contigo nadie tiene que fingir entereza.</p>
+    <p>Hoy la herida actúa a medias como freno. Te permite acompañar, y todavía te impide cobrar, nombrar y habitar ese don a plena luz. La señal de integración será concreta: el día que hables de tu propia intensidad sin justificarla, frente a alguien que no es de máxima confianza, el módulo de Misión empezará a desbloquearse solo.</p>
+    <p class="vuelta">La maestría que el mundo te va a reconocer nace exactamente del lugar donde más pediste perdón.</p>
+  </div>
+</section>
+
+<!-- ════════ CONVERGENCIA ════════ -->
+<section class="converge">
+  <div class="wrap rv">
+    <div class="converge-card">
+      <span class="overline">Punto de convergencia · donde los cuatro se vuelven uno</span>
+      <p class="converge-frase">Espacios pequeños y propios donde lo enredado se vuelve claro <em>y lo difícil se puede decir.</em></p>
+      <p class="converge-nota">Tu mesa que reúne (Pasión), tu método que ordena (Profesión), tu pregunta que aclara (Vocación) y tu presencia que sostiene (Misión) apuntan al mismo lugar. Los cruces son precisos: el oficio de terminar es la herramienta exacta contra el fuego corto; las estructuras que pones en lo laboral son las que protegen tu energía cuando acompañas; y la red que tejiste conectando a otros es el primer mercado del acompañamiento que todavía regalas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ AHORA ════════ -->
+<section class="tight">
+  <div class="wrap">
+    <div class="rv">
+      <div class="overline">Lo que se está activando <span class="dim">· ahora</span></div>
+      <h2 class="sec-title">Tres ventanas abiertas</h2>
+    </div>
+    <div class="ventanas">
+      <div class="ventana rv">
+        <span class="num">I</span>
+        <div><h3>Visibilidad</h3><p>Lo que muestres de tu trabajo propio entre ahora y comienzos del próximo año tiende a crecer más rápido de lo habitual. Es el momento de publicar, convocar, inaugurar: en pequeño pero en público.</p></div>
+      </div>
+      <div class="ventana rv">
+        <span class="num">II</span>
+        <div><h3>Cierre de ciclo</h3><p>Se está cerrando una etapa larga en tu manera de trabajar para otros. Vas a sentir fatiga creciente con compromisos que hace un año tolerabas bien. Esa incomodidad es información: renegociar o soltar, por decisión propia, antes de que lo haga el desgaste.</p></div>
+      </div>
+      <div class="ventana rv">
+        <span class="num">III</span>
+        <div><h3>Lo pendiente íntimo</h3><p>Conversaciones que llevan años esperando encuentran ahora condiciones especialmente buenas. La que tienes en mente mientras lees esto. Esa.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CAMINO 2026 ════════ -->
+<section>
+  <div class="wrap">
+    <div class="rv">
+      <div class="overline">Tu camino en 2026 <span class="dim">· rutas concretas</span></div>
+      <h2 class="sec-title">El mundo está pagando lo que tú das en una mesa</h2>
+      <p class="sec-intro">La economía de los cuidados está dejando de ser invisible: acompañar procesos humanos, facilitar conversaciones difíciles y sostener transiciones se está volviendo oficio pagado. Y cuanto más se automatiza el mundo, más se cotiza la presencia real, la lectura fina, la calidez sin guion.</p>
+    </div>
+    <article class="ruta rv">
+      <span class="num">01</span>
+      <div>
+        <h3>Documenta tu método con IA</h3>
+        <p>Eso que haces cuando organizas el desorden tiene pasos. Dictárselos a una IA y convertirlos en guía es trabajo de un fin de semana, y es el principio de un producto. Úsala como primer borrador, nunca como voz final: tu manera de decir las cosas es parte de lo que la gente compra.</p>
+        <div class="tags"><span class="tag">Un fin de semana</span><span class="tag">Costo cero</span><span class="tag">Módulo Profesión</span></div>
+        <p class="paso"><b>Primer paso:</b> una sesión de voz de 40 minutos contándole a la IA cómo desenredaste tu último proyecto.</p>
+      </div>
+    </article>
+    <article class="ruta rv">
+      <span class="num">02</span>
+      <div>
+        <h3>Cobra la conversación que hoy regalas</h3>
+        <p>Las personas que has conectado y acompañado ya saben lo que vales; nadie necesita convencerse. Una sesión con nombre, duración y precio convierte tu don más cotizable en práctica visible.</p>
+        <div class="tags"><span class="tag">Antes de fin de año</span><span class="tag">Módulo Vocación</span></div>
+        <p class="paso"><b>Primer paso:</b> elige a una persona de tu red y ofrécele la primera sesión formal, con precio, esta semana.</p>
+      </div>
+    </article>
+    <article class="ruta rv">
+      <span class="num">03</span>
+      <div>
+        <h3>Un espacio de acompañamiento pequeño y tuyo</h3>
+        <p>Presencial o íntimo, documentado con método, cobrado sin disculpas. Tu mesa es el escenario natural donde el don de Misión se vuelve práctica nombrada, en formato que no te exige abandonar el refugio.</p>
+        <div class="tags"><span class="tag">3 a 6 meses</span><span class="tag">Módulos Pasión + Misión</span></div>
+        <p class="paso"><b>Primer paso:</b> ponle fecha al primer encuentro y deja que lo operativo (correos, actas, seguimientos) lo cargue la máquina.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ════════ CIERRE ════════ -->
+<section class="cierre">
+  <div class="wrap rv">
+    <div class="overline">Cierre</div>
+    <h2>Si este año pasan tres cosas, el mapa entero se mueve</h2>
+    <p class="tres">Un proyecto a medias rescatado y terminado. Una conversación cobrada por primera vez. Tu intensidad dicha en voz alta, sin pedir perdón.</p>
+    <p>María Fernanda: tu mesa ya reúne gente. Tu teléfono ya suena en las noches difíciles. Tu método ya funciona. Lo único que falta lleva tu nombre y un precio al lado.</p>
+    <p style="font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink)">Nos vemos del otro lado de la puerta.</p>
+    <div class="firma">
+      <div class="sello">AKSHA LIFE</div>
+      <div class="lema">La IA no crea el conocimiento. Lo conecta.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+<script>
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}});
+},{threshold:.18,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -80,6 +80,7 @@ export default async function handler(req, res) {
     nombre: md.customer_name,
     email: md.customer_email,
     reporte,
+    urlWeb: md.reporte_web_url || '',
   });
 
   await stripe.paymentIntents.update(String(pi), {

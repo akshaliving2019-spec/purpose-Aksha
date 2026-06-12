@@ -89,8 +89,54 @@ function detectarGlifosProhibidos(reporte) {
   ];
 }
 
+// Estándar top-tier 2026 (.claude/skills/reportes-top-tier): la astrología es
+// motor interno y el texto al cliente no la menciona. Lista deliberadamente
+// conservadora: solo términos sin uso plausible en prosa personal normal
+// ("casa", "oposición" o "tránsito" a secas quedan fuera por ambiguos).
+const TERMINOS_ASTRO = new RegExp(
+  '\\b(trigono|cuadratura|sextil|quincuncio|ascendente|medio cielo|dispositor|' +
+  'quiron|carta natal|zodiaco|zodiacal|efemerides|swiss ephemeris|luminaria)\\b' +
+  `|\\bcasa\\s+\\d{1,2}\\b|\\ben\\s+(?:${SIGNOS_NORM.join('|')})\\b`,
+  'g',
+);
+
+// Máximo 8 hojas: objetivo 2200-3000 palabras; tolerancia de validación 3300.
+// Un reporte muy corto delata truncamiento o secciones faltantes.
+const PALABRAS_MAX = 3300;
+const PALABRAS_MIN = 1600;
+
+function validarEstandarEditorial(reporte) {
+  const errores = [];
+  const texto = normalizar(reporte || '');
+
+  const astro = [...new Set(texto.match(TERMINOS_ASTRO) || [])];
+  if (astro.length > 0) {
+    errores.push(
+      `El reporte menciona términos astrológicos (${astro.join(', ')}) — el estándar ` +
+      'top-tier exige traducirlos a situación vivida, sin vocabulario de carta.',
+    );
+  }
+
+  const palabras = (String(reporte || '').trim().match(/\S+/g) || []).length;
+  if (palabras > PALABRAS_MAX) {
+    errores.push(
+      `El reporte tiene ${palabras} palabras — excede el máximo de 8 hojas ` +
+      '(objetivo 2200-3000). Cortar secciones, no adjetivos.',
+    );
+  } else if (palabras > 0 && palabras < PALABRAS_MIN) {
+    errores.push(
+      `El reporte tiene solo ${palabras} palabras — por debajo del mínimo editorial ` +
+      '(posible truncamiento o secciones faltantes).',
+    );
+  }
+  return errores;
+}
+
 export function validarReporte(reporte, carta) {
-  const erroresEstilo = detectarGlifosProhibidos(reporte);
+  const erroresEstilo = [
+    ...detectarGlifosProhibidos(reporte),
+    ...validarEstandarEditorial(reporte),
+  ];
 
   if (!reporte || !carta || carta.fallback || !Array.isArray(carta.planetas)) {
     return {

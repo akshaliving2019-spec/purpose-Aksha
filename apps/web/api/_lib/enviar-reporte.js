@@ -41,7 +41,7 @@ async function enviarConResend(payload, descripcion) {
   throw ultimoError;
 }
 
-export async function enviarReporte({ nombre, email, reporte }) {
+export async function enviarReporte({ nombre, email, reporte, urlWeb = '' }) {
   if (!RESEND_API_KEY) {
     console.error('❌ RESEND_API_KEY no configurada');
     await enviarNotificacionInterna({ nombre, email, reporte });
@@ -54,8 +54,8 @@ export async function enviarReporte({ nombre, email, reporte }) {
     from: 'AKSHA LIFE <reportes@aksha.life>',
     to: [email],
     subject: `${primerNombre}, tu Mapa de Propósito está listo`,
-    html: formatearEmailHTML(nombre, reporte),
-    text: reporte,
+    html: formatearEmailHTML(nombre, reporte, '', urlWeb),
+    text: (urlWeb ? `Abre tu Mapa en la web: ${urlWeb}\n\n` : '') + reporte,
   }, `email a ${email}`);
 
   console.log('✅ Email enviado a:', email);
@@ -65,7 +65,7 @@ export async function enviarReporte({ nombre, email, reporte }) {
 // Reporte en modo revisión: va a la revisora (no al cliente) con el reporte
 // completo tal como lo recibiría el cliente y un botón "Aprobar y enviar".
 export async function enviarReporteRevision({
-  nombre, emailCliente, emailRevisora, reporte, linkAprobacion, linkFeedback, paymentIntentId, validacion,
+  nombre, emailCliente, emailRevisora, reporte, urlWeb = '', linkAprobacion, linkFeedback, paymentIntentId, validacion,
 }) {
   if (!RESEND_API_KEY) {
     throw new Error('RESEND_API_KEY no configurada — email de revisión no enviado');
@@ -87,6 +87,7 @@ export async function enviarReporteRevision({
       <p style="color:#D9D5C9;font-size:14px;margin:0 0 4px;">Cliente: <strong>${escapeHtml(nombre)}</strong> &lt;${escapeHtml(emailCliente)}&gt;</p>
       <p style="color:#D9D5C9;font-size:14px;margin:0 0 16px;">Pedido: ${escapeHtml(paymentIntentId || '')}</p>
       ${bloqueValidacion}
+      ${urlWeb ? `<p style="color:#D9D5C9;font-size:14px;margin:0 0 16px;">Versión web que verá el cliente: <a href="${urlWeb}" style="color:#E8C97A;">abrir el Mapa</a></p>` : ''}
       <a href="${linkAprobacion}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:6px;text-decoration:none;margin:0 12px 10px 0;">Aprobar y enviar al cliente</a>
       ${linkFeedback ? `<a href="${linkFeedback}" style="display:inline-block;background-color:transparent;border:1px solid #C9A84C;color:#C9A84C;font-weight:bold;font-size:15px;padding:11px 24px;border-radius:6px;text-decoration:none;margin:0 0 10px;">Observaciones / Rechazar</a>` : ''}
       <p style="color:#8E94A6;font-size:12px;margin:8px 0 0;">Con "Observaciones" registras qué mejorar y, si quieres, el reporte se regenera incorporándolas.</p>
@@ -226,9 +227,16 @@ export function reporteAHtml(reporte) {
   return bloques.join('\n');
 }
 
-export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
+export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb = '') {
   const primerNombre = escapeHtml(nombre.split(' ')[0]);
   const reporteHTML = reporteAHtml(reporte);
+  const botonMapa = urlWeb ? `
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:34px 36px 0;">
+              <a href="${urlWeb}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-family:${FUENTE_SERIF};font-weight:bold;font-size:16px;letter-spacing:0.04em;padding:15px 34px;border-radius:8px;text-decoration:none;">Abrir tu Mapa en la web</a>
+              <p style="margin:14px 0 0;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">La misma lectura, en su versión interactiva. Abajo la tienes completa en este correo.</p>
+            </td>
+          </tr>` : '';
   const preheader =
     'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.';
 
@@ -273,7 +281,7 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
                 para que puedas actuar con claridad.
               </p>
             </td>
-          </tr>
+          </tr>${botonMapa}
           <tr>
             <td class="pad-lateral" style="padding:10px 36px 0;">
               ${reporteHTML}
