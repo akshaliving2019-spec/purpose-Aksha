@@ -46,6 +46,9 @@ console.log('\nMotores (extraerJson y resolverMotor):');
 prueba('extrae JSON limpio', extraerJson('{"a":1}').a === 1);
 prueba('extrae JSON entre texto y cercos', extraerJson('Aquí está:\n```json\n{"a":{"b":2}}\n```\nListo.').a.b === 2);
 prueba('rechaza texto sin JSON', (() => { try { extraerJson('sin json'); return false; } catch { return true; } })());
+prueba('elige el objeto válido más grande entre varios', extraerJson('nota {x} previa {"a":{"b":2},"c":[1]} fin').a.b === 2);
+prueba('respeta llaves dentro de strings', extraerJson('{"s":"tiene { y } dentro","n":1}').n === 1);
+prueba('respeta comillas escapadas en strings', extraerJson('{"s":"dice \\"hola{\\"","n":3}').n === 3);
 prueba('motor explícito se respeta', resolverMotor('claude-code') === 'claude-code' && resolverMotor('api') === 'api');
 prueba('motor auto resuelve a un motor válido', ['api', 'claude-code'].includes(resolverMotor('auto')));
 

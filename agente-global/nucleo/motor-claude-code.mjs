@@ -86,13 +86,41 @@ function ejecutarClaudeCode({
 }
 
 // Sin salida estructurada forzada en el CLI, el JSON llega como texto y
-// puede venir envuelto en explicaciones o cercos de código.
+// puede venir envuelto en explicaciones, cercos de código o acompañado de
+// otras llaves. Se extraen los objetos balanceados de nivel superior
+// (respetando strings y escapes) y se devuelve el más grande que parsee.
 export function extraerJson(texto) {
   const t = String(texto || '');
-  const inicio = t.indexOf('{');
-  const fin = t.lastIndexOf('}');
-  if (inicio === -1 || fin <= inicio) {
-    throw new Error('La respuesta no contiene un objeto JSON.');
+
+  const cerco = t.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (cerco) {
+    try { return JSON.parse(cerco[1]); } catch { /* sigue con el escáner */ }
   }
-  return JSON.parse(t.slice(inicio, fin + 1));
+
+  const candidatos = [];
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] !== '{') continue;
+    let profundidad = 0;
+    let enCadena = false;
+    let escape = false;
+    for (let j = i; j < t.length; j++) {
+      const c = t[j];
+      if (escape) { escape = false; continue; }
+      if (c === '\\') { escape = enCadena; continue; }
+      if (c === '"') { enCadena = !enCadena; continue; }
+      if (enCadena) continue;
+      if (c === '{') profundidad++;
+      else if (c === '}' && --profundidad === 0) {
+        candidatos.push(t.slice(i, j + 1));
+        i = j;
+        break;
+      }
+    }
+  }
+
+  candidatos.sort((a, b) => b.length - a.length);
+  for (const candidato of candidatos) {
+    try { return JSON.parse(candidato); } catch { /* prueba el siguiente */ }
+  }
+  throw new Error('La respuesta no contiene un objeto JSON válido.');
 }

@@ -139,7 +139,9 @@ export async function ejecutarInvestigacion({
   dirDatos = join(RAIZ, 'datos'),
   log = console.log,
 }) {
-  const fecha = new Date().toISOString().slice(0, 10);
+  // Fecha local (no UTC): pasada la medianoche UTC el reporte llevaría la
+  // fecha de mañana para quien lo lee en América.
+  const fecha = new Date().toLocaleDateString('en-CA');
 
   let hallazgos;
   let reporte;
