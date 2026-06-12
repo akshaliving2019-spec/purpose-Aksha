@@ -15,7 +15,7 @@ import { consultarClaude, hayApiKey } from './cliente.mjs';
 import { consultarClaudeCode, extraerJson } from './motor-claude-code.mjs';
 import { validarReporteGlobal, validarTexto } from './validar.mjs';
 import { renderizarReporteHumano } from './renderizar.mjs';
-import { guardarResultado, slug } from './almacen.mjs';
+import { guardarResultado, guardarHallazgosParciales, slug } from './almacen.mjs';
 import { reporteSimulado, HALLAZGOS_SIMULADOS } from './simulado.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -157,6 +157,10 @@ export async function ejecutarInvestigacion({
     const inv = await investigar({ motor: motorActivo, pais, area, fecha });
     hallazgos = inv.texto;
     log(`  Hallazgos: ${hallazgos.length} caracteres`);
+    if (guardar) {
+      const rutaParcial = guardarHallazgosParciales({ fecha, pais, area, hallazgos, dirDatos });
+      log(`  Hallazgos guardados: ${rutaParcial}`);
+    }
 
     log('Fase 2/3 — Clasificando hallazgos al esquema AKSHA...');
     reporte = await clasificar({ motor: motorActivo, hallazgos, pais, area, fecha, log });

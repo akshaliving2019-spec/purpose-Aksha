@@ -12,7 +12,26 @@ import { fileURLToPath } from 'node:url';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-export function consultarClaudeCode({
+// Errores de red transitorios del CLI: se reintenta (el SDK de la API hace
+// esto solo con maxRetries; aquí el proceso hijo no, así que va por fuera).
+const PATRON_ERROR_RED = /unable to connect|econnrefused|econnreset|etimedout|fetch failed/i;
+
+export async function consultarClaudeCode(opciones) {
+  const esperas = [0, 10_000, 30_000];
+  let ultimoError;
+  for (const espera of esperas) {
+    if (espera > 0) await new Promise((r) => setTimeout(r, espera));
+    try {
+      return await ejecutarClaudeCode(opciones);
+    } catch (err) {
+      if (!PATRON_ERROR_RED.test(err.message)) throw err;
+      ultimoError = err;
+    }
+  }
+  throw ultimoError;
+}
+
+function ejecutarClaudeCode({
   systemFile,
   prompt,
   permitirWeb = false,

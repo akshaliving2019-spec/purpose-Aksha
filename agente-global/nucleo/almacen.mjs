@@ -18,6 +18,16 @@ function leerJson(ruta, porDefecto) {
   return JSON.parse(readFileSync(ruta, 'utf8'));
 }
 
+// Los hallazgos de investigación se guardan apenas termina la fase 1: si la
+// clasificación falla después, el trabajo de búsqueda web no se pierde.
+export function guardarHallazgosParciales({ fecha, pais, area, hallazgos, dirDatos }) {
+  const dirReportes = join(dirDatos, 'reportes');
+  mkdirSync(dirReportes, { recursive: true });
+  const ruta = join(dirReportes, `${fecha}-${slug(pais)}-${slug(area)}-hallazgos.md`);
+  writeFileSync(ruta, hallazgos, 'utf8');
+  return ruta;
+}
+
 export function guardarResultado({ reporte, markdown, hallazgos, dirDatos }) {
   const base = `${reporte.date}-${slug(reporte.region_or_country)}-${slug(reporte.research_area)}`;
   const dirReportes = join(dirDatos, 'reportes');

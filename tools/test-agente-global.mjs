@@ -9,7 +9,7 @@ import { validarTexto, validarReporteGlobal } from '../agente-global/nucleo/vali
 import { extraerJson } from '../agente-global/nucleo/motor-claude-code.mjs';
 import { resolverMotor } from '../agente-global/nucleo/pipeline.mjs';
 import { renderizarReporteHumano } from '../agente-global/nucleo/renderizar.mjs';
-import { guardarResultado, slug } from '../agente-global/nucleo/almacen.mjs';
+import { guardarResultado, guardarHallazgosParciales, slug } from '../agente-global/nucleo/almacen.mjs';
 import { reporteSimulado } from '../agente-global/nucleo/simulado.mjs';
 import { ejecutarInvestigacion } from '../agente-global/nucleo/pipeline.mjs';
 
@@ -80,6 +80,10 @@ console.log('\nAlmacenamiento (guardarResultado):');
 prueba('slug normaliza acentos', slug('España · Educación') === 'espana-educacion');
 const dirTemp = mkdtempSync(join(tmpdir(), 'aksha-agente-'));
 try {
+  const rutaParcial = guardarHallazgosParciales({
+    fecha: '2026-06-11', pais: 'Colombia', area: 'Bienestar', hallazgos: 'parcial', dirDatos: dirTemp,
+  });
+  prueba('guarda hallazgos parciales tras la fase 1', existsSync(rutaParcial));
   const rutas = guardarResultado({ reporte, markdown, hallazgos: 'hallazgos de prueba', dirDatos: dirTemp });
   prueba('escribe el JSON', existsSync(rutas.rutaJson));
   prueba('escribe el markdown', existsSync(rutas.rutaMd));
