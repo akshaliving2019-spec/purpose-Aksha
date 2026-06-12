@@ -1,0 +1,8 @@
+{
+  "america_del_norte": ["Estados Unidos", "Canadá", "México"],
+  "america_latina": ["Colombia", "Brasil", "Argentina", "Chile", "Perú", "Costa Rica", "Panamá", "Uruguay", "México"],
+  "europa": ["España", "Alemania", "Francia", "Reino Unido", "Países Bajos", "Países Nórdicos", "Italia"],
+  "asia": ["China", "India", "Japón", "Corea del Sur", "Singapur"],
+  "eurasia": ["Rusia", "Europa Oriental", "Kazajistán"],
+  "medio_oriente": ["Emiratos Árabes Unidos", "Arabia Saudita", "Qatar", "Israel"]
+}

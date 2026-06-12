@@ -1,0 +1,209 @@
+{
+  "type": "object",
+  "description": "Reporte de investigación global AKSHA.life (formato de salida de la sección 15 del prompt maestro). Todo el texto en español, sin emojis, usando 'apoyar' en lugar de 'ayudar' y lenguaje no determinista.",
+  "additionalProperties": false,
+  "required": [
+    "report_id", "date", "region_or_country", "research_area", "executive_summary",
+    "key_findings", "emerging_professions", "emerging_courses_and_certifications",
+    "human_talents_detected", "automation_risks", "opportunities_for_non_technical_people",
+    "opportunities_for_holistic_and_human_development_fields", "opportunity_radar",
+    "recommended_actions", "alerts", "sources", "confidence_level", "next_research_questions"
+  ],
+  "properties": {
+    "report_id": { "type": "string", "description": "Identificador en formato AAAA-MM-DD-pais-area en minúsculas con guiones" },
+    "date": { "type": "string", "description": "Fecha de la investigación en formato ISO AAAA-MM-DD" },
+    "region_or_country": { "type": "string" },
+    "research_area": { "type": "string" },
+    "executive_summary": { "type": "string", "description": "Resumen humano y claro de 2 a 4 párrafos" },
+    "key_findings": { "type": "array", "items": { "type": "string" } },
+    "emerging_professions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profession_name", "category", "country_or_region_detected", "source_type",
+          "description", "why_it_matters", "human_talents_required", "technical_skills_required",
+          "ai_tools_related", "automation_resistance_score", "growth_potential_score",
+          "accessibility_score", "time_to_learn", "recommended_courses", "recommended_certifications",
+          "best_fit_for_personality_or_talent", "possible_income_paths", "risks_or_limitations",
+          "iva", "evidence_sources"
+        ],
+        "properties": {
+          "profession_name": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["AI", "Education", "Wellness", "Creativity", "Human Development", "Business", "Technical", "Hybrid"]
+          },
+          "country_or_region_detected": { "type": "string" },
+          "source_type": {
+            "type": "string",
+            "enum": ["academic", "company", "job_market", "certification", "community", "government", "signal"]
+          },
+          "description": { "type": "string" },
+          "why_it_matters": { "type": "string" },
+          "human_talents_required": { "type": "array", "items": { "type": "string" } },
+          "technical_skills_required": { "type": "array", "items": { "type": "string" } },
+          "ai_tools_related": { "type": "array", "items": { "type": "string" } },
+          "automation_resistance_score": { "type": "integer", "description": "0 a 10: qué tan resistente es a la automatización" },
+          "growth_potential_score": { "type": "integer", "description": "0 a 10: potencial de crecimiento de la demanda" },
+          "accessibility_score": { "type": "integer", "description": "0 a 10: qué tan accesible es para una persona promedio (costo, requisitos, idioma)" },
+          "time_to_learn": { "type": "string" },
+          "recommended_courses": { "type": "array", "items": { "type": "string" } },
+          "recommended_certifications": { "type": "array", "items": { "type": "string" } },
+          "best_fit_for_personality_or_talent": { "type": "array", "items": { "type": "string" } },
+          "possible_income_paths": { "type": "array", "items": { "type": "string" } },
+          "risks_or_limitations": { "type": "array", "items": { "type": "string" } },
+          "iva": {
+            "type": "object",
+            "description": "Traducción de la oportunidad al modelo IVA de AKSHA.life, en lenguaje no determinista ('podría', 'una ruta posible')",
+            "additionalProperties": false,
+            "required": ["identity_fit", "vocation_path", "contribution"],
+            "properties": {
+              "identity_fit": { "type": "string", "description": "Identidad: para qué tipo de persona podría haber afinidad natural" },
+              "vocation_path": { "type": "string", "description": "Vocación: cómo podría expresarse esa identidad en este camino" },
+              "contribution": { "type": "string", "description": "Aportación: qué valor podría entregar al mundo desde este rol" }
+            }
+          },
+          "evidence_sources": { "type": "array", "items": { "type": "string" }, "description": "URLs o referencias verificables" }
+        }
+      }
+    },
+    "emerging_courses_and_certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "program_name", "provider", "country_or_global", "language", "area", "level",
+          "duration", "cost_estimate", "credential_type", "skills_developed",
+          "human_talents_supported", "profession_paths_supported", "accessibility_score",
+          "credibility_score", "practical_value_score", "source_url", "date_detected", "last_verified"
+        ],
+        "properties": {
+          "program_name": { "type": "string" },
+          "provider": { "type": "string" },
+          "country_or_global": { "type": "string" },
+          "language": { "type": "string" },
+          "area": { "type": "string" },
+          "level": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
+          "duration": { "type": "string" },
+          "cost_estimate": { "type": "string", "enum": ["free", "low", "medium", "high", "unknown"] },
+          "credential_type": { "type": "string", "enum": ["course", "certificate", "microcredential", "degree", "bootcamp", "workshop"] },
+          "skills_developed": { "type": "array", "items": { "type": "string" } },
+          "human_talents_supported": { "type": "array", "items": { "type": "string" } },
+          "profession_paths_supported": { "type": "array", "items": { "type": "string" } },
+          "accessibility_score": { "type": "integer", "description": "0 a 10" },
+          "credibility_score": { "type": "integer", "description": "0 a 10" },
+          "practical_value_score": { "type": "integer", "description": "0 a 10" },
+          "source_url": { "type": "string" },
+          "date_detected": { "type": "string", "description": "AAAA-MM-DD" },
+          "last_verified": { "type": "string", "description": "AAAA-MM-DD" }
+        }
+      }
+    },
+    "human_talents_detected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["talent", "category", "why_valuable", "related_opportunities", "possible_income_paths"],
+        "properties": {
+          "talent": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["relational", "creative", "adaptation", "teaching", "purpose", "holistic_wellbeing"]
+          },
+          "why_valuable": { "type": "string", "description": "Por qué mantiene o aumenta su valor en la era de la IA" },
+          "related_opportunities": { "type": "array", "items": { "type": "string" } },
+          "possible_income_paths": { "type": "array", "items": { "type": "string" }, "description": "Rutas de monetización ética" }
+        }
+      }
+    },
+    "automation_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["affected_profession", "region", "severity", "timeframe", "evidence"],
+        "properties": {
+          "affected_profession": { "type": "string" },
+          "region": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "timeframe": { "type": "string", "description": "Horizonte estimado del desplazamiento" },
+          "evidence": { "type": "string", "description": "Evidencia observable, con fuente cuando exista" }
+        }
+      }
+    },
+    "opportunities_for_non_technical_people": { "type": "array", "items": { "type": "string" } },
+    "opportunities_for_holistic_and_human_development_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Caminos de bienestar, acompañamiento, arte y comunidad. Sin afirmaciones médicas."
+    },
+    "opportunity_radar": {
+      "type": "object",
+      "description": "Radar de oportunidades: 3 inmediatas, 3 a mediano plazo, 3 exploratorias",
+      "additionalProperties": false,
+      "required": ["immediate", "medium_term", "exploratory"],
+      "properties": {
+        "immediate": { "type": "array", "items": { "type": "string" } },
+        "medium_term": { "type": "array", "items": { "type": "string" } },
+        "exploratory": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "recommended_actions": { "type": "array", "items": { "type": "string" } },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "alert_type", "title", "summary", "region", "area", "urgency",
+          "who_should_pay_attention", "recommended_action", "related_courses",
+          "related_professions", "human_talents_related", "evidence_sources", "date_detected"
+        ],
+        "properties": {
+          "alert_type": {
+            "type": "string",
+            "enum": ["displacement", "opportunity", "human_talent", "regional", "accessibility", "entrepreneurship"]
+          },
+          "title": { "type": "string" },
+          "summary": { "type": "string" },
+          "region": { "type": "string" },
+          "area": { "type": "string" },
+          "urgency": { "type": "string", "enum": ["low", "medium", "high"] },
+          "who_should_pay_attention": { "type": "array", "items": { "type": "string" } },
+          "recommended_action": { "type": "string" },
+          "related_courses": { "type": "array", "items": { "type": "string" } },
+          "related_professions": { "type": "array", "items": { "type": "string" } },
+          "human_talents_related": { "type": "array", "items": { "type": "string" } },
+          "evidence_sources": { "type": "array", "items": { "type": "string" } },
+          "date_detected": { "type": "string", "description": "AAAA-MM-DD" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url", "source_type", "confidence"],
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "source_type": {
+            "type": "string",
+            "enum": ["academic", "company", "job_market", "certification", "community", "government", "signal"]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "early_signal", "needs_verification", "not_reliable"]
+          }
+        }
+      }
+    },
+    "confidence_level": { "type": "string", "enum": ["low", "medium", "high"] },
+    "next_research_questions": { "type": "array", "items": { "type": "string" } }
+  }
+}

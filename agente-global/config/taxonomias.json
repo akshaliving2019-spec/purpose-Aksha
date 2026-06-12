@@ -1,0 +1,38 @@
+{
+  "categorias_profesiones": [
+    "Profesiones técnicas de IA",
+    "Profesiones híbridas humano-IA",
+    "Profesiones de educación y aprendizaje",
+    "Profesiones de bienestar y resiliencia",
+    "Profesiones de creatividad y contenido",
+    "Profesiones de facilitación comunitaria",
+    "Profesiones de consultoría y transición laboral",
+    "Profesiones de diseño de experiencias humanas",
+    "Profesiones de emprendimiento digital",
+    "Profesiones de cuidado, acompañamiento y desarrollo personal"
+  ],
+  "categorias_talentos": {
+    "relational": ["Empatía", "Escucha profunda", "Comunicación emocional", "Acompañamiento", "Mentoría", "Construcción de confianza"],
+    "creative": ["Imaginación", "Narrativa", "Arte", "Diseño de experiencias", "Pensamiento simbólico", "Innovación"],
+    "adaptation": ["Resiliencia", "Flexibilidad", "Aprendizaje continuo", "Capacidad de reinventarse", "Tolerancia a la incertidumbre"],
+    "teaching": ["Explicar con claridad", "Traducir complejidad", "Crear rutas de aprendizaje", "Facilitar grupos", "Enseñar desde la experiencia"],
+    "purpose": ["Sentido de misión", "Servicio", "Liderazgo humano", "Inspiración", "Conectar personas con significado"],
+    "holistic_wellbeing": ["Presencia", "Regulación emocional", "Conciencia corporal", "Facilitación de prácticas contemplativas", "Acompañamiento en procesos de cambio"]
+  },
+  "tipos_alerta": {
+    "displacement": "Una profesión muestra señales de automatización acelerada",
+    "opportunity": "Surge una nueva profesión, curso, certificación o mercado",
+    "human_talent": "Una capacidad humana aumenta su demanda",
+    "regional": "Un país lanza un programa relevante de formación, reconversión o IA",
+    "accessibility": "Aparece una ruta de aprendizaje gratuita o de bajo costo",
+    "entrepreneurship": "Aparece un nicho humano-IA con potencial de negocio"
+  },
+  "niveles_confianza_fuente": {
+    "high": "Alta confianza: fuente oficial, universidad, plataforma reconocida, datos observables",
+    "medium": "Confianza media: medio establecido, reporte de empresa, datos parciales",
+    "early_signal": "Señal temprana: comunidad, foro, tendencia incipiente sin datos consolidados",
+    "needs_verification": "Requiere verificación: afirmación interesante sin respaldo comprobable aún",
+    "not_reliable": "No confiable: fuente sin trazabilidad o con incentivos de desinformación"
+  },
+  "tipos_fuente": ["academic", "company", "job_market", "certification", "community", "government", "signal"]
+}

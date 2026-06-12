@@ -1,0 +1,6 @@
+{
+  "_comentario": "Modelo por fase del pipeline (solo motor api). La investigación necesita un modelo con búsqueda web (Sonnet u Opus); la clasificación es extracción estructurada y Haiku basta porque el esquema y el validador garantizan la forma. Los reportes de clientes (apps/web) van aparte y siguen en Opus.",
+  "investigacion": "claude-sonnet-4-6",
+  "clasificacion": "claude-haiku-4-5",
+  "prosa": "claude-sonnet-4-6"
+}
