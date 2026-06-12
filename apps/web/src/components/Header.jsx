@@ -96,7 +96,7 @@ const Header = () => {
             <button
               className="flex md:hidden items-center justify-center w-9 h-9 rounded-lg transition-colors hover:bg-primary/10"
               onClick={() => setMenuOpen(v => !v)}
-              aria-label="Menu"
+              aria-label={lang === 'es' ? 'Menú' : 'Menu'}
             >
               {menuOpen ? <X className="w-5 h-5 text-primary" /> : <Menu className="w-5 h-5" style={{ color: 'rgba(212,175,55,0.8)' }} />}
             </button>

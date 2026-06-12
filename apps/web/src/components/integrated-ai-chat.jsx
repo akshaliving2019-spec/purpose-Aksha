@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAnimatedText } from '@/hooks/use-animated-text';
 import { useIntegratedAi } from '@/hooks/use-integrated-ai';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
 const MAX_IMAGES = 10;
 const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
@@ -8,6 +9,7 @@ const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const getImageKey = file => `${file.name}:${file.size}:${file.lastModified}`;
 
 export default function IntegratedAiChat() {
+	const { t } = useLanguage();
 	const [input, setInput] = useState('');
 	const [selectedImages, setSelectedImages] = useState([]);
 	const { messages, isStreaming, isLoadingHistory, sendMessage, clearMessages } = useIntegratedAi();
@@ -77,21 +79,21 @@ export default function IntegratedAiChat() {
 	return (
 		<div className="flex flex-col h-full max-w-2xl mx-auto">
 			<div className="flex items-center justify-between p-4 border-b">
-				<h2 className="text-lg font-semibold">AI Chat</h2>
+				<h2 className="text-lg font-semibold">{t.chat.title}</h2>
 			{messages.length > 0 && (
 				<button
 					onClick={clearMessages}
 					disabled={isStreaming}
 					className="text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
-					Clear
+					{t.chat.clear}
 				</button>
 			)}
 			</div>
 
 			<div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth">
 				{isLoadingHistory && (
-					<div className="text-center text-sm text-gray-400 py-4">Loading history...</div>
+					<div className="text-center text-sm text-gray-400 py-4">{t.chat.loadingHistory}</div>
 				)}
 				{messages.map((msg, i) => {
 					const isLastStreamingMessage = isStreaming && i === messages.length - 1 && msg.role === 'assistant';
@@ -111,7 +113,7 @@ export default function IntegratedAiChat() {
 									<img
 										key={j}
 										src={url}
-										alt="AI generated"
+										alt={t.chat.generatedImageAlt}
 										className="mt-2 rounded max-w-full"
 									/>
 								))}
@@ -161,7 +163,7 @@ export default function IntegratedAiChat() {
 						onClick={() => fileInputRef.current?.click()}
 						className="rounded-lg border px-3 py-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
 						disabled={isStreaming || isLoadingHistory || selectedImages.length >= MAX_IMAGES}
-						title="Upload images"
+						title={t.chat.uploadImages}
 					>
 						📎
 					</button>
@@ -169,7 +171,7 @@ export default function IntegratedAiChat() {
 						type="text"
 						value={input}
 						onChange={e => setInput(e.target.value)}
-						placeholder="Type a message..."
+						placeholder={t.chat.placeholder}
 						className="flex-1 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						disabled={isStreaming || isLoadingHistory}
 					/>
@@ -178,7 +180,7 @@ export default function IntegratedAiChat() {
 						disabled={isStreaming || (!input.trim() && selectedImages.length === 0)}
 						className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
 					>
-						Send
+						{t.chat.send}
 					</button>
 				</form>
 			</div>

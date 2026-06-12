@@ -60,28 +60,31 @@ const ModuleCard = ({ name, pct, phrase, detail, color }) => (
 );
 
 // ─── RUTA CARD ─────────────────────────────────────────────────
-const RutaCard = ({ num, title, tiempo, costo, paso, color }) => (
-  <div className="rounded-2xl p-5 mb-4"
-    style={{ backgroundColor: 'rgba(7,20,47,0.6)', border: '1px solid rgba(212,175,55,0.15)' }}>
-    <div className="flex items-start gap-4">
-      <span className="text-3xl font-bold flex-shrink-0" style={{ color: '#D4AF37', opacity: 0.4 }}>0{num}</span>
-      <div className="flex-1">
-        <p className="text-white font-bold text-base mb-3">{title}</p>
-        <div className="flex flex-wrap gap-3 mb-3">
-          <span className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(212,175,55,0.1)', color: 'rgba(212,175,55,0.8)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            ⏱ {tiempo}
-          </span>
-          <span className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(212,175,55,0.1)', color: 'rgba(212,175,55,0.8)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            💰 {costo}
-          </span>
+const RutaCard = ({ num, title, tiempo, costo, paso, color }) => {
+  const { lang } = useLanguage();
+  return (
+    <div className="rounded-2xl p-5 mb-4"
+      style={{ backgroundColor: 'rgba(7,20,47,0.6)', border: '1px solid rgba(212,175,55,0.15)' }}>
+      <div className="flex items-start gap-4">
+        <span className="text-3xl font-bold flex-shrink-0" style={{ color: '#D4AF37', opacity: 0.4 }}>0{num}</span>
+        <div className="flex-1">
+          <p className="text-white font-bold text-base mb-3">{title}</p>
+          <div className="flex flex-wrap gap-3 mb-3">
+            <span className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(212,175,55,0.1)', color: 'rgba(212,175,55,0.8)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              ⏱ {tiempo}
+            </span>
+            <span className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(212,175,55,0.1)', color: 'rgba(212,175,55,0.8)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              💰 {costo}
+            </span>
+          </div>
+          <p className="text-white/50 text-xs leading-relaxed">
+            <span className="text-white/70 font-semibold">{lang === 'es' ? 'Primer paso: ' : 'First step: '}</span>{paso}
+          </p>
         </div>
-        <p className="text-white/50 text-xs leading-relaxed">
-          <span className="text-white/70 font-semibold">Primer paso: </span>{paso}
-        </p>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── PÁGINA PRINCIPAL ──────────────────────────────────────────
 const SampleAnalysisPage = () => {

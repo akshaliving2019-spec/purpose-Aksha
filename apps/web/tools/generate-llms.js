@@ -57,6 +57,16 @@ const PUBLIC_PAGES = [
 		title: 'Por Qué Existimos — AKSHA LIFE',
 		description: 'La misión de AKSHA LIFE: mientras la IA lo transforma todo, revelamos lo único que no puede reemplazar — quién eres tú.',
 	},
+	{
+		url: '/privacy',
+		title: 'Política de Privacidad — AKSHA',
+		description: 'Cómo AKSHA LIFE recopila, usa y protege tus datos personales.',
+	},
+	{
+		url: '/terms',
+		title: 'Términos del Servicio — AKSHA',
+		description: 'Los términos que rigen el uso de AKSHA LIFE y el reporte de Mapa de Propósito.',
+	},
 ];
 
 function extractRoutes(appJsxPath) {

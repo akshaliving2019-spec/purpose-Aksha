@@ -249,7 +249,7 @@ const CheckoutPage = () => {
                       {es ? 'Email — tu reporte llegará aquí *' : 'Email — your report arrives here *'}
                     </label>
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                      placeholder="tu@email.com"
+                      placeholder={es ? 'tu@email.com' : 'your@email.com'}
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                   </div>
 

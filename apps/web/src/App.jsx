@@ -18,6 +18,8 @@ import PricingPage from '@/pages/PricingPage.jsx';
 import WhyWeExistPage from '@/pages/WhyWeExistPage.jsx';
 import CheckoutPage from '@/pages/CheckoutPage.jsx';
 import PaymentSuccessPage from '@/pages/PaymentSuccessPage.jsx';
+import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage.jsx';
+import TermsOfServicePage from '@/pages/TermsOfServicePage.jsx';
 import { Toaster } from '@/components/ui/sonner';
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
               <Route path="/thank-you" element={<PaymentSuccessPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms" element={<TermsOfServicePage />} />
               <Route
                 path="/dashboard"
                 element={

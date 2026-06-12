@@ -205,7 +205,7 @@ const WhyWeExistPage = () => {
                   }} />
                 ))}
                 <span className="relative text-[10px] font-bold tracking-[0.3em] uppercase"
-                  style={{ color: '#D4AF37' }}>YOU</span>
+                  style={{ color: '#D4AF37' }}>{lang === 'es' ? 'TÚ' : 'YOU'}</span>
               </div>
               <p className="text-base md:text-lg text-foreground/70 leading-relaxed max-w-md mx-auto italic">
                 {c.onionText}

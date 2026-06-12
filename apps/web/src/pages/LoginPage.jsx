@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/contexts/AuthContext.jsx';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,6 +14,7 @@ import { toast } from 'sonner';
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,10 +28,10 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      toast.success('Login successful');
+      toast.success(t.login.success);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || t.login.invalidCredentials);
     } finally {
       setLoading(false);
     }
@@ -38,8 +40,8 @@ const LoginPage = () => {
   return (
     <>
       <Helmet>
-        <title>Login - AKSHA</title>
-        <meta name="description" content="Login to your AKSHA account to access your purpose profile and career roadmap." />
+        <title>{t.login.metaTitle}</title>
+        <meta name="description" content={t.login.metaDesc} />
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
@@ -50,17 +52,17 @@ const LoginPage = () => {
                 <Sparkles className="w-8 h-8 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl text-foreground">Welcome back</CardTitle>
-            <CardDescription className="text-muted-foreground">Login to continue your purpose discovery journey</CardDescription>
+            <CardTitle className="text-2xl text-foreground">{t.login.title}</CardTitle>
+            <CardDescription className="text-muted-foreground">{t.login.subtitle}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">Email</Label>
+                <Label htmlFor="email" className="text-foreground">{t.login.email}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder={t.login.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -70,12 +72,12 @@ const LoginPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">Password</Label>
+                <Label htmlFor="password" className="text-foreground">{t.login.password}</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder={t.login.passwordPlaceholder}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -100,13 +102,13 @@ const LoginPage = () => {
                 className="w-full transition-all duration-200 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
                 disabled={loading}
               >
-                {loading ? 'Logging in...' : 'Login'}
+                {loading ? t.login.submitting : t.login.submit}
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
-                Don't have an account?{' '}
+                {t.login.noAccount}{' '}
                 <Link to="/signup" className="text-primary hover:underline font-medium">
-                  Sign up
+                  {t.login.signupLink}
                 </Link>
               </p>
             </form>

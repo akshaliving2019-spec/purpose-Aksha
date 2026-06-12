@@ -208,7 +208,7 @@ const HumanBlueprintDiagram = () => {
         <div className="relative w-full max-w-4xl mx-auto">
           <img
             src="/human-blueprint.jpg"
-            alt="AKSHA LIFE — Mapa de Propósito Humano"
+            alt={lang === 'es' ? 'AKSHA LIFE — Mapa de Propósito Humano' : 'AKSHA LIFE — Human Purpose Map'}
             className="w-full h-auto block rounded-xl"
           />
           <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ backgroundColor: 'rgba(7,20,47,0.18)' }} />

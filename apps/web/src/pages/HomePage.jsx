@@ -269,7 +269,7 @@ const HomePage = () => {
             >
               <img
                 src="/aksha-huella.png"
-                alt="Tu Huella de Propósito"
+                alt={lang === 'es' ? 'Tu Huella de Propósito' : 'Your Purpose Fingerprint'}
                 className="w-48 h-48 md:w-64 md:h-64 object-contain filter drop-shadow-[0_0_30px_rgba(212,175,55,0.45)] mb-6"
               />
               <p className="text-lg md:text-xl max-w-xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
