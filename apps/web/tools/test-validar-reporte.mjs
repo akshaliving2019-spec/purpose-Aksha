@@ -17,6 +17,13 @@ const transito = Object.fromEntries(
   (carta.transitos?.posiciones || []).map((p) => [p.nombre, p]),
 );
 
+const SIGNOS_EN_TEST = {
+  Aries: 'Aries', Tauro: 'Taurus', 'Géminis': 'Gemini', 'Cáncer': 'Cancer',
+  Leo: 'Leo', Virgo: 'Virgo', Libra: 'Libra', Escorpio: 'Scorpio',
+  Sagitario: 'Sagittarius', Capricornio: 'Capricorn', Acuario: 'Aquarius',
+  Piscis: 'Pisces',
+};
+
 const casos = [
   {
     nombre: 'menciones correctas (natal, asteroides, ASC/MC)',
@@ -52,6 +59,26 @@ const casos = [
   {
     nombre: 'Ascendente equivocado',
     texto: 'Con tu Ascendente en Sagitario buscas horizontes.',
+    esperaSinErroresPosicion: false,
+  },
+  {
+    nombre: 'EN: términos astrológicos detectados',
+    texto: 'Your trine to the midheaven shows talent, and the ascendant confirms it.',
+    esperaOk: false,
+  },
+  {
+    nombre: 'EN: posición correcta no marca error de posición',
+    texto: `The Sun in ${SIGNOS_EN_TEST[natal.Sol.signo]} drives your work.`,
+    esperaSinErroresPosicion: true,
+  },
+  {
+    nombre: 'EN: signo equivocado para el Sol',
+    texto: 'The Sun in Virgo makes you meticulous.',
+    esperaSinErroresPosicion: false,
+  },
+  {
+    nombre: 'EN: casa equivocada',
+    texto: 'The Moon in the 5th house speaks of creativity.',
     esperaSinErroresPosicion: false,
   },
   {

@@ -18,6 +18,20 @@ function normalizar(s) {
 
 const SIGNOS_NORM = SIGNOS.map(normalizar);
 
+// Equivalencias EN→ES para validar reportes en inglés con la misma carta.
+const SIGNOS_EN = [
+  'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
+  'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
+];
+const SIGNO_EN_A_ES = Object.fromEntries(SIGNOS_EN.map((s, i) => [s, SIGNOS_NORM[i]]));
+const NOMBRES_EN = {
+  sun: 'sol', moon: 'luna', mercury: 'mercurio', venus: 'venus',
+  mars: 'marte', jupiter: 'jupiter', saturn: 'saturno', uranus: 'urano',
+  neptune: 'neptuno', pluto: 'pluton', 'north node': 'nodo norte',
+  'south node': 'nodo sur', chiron: 'quiron', ascendant: 'ascendente',
+  midheaven: 'medio cielo', lilith: 'lilith',
+};
+
 // Casa Placidus de una longitud eclíptica dada (mismo algoritmo que index.py)
 function casaDe(longitud, cuspides) {
   const lon = ((longitud % 360) + 360) % 360;
@@ -95,8 +109,12 @@ function detectarGlifosProhibidos(reporte) {
 // ("casa", "oposición" o "tránsito" a secas quedan fuera por ambiguos).
 const TERMINOS_ASTRO = new RegExp(
   '\\b(trigono|cuadratura|sextil|quincuncio|ascendente|medio cielo|dispositor|' +
-  'quiron|carta natal|zodiaco|zodiacal|efemerides|swiss ephemeris|luminaria)\\b' +
-  `|\\bcasa\\s+\\d{1,2}\\b|\\ben\\s+(?:${SIGNOS_NORM.join('|')})\\b`,
+  'quiron|carta natal|zodiaco|zodiacal|efemerides|swiss ephemeris|luminaria|' +
+  'trine|sextile|quincunx|ascendant|midheaven|natal chart|zodiac|ephemeris|' +
+  'chiron|luminary)\\b' +
+  `|\\bcasa\\s+\\d{1,2}\\b|\\ben\\s+(?:${SIGNOS_NORM.join('|')})\\b` +
+  `|\\bin\\s+the\\s+\\d{1,2}(?:st|nd|rd|th)\\s+house\\b` +
+  `|\\b(?:${Object.keys(NOMBRES_EN).join('|')})\\s+in\\s+(?:${SIGNOS_EN.join('|')})\\b`,
   'g',
 );
 
@@ -178,6 +196,35 @@ export function validarReporte(reporte, carta) {
         (otro) => otro !== clave && new RegExp(`\\b${otro}\\b`).test(m[1]),
       );
       if (otroEnMedio) continue;
+      if (punto.casas.size > 0 && !punto.casas.has(Number(m[2]))) {
+        errores.push(
+          `${punto.etiqueta} mencionado en Casa ${m[2]} — la carta dice Casa ${[...punto.casas].join(' / ')}.`,
+        );
+      }
+    }
+  }
+
+  // Posiciones afirmadas en inglés: se traducen al nombre/signo ES y se
+  // cruzan contra los mismos puntos de la carta.
+  for (const [nombreEn, claveEs] of Object.entries(NOMBRES_EN)) {
+    const punto = puntos.get(claveEs);
+    if (!punto) continue;
+    const patronSignoEn = new RegExp(
+      `\\b(?:the\\s+)?${nombreEn}(?:\\s+is)?\\s+in\\s+(?:the\\s+sign\\s+of\\s+)?(${SIGNOS_EN.join('|')})\\b`,
+      'g',
+    );
+    for (const m of texto.matchAll(patronSignoEn)) {
+      if (!punto.signos.has(SIGNO_EN_A_ES[m[1]])) {
+        errores.push(
+          `${punto.etiqueta} mencionado en ${m[1]} — la carta dice ${[...punto.signos].join(' / ') || '(sin posición)'}.`,
+        );
+      }
+    }
+    const patronCasaEn = new RegExp(
+      `\\b${nombreEn}\\b([^.;\\n]{0,45}?)\\bthe\\s+(\\d{1,2})(?:st|nd|rd|th)\\s+house\\b`,
+      'g',
+    );
+    for (const m of texto.matchAll(patronCasaEn)) {
       if (punto.casas.size > 0 && !punto.casas.has(Number(m[2]))) {
         errores.push(
           `${punto.etiqueta} mencionado en Casa ${m[2]} — la carta dice Casa ${[...punto.casas].join(' / ')}.`,
