@@ -5,13 +5,37 @@
 // pedidos fallidos sin base de datos adicional.
 
 import Stripe from 'stripe';
+import { put } from '@vercel/blob';
 import { calcularCarta } from './calcular-carta.js';
 import { generarReporte } from './generar-reporte.js';
 import { enviarReporte, enviarAlertaInterna, enviarReporteRevision } from './enviar-reporte.js';
 import { validarReporte } from './validar-reporte.js';
+import { renderReporteWeb } from './plantilla-reporte-web.js';
 import {
   modoRevisionActivo, emailRevision, guardarReportePendiente, urlAprobacion, urlFeedback,
 } from './revision-reporte.js';
+import { GRACIA_HISTORIA_MS } from './historia-vida.js';
+import { buscarOportunidades } from './lookup-territorio.js';
+import { paisDesdeLugar } from './pais-residencia.js';
+import { calcularElementoDebil, guardarReporteMd, metadataBasePlan } from './plan-elemento.js';
+
+// Versión web del Mapa (plantilla top-tier): se genera SIEMPRE y se guarda en
+// Blob con URL impredecible; el email lleva el botón "Abrir tu Mapa". Si el
+// render o el Blob fallan, el reporte sigue su curso solo por email.
+async function generarMapaWeb(paymentIntentId, nombre, reporte, idioma) {
+  try {
+    const html = renderReporteWeb({ nombre, reporte, idioma });
+    const { url } = await put(`mapas/${paymentIntentId}.html`, html, {
+      access: 'public',
+      addRandomSuffix: true,
+      contentType: 'text/html; charset=utf-8',
+    });
+    return url;
+  } catch (error) {
+    console.warn(`⚠️ [${paymentIntentId}] Mapa web no generado (continúa solo email):`, String(error).slice(0, 200));
+    return '';
+  }
+}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -23,13 +47,40 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
   const md = pi.metadata || {};
   const { customer_name, customer_email, birth_date, birth_time, birth_place, producto } = md;
 
+  // Idioma del reporte ('es'|'en'); pedidos antiguos no lo traen → 'es'.
+  const idioma = md.idioma === 'en' ? 'en' : 'es';
+
+  // País de residencia por IP (Pieza 2); respaldo: país del lugar de
+  // nacimiento. La ciudad, si llegó, enriquece el insumo del prompt.
+  const ciudadResidencia = md.ciudad_residencia || '';
+
   if (!customer_name || !customer_email || !birth_date || !birth_place) {
     return { estado: 'datos_incompletos' };
   }
 
+  // Pedidos antiguos guardaban 'Not provided' cuando faltaba la hora; el
+  // protocolo sin hora del prompt se activa solo con valor vacío.
+  const birthTime = !birth_time || birth_time === 'Not provided' ? '' : birth_time;
+
+  // La historia de vida viaja troceada en historia_vida_1..N porque la
+  // metadata de Stripe limita cada valor a 500 caracteres.
+  const historiaVida = Object.keys(md)
+    .filter((k) => /^historia_vida_\d+$/.test(k))
+    .sort((a, b) => parseInt(a.slice(14), 10) - parseInt(b.slice(14), 10))
+    .map((k) => md[k])
+    .join('');
+
   const intentos = parseInt(md.reporte_intentos || '0', 10);
 
   if (!forzar) {
+    // La historia de vida se pide DESPUÉS del pago en la página de gracias:
+    // su formulario (enviar u omitir) dispara el pipeline al instante vía
+    // /api/agregar-historia; si el cliente cierra la pestaña, la ventana
+    // expira y el cron diario procesa el pedido sin historia.
+    if (md.espera_historia === '1' && !historiaVida &&
+        Date.now() - pi.created * 1000 < GRACIA_HISTORIA_MS) {
+      return { estado: 'esperando_historia' };
+    }
     if (md.reporte_status === 'enviado') return { estado: 'ya_enviado' };
     if (md.reporte_status === 'en_revision') return { estado: 'en_revision' };
     if (md.reporte_status === 'procesando') {
@@ -49,20 +100,36 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
 
   try {
     console.log(`🔭 [${paymentIntentId}] Calculando carta natal...`);
-    const carta = await calcularCarta(birth_date, birth_time, birth_place, {
+    const carta = await calcularCarta(birth_date, birthTime, birth_place, {
       nombre: customer_name,
     });
+
+    // Pieza 2 — Oportunidades del territorio. El país manda por IP; si no
+    // llegó, se deriva del lugar de nacimiento. Lookup híbrido: banco en Blob
+    // o investigación en vivo (persistida antes de generar). Sin insumo, el
+    // prompt omite la sección. Un fallo del lookup NUNCA bloquea el reporte.
+    const paisResidencia = md.pais_residencia || paisDesdeLugar(birth_place);
+    let oportunidades = null;
+    try {
+      oportunidades = await buscarOportunidades(paisResidencia);
+      if (ciudadResidencia && oportunidades?.tieneInsumo) oportunidades.ciudad = ciudadResidencia;
+    } catch (error) {
+      console.warn(`⚠️ [${paymentIntentId}] Oportunidades del territorio no disponibles (continúa sin la sección):`, String(error).slice(0, 200));
+    }
 
     console.log(`🤖 [${paymentIntentId}] Generando reporte con Claude...`);
     const reporte = await generarReporte({
       nombre: customer_name,
       email: customer_email,
       birthDate: birth_date,
-      birthTime: birth_time,
+      birthTime,
       birthPlace: birth_place,
       carta,
       observaciones,
+      historiaVida,
       producto,
+      idioma,
+      oportunidades,
     });
 
     // Lineamiento AKSHA: el texto generado se valida contra la carta Swiss
@@ -72,6 +139,8 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     if (!validacion.ok) {
       console.warn(`⚠️ [${paymentIntentId}] Validación:`, validacion.errores);
     }
+
+    const urlWeb = await generarMapaWeb(paymentIntentId, customer_name, reporte, idioma);
 
     // Modo revisión: el reporte va primero a la revisora con link de
     // aprobación; el cliente lo recibe cuando ella aprueba (/api/aprobar-reporte).
@@ -83,6 +152,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         emailCliente: customer_email,
         emailRevisora: emailRevision(),
         reporte,
+        urlWeb,
         linkAprobacion: urlAprobacion(paymentIntentId),
         linkFeedback: urlFeedback(paymentIntentId),
         paymentIntentId,
@@ -93,6 +163,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         metadata: {
           reporte_status: 'en_revision',
           reporte_blob_url: blobUrl,
+          reporte_web_url: urlWeb,
           reporte_revision_resend_id: envioRevision?.id || '',
           reporte_revision_at: new Date().toISOString(),
           reporte_error: '',
@@ -110,14 +181,29 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     }
 
     console.log(`📧 [${paymentIntentId}] Enviando reporte a:`, customer_email);
-    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte });
+    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte, urlWeb, idioma });
+
+    // Base del plan de 4 semanas: el cliente YA recibió el reporte, así que
+    // fijamos su elemento débil y guardamos el reporte.md como insumo. Si algo
+    // de esto falla, el reporte ya salió: no rompemos el envío (cron lo retoma).
+    let metaPlan = {};
+    try {
+      const debil = calcularElementoDebil(reporte, carta);
+      const reporteMdUrl = await guardarReporteMd(paymentIntentId, reporte);
+      metaPlan = metadataBasePlan({ elemento: debil.elemento, reporteMdUrl });
+      console.log(`🗓️ [${paymentIntentId}] Plan 4 semanas — elemento débil: ${debil.elemento} (${debil.modulo}, vía ${debil.via})`);
+    } catch (planError) {
+      console.warn(`⚠️ [${paymentIntentId}] No se pudo fijar la base del plan:`, String(planError).slice(0, 200));
+    }
 
     await stripe.paymentIntents.update(paymentIntentId, {
       metadata: {
         reporte_status: 'enviado',
+        reporte_web_url: urlWeb,
         reporte_resend_id: envio?.id || '',
         reporte_enviado_at: new Date().toISOString(),
         reporte_error: '',
+        ...metaPlan,
       },
     });
 
@@ -140,7 +226,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         `El pipeline de reporte falló.\n\n` +
         `PaymentIntent: ${paymentIntentId}\n` +
         `Cliente: ${customer_name} <${customer_email}>\n` +
-        `Nacimiento: ${birth_date} ${birth_time || '(sin hora)'} · ${birth_place}\n` +
+        `Nacimiento: ${birth_date} ${birthTime || '(sin hora)'} · ${birth_place}\n` +
         `Intento: ${intentos + 1} de ${MAX_INTENTOS}\n\n` +
         `Error:\n${detalle}\n\n` +
         (intentos + 1 < MAX_INTENTOS
@@ -161,7 +247,11 @@ export async function reprocesarPendientes({ maxPedidos = 1, dryRun = false } = 
 
   const pendientes = lista.data.filter((pi) => {
     const md = pi.metadata || {};
-    if (pi.status !== 'succeeded') return false;
+    // Pedidos con cupón 100% no se pagan nunca: el PaymentIntent queda sin
+    // confirmar y cupon_gratis='1' es lo que los marca como pedidos reales.
+    if (pi.status !== 'succeeded' && md.cupon_gratis !== '1') return false;
+    // Aún dentro de la ventana para añadir historia de vida: no apurarlo.
+    if (md.espera_historia === '1' && Date.now() - pi.created * 1000 < GRACIA_HISTORIA_MS) return false;
     if (!md.customer_email || !md.birth_date) return false;
     if (md.reporte_status === 'enviado') return false;
     if (md.reporte_status === 'en_revision') return false; // espera aprobación, no reprocesar

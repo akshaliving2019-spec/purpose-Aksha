@@ -5,9 +5,10 @@
 // Uso:
 //   POST /api/test-pipeline
 //   { "nombre": "...", "email": "...", "fecha": "DD/MM/YYYY", "hora": "HH:MM",
-//     "lugar": "Ciudad, País", "transitos": "YYYY-MM-DD", "lugar_transitos": "Miami",
-//     "enviar": true }
-// Si "enviar" es false, devuelve el reporte sin mandar el email.
+//     "lugar": "Ciudad, País", "historia_vida": "eventos y patrones...",
+//     "transitos": "YYYY-MM-DD", "lugar_transitos": "Miami", "enviar": true }
+// Si "enviar" es false, devuelve el reporte sin mandar el email. Sin "hora"
+// y con "historia_vida" se ejerce el protocolo de Historia de Vida.
 
 import { timingSafeEqual } from 'node:crypto';
 import { calcularCarta } from './_lib/calcular-carta.js';
@@ -32,9 +33,10 @@ export default async function handler(req, res) {
   }
 
   const {
-    nombre, email, fecha, hora, lugar,
-    transitos, lugar_transitos, enviar = false, producto,
+    nombre, email, fecha, hora, lugar, historia_vida,
+    transitos, lugar_transitos, enviar = false, producto, idioma,
   } = req.body || {};
+  const idiomaReporte = idioma === 'en' ? 'en' : 'es';
 
   if (!nombre || !email || !fecha || !lugar) {
     return res.status(400).json({ error: 'Faltan campos: nombre, email, fecha, lugar' });
@@ -52,7 +54,8 @@ export default async function handler(req, res) {
 
     console.log('🤖 [test] Generando reporte con Claude...');
     const reporte = await generarReporte({
-      nombre, email, birthDate: fecha, birthTime: hora, birthPlace: lugar, carta, producto,
+      nombre, email, birthDate: fecha, birthTime: hora, birthPlace: lugar,
+      carta, historiaVida: historia_vida, producto, idioma: idiomaReporte,
     });
     pasos.reporte = `ok (${reporte.length} caracteres)`;
 
@@ -66,7 +69,7 @@ export default async function handler(req, res) {
       pasos.email = 'bloqueado por validación (lineamiento AKSHA)';
     } else if (enviar) {
       console.log('📧 [test] Enviando email a:', email);
-      resultadoEnvio = await enviarReporte({ nombre, email, reporte });
+      resultadoEnvio = await enviarReporte({ nombre, email, reporte, idioma: idiomaReporte });
       pasos.email = 'ok';
     } else {
       pasos.email = 'omitido (enviar=false)';

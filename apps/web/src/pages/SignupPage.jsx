@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/contexts/AuthContext.jsx';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,6 +14,7 @@ import { toast } from 'sonner';
 const SignupPage = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,12 +29,12 @@ const SignupPage = () => {
     setError('');
 
     if (password !== passwordConfirm) {
-      setError('Passwords do not match');
+      setError(t.signup.mismatch);
       return;
     }
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters');
+      setError(t.signup.tooShort);
       return;
     }
 
@@ -40,10 +42,10 @@ const SignupPage = () => {
 
     try {
       await signup(email, password, passwordConfirm, name);
-      toast.success('Account created successfully');
+      toast.success(t.signup.success);
       navigate('/discover');
     } catch (err) {
-      setError(err.message || 'Failed to create account');
+      setError(err.message || t.signup.failed);
     } finally {
       setLoading(false);
     }
@@ -52,8 +54,8 @@ const SignupPage = () => {
   return (
     <>
       <Helmet>
-        <title>Sign Up - AKSHA</title>
-        <meta name="description" content="Create your AKSHA account and start discovering your unique purpose." />
+        <title>{t.signup.metaTitle}</title>
+        <meta name="description" content={t.signup.metaDesc} />
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
@@ -64,17 +66,17 @@ const SignupPage = () => {
                 <Sparkles className="w-8 h-8 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl text-foreground">Create your account</CardTitle>
-            <CardDescription className="text-muted-foreground">Start your journey to discover your unique purpose</CardDescription>
+            <CardTitle className="text-2xl text-foreground">{t.signup.title}</CardTitle>
+            <CardDescription className="text-muted-foreground">{t.signup.subtitle}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-foreground">Name</Label>
+                <Label htmlFor="name" className="text-foreground">{t.signup.name}</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Your name"
+                  placeholder={t.signup.namePlaceholder}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -84,11 +86,11 @@ const SignupPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">Email</Label>
+                <Label htmlFor="email" className="text-foreground">{t.signup.email}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder={t.signup.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -98,12 +100,12 @@ const SignupPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">Password</Label>
+                <Label htmlFor="password" className="text-foreground">{t.signup.password}</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="At least 8 characters"
+                    placeholder={t.signup.passwordPlaceholder}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -119,12 +121,12 @@ const SignupPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="passwordConfirm" className="text-foreground">Confirm Password</Label>
+                <Label htmlFor="passwordConfirm" className="text-foreground">{t.signup.confirmPassword}</Label>
                 <div className="relative">
                   <Input
                     id="passwordConfirm"
                     type={showConfirm ? 'text' : 'password'}
-                    placeholder="Re-enter your password"
+                    placeholder={t.signup.confirmPlaceholder}
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     required
@@ -150,13 +152,13 @@ const SignupPage = () => {
                 className="w-full transition-all duration-200 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
                 disabled={loading}
               >
-                {loading ? 'Creating account...' : 'Sign Up'}
+                {loading ? t.signup.submitting : t.signup.submit}
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
-                Already have an account?{' '}
+                {t.signup.haveAccount}{' '}
                 <Link to="/login" className="text-primary hover:underline font-medium">
-                  Login
+                  {t.signup.loginLink}
                 </Link>
               </p>
             </form>

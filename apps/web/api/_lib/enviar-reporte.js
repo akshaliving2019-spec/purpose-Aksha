@@ -14,6 +14,15 @@ function escapeHtml(str) {
 const RESEND_API_KEY = ((process.env.RESEND_API_KEY || '').match(/re_[A-Za-z0-9_-]{10,}/) ||
   [(process.env.RESEND_API_KEY || '').trim()])[0];
 
+// Copia oculta de auditoría/compliance (pedida por el dueño): cada reporte
+// que sale a un cliente — envío directo o aprobado en revisión — llega
+// también al buzón interno de AKSHA, idéntico a lo que recibió el cliente.
+// Se cambia con AUDITORIA_EMAIL; ponerla en '0' lo apaga.
+const EMAIL_AUDITORIA = (() => {
+  const valor = (process.env.AUDITORIA_EMAIL ?? 'Purpose@aksha.life').trim();
+  return valor && valor !== '0' ? valor : '';
+})();
+
 async function enviarConResend(payload, descripcion) {
   let ultimoError;
   for (let intento = 1; intento <= 3; intento++) {
@@ -41,7 +50,7 @@ async function enviarConResend(payload, descripcion) {
   throw ultimoError;
 }
 
-export async function enviarReporte({ nombre, email, reporte }) {
+export async function enviarReporte({ nombre, email, reporte, urlWeb = '', idioma = 'es' }) {
   if (!RESEND_API_KEY) {
     console.error('❌ RESEND_API_KEY no configurada');
     await enviarNotificacionInterna({ nombre, email, reporte });
@@ -49,13 +58,17 @@ export async function enviarReporte({ nombre, email, reporte }) {
   }
 
   const primerNombre = nombre.split(' ')[0];
+  const t = TEXTOS_EMAIL[idioma] || TEXTOS_EMAIL.es;
 
   const resultado = await enviarConResend({
     from: 'AKSHA LIFE <reportes@aksha.life>',
     to: [email],
-    subject: `${primerNombre}, tu Mapa de Propósito está listo`,
-    html: formatearEmailHTML(nombre, reporte),
-    text: reporte,
+    ...(EMAIL_AUDITORIA && EMAIL_AUDITORIA.toLowerCase() !== email.toLowerCase()
+      ? { bcc: [EMAIL_AUDITORIA] }
+      : {}),
+    subject: t.asunto(primerNombre),
+    html: formatearEmailHTML(nombre, reporte, '', urlWeb, idioma),
+    text: (urlWeb ? `${t.abrirWeb} ${urlWeb}\n\n` : '') + reporte,
   }, `email a ${email}`);
 
   console.log('✅ Email enviado a:', email);
@@ -65,7 +78,7 @@ export async function enviarReporte({ nombre, email, reporte }) {
 // Reporte en modo revisión: va a la revisora (no al cliente) con el reporte
 // completo tal como lo recibiría el cliente y un botón "Aprobar y enviar".
 export async function enviarReporteRevision({
-  nombre, emailCliente, emailRevisora, reporte, linkAprobacion, linkFeedback, paymentIntentId, validacion,
+  nombre, emailCliente, emailRevisora, reporte, urlWeb = '', linkAprobacion, linkFeedback, paymentIntentId, validacion,
 }) {
   if (!RESEND_API_KEY) {
     throw new Error('RESEND_API_KEY no configurada — email de revisión no enviado');
@@ -87,6 +100,7 @@ export async function enviarReporteRevision({
       <p style="color:#D9D5C9;font-size:14px;margin:0 0 4px;">Cliente: <strong>${escapeHtml(nombre)}</strong> &lt;${escapeHtml(emailCliente)}&gt;</p>
       <p style="color:#D9D5C9;font-size:14px;margin:0 0 16px;">Pedido: ${escapeHtml(paymentIntentId || '')}</p>
       ${bloqueValidacion}
+      ${urlWeb ? `<p style="color:#D9D5C9;font-size:14px;margin:0 0 16px;">Versión web que verá el cliente: <a href="${urlWeb}" style="color:#E8C97A;">abrir el Mapa</a></p>` : ''}
       <a href="${linkAprobacion}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:6px;text-decoration:none;margin:0 12px 10px 0;">Aprobar y enviar al cliente</a>
       ${linkFeedback ? `<a href="${linkFeedback}" style="display:inline-block;background-color:transparent;border:1px solid #C9A84C;color:#C9A84C;font-weight:bold;font-size:15px;padding:11px 24px;border-radius:6px;text-decoration:none;margin:0 0 10px;">Observaciones / Rechazar</a>` : ''}
       <p style="color:#8E94A6;font-size:12px;margin:8px 0 0;">Con "Observaciones" registras qué mejorar y, si quieres, el reporte se regenera incorporándolas.</p>
@@ -159,6 +173,65 @@ async function enviarNotificacionInterna({ nombre, email, reporte }) {
 
 const FUENTE_SERIF = "Georgia,'Times New Roman',serif";
 
+const TEXTOS_EMAIL = {
+  es: {
+    asunto: (nombre) => `${nombre}, tu Mapa de Propósito está listo`,
+    producto: 'Mapa de Propósito',
+    preheader: 'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.',
+    intro: `Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
+                los patrones únicos de tu nacimiento con el contexto actual del mundo —
+                para que puedas actuar con claridad.`,
+    botonMapa: 'Abrir tu Mapa en la web',
+    botonNota: 'La misma lectura, en su versión interactiva. Abajo la tienes completa en este correo.',
+    abrirWeb: 'Abre tu Mapa en la web:',
+    contacto: 'Si tienes preguntas, escríbenos a',
+    lema: 'La IA no crea el conocimiento. Lo conecta.',
+  },
+  en: {
+    asunto: (nombre) => `${nombre}, your Purpose Map is ready`,
+    producto: 'Purpose Map',
+    preheader: 'Your full reading: the four Ikigai modules, your birth gifts and challenges, and the windows of this cycle.',
+    intro: `Your Purpose Map is ready. What you are about to read connects the unique
+                patterns of your birth with the world as it is today —
+                so you can act with clarity.`,
+    botonMapa: 'Open your Map on the web',
+    botonNota: 'The same reading, in its interactive version. The full text is below in this email.',
+    abrirWeb: 'Open your Map on the web:',
+    contacto: 'Questions? Write to us at',
+    lema: 'AI does not create knowledge. It connects it.',
+  },
+};
+
+// Textos bilingües del plan de 4 semanas (asunto + intro por semana).
+export const TEXTOS_PLAN_SEMANAL = {
+  es: {
+    producto: 'Tu programa de 4 semanas',
+    contacto: 'Si tienes preguntas, escríbenos a',
+    lema: 'La IA no crea el conocimiento. Lo conecta.',
+    1: { asunto: (n) => `${n}, empieza tu programa de 4 semanas`,
+         intro: 'Tu Mapa de Propósito abrió el mapa. Estas cuatro semanas lo ponen a caminar, una pieza a la vez.' },
+    2: { asunto: (n) => `${n}, semana 2 — una práctica para esta semana`,
+         intro: 'Lo que reconociste la semana pasada, esta semana se trabaja con un solo movimiento concreto.' },
+    3: { asunto: (n) => `${n}, semana 3 — apóyate en lo que ya dominas`,
+         intro: 'Esta semana cruzamos lo que cuesta con tus dones más fuertes.' },
+    4: { asunto: (n) => `${n}, semana 4 — cierre de tu programa`,
+         intro: 'Última semana: medir lo avanzado y dejar el camino marcado.' },
+  },
+  en: {
+    producto: 'Your 4-week program',
+    contacto: 'Questions? Write to us at',
+    lema: 'AI does not create knowledge. It connects it.',
+    1: { asunto: (n) => `${n}, your 4-week program begins`,
+         intro: 'Your Purpose Map opened the territory. These four weeks set it in motion, one piece at a time.' },
+    2: { asunto: (n) => `${n}, week 2 — one practice for this week`,
+         intro: 'What you recognized last week becomes a single, concrete move this week.' },
+    3: { asunto: (n) => `${n}, week 3 — lean on what you already master`,
+         intro: 'This week we cross what is hard with your strongest gifts.' },
+    4: { asunto: (n) => `${n}, week 4 — closing your program`,
+         intro: 'Final week: measure the progress and leave the path marked.' },
+  },
+};
+
 const ESTILO = {
   p: `margin:0 0 18px;color:#D9D5C9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;`,
   h2: `margin:38px 0 16px;padding:30px 0 0;border-top:1px solid #1C2B4D;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:23px;line-height:1.35;font-weight:normal;letter-spacing:0.03em;`,
@@ -226,20 +299,29 @@ export function reporteAHtml(reporte) {
   return bloques.join('\n');
 }
 
-export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
+export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb = '', idioma = 'es') {
+  // Normaliza una vez para que el atributo lang nunca reciba un valor crudo.
+  idioma = idioma === 'en' ? 'en' : 'es';
+  const t = TEXTOS_EMAIL[idioma] || TEXTOS_EMAIL.es;
   const primerNombre = escapeHtml(nombre.split(' ')[0]);
   const reporteHTML = reporteAHtml(reporte);
-  const preheader =
-    'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.';
+  const botonMapa = urlWeb ? `
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:34px 36px 0;">
+              <a href="${urlWeb}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-family:${FUENTE_SERIF};font-weight:bold;font-size:16px;letter-spacing:0.04em;padding:15px 34px;border-radius:8px;text-decoration:none;">${t.botonMapa}</a>
+              <p style="margin:14px 0 0;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">${t.botonNota}</p>
+            </td>
+          </tr>` : '';
+  const preheader = t.preheader;
 
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${idioma}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="supported-color-schemes" content="dark">
-  <title>AKSHA · Mapa de Propósito</title>
+  <title>AKSHA · ${t.producto}</title>
   <style>
     body { margin:0; padding:0; background-color:#07142F; }
     a { color:#E8C97A; }
@@ -260,7 +342,7 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
           <tr>
             <td align="center" class="pad-lateral" style="padding:56px 36px 0;">
               <div style="color:#C9A84C;font-family:${FUENTE_SERIF};font-size:26px;font-weight:bold;letter-spacing:0.4em;">AKSHA&nbsp;LIFE</div>
-              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">Mapa de Propósito</div>
+              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">${t.producto}</div>
               <div style="width:64px;border-top:1px solid #C9A84C;margin:28px auto 0;font-size:0;line-height:0;">&nbsp;</div>
             </td>
           </tr>
@@ -268,12 +350,10 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
             <td class="pad-lateral" style="padding:46px 36px 0;">
               <p style="margin:0 0 14px;color:#F0ECE4;font-family:${FUENTE_SERIF};font-size:25px;line-height:1.3;">${primerNombre},</p>
               <p style="margin:0;color:#A9AEB9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;">
-                Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
-                los patrones únicos de tu nacimiento con el contexto actual del mundo —
-                para que puedas actuar con claridad.
+                ${t.intro}
               </p>
             </td>
-          </tr>
+          </tr>${botonMapa}
           <tr>
             <td class="pad-lateral" style="padding:10px 36px 0;">
               ${reporteHTML}
@@ -284,10 +364,10 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
               <div style="width:64px;border-top:1px solid #1C2B4D;margin:0 auto 26px;font-size:0;line-height:0;">&nbsp;</div>
               <p style="margin:0 0 8px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;letter-spacing:0.08em;">AKSHA LIFE · aksha.life</p>
               <p style="margin:0 0 20px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">
-                Si tienes preguntas, escríbenos a
+                ${t.contacto}
                 <a href="mailto:Purpose@aksha.life" style="color:#C9A84C;text-decoration:none;">Purpose@aksha.life</a>
               </p>
-              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">La IA no crea el conocimiento. Lo conecta.</p>
+              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">${t.lema}</p>
             </td>
           </tr>
         </table>
@@ -296,4 +376,95 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '') {
   </table>
 </body>
 </html>`;
+}
+
+// Variante simple de formatearEmailHTML para los emails semanales: mismo look,
+// sin botón de "Abrir tu Mapa" (el semanal es texto autocontenido).
+export function formatearEmailPlanHTML(nombre, contenidoMd, semana, idioma = 'es') {
+  idioma = idioma === 'en' ? 'en' : 'es';
+  const t = TEXTOS_PLAN_SEMANAL[idioma] || TEXTOS_PLAN_SEMANAL.es;
+  const tSem = t[semana] || t[1];
+  const primerNombre = escapeHtml(nombre.split(' ')[0]);
+  const cuerpoHTML = reporteAHtml(contenidoMd);
+
+  return `<!DOCTYPE html>
+<html lang="${idioma}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>AKSHA · ${t.producto}</title>
+  <style>
+    body { margin:0; padding:0; background-color:#07142F; }
+    a { color:#E8C97A; }
+    @media (max-width:520px) {
+      .pad-lateral { padding-left:22px !important; padding-right:22px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#07142F;" bgcolor="#07142F">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#07142F" style="background-color:#07142F;">
+    <tr>
+      <td align="center" style="padding:8px 12px 48px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;">
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:56px 36px 0;">
+              <div style="color:#C9A84C;font-family:${FUENTE_SERIF};font-size:26px;font-weight:bold;letter-spacing:0.4em;">AKSHA&nbsp;LIFE</div>
+              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">${t.producto}</div>
+              <div style="width:64px;border-top:1px solid #C9A84C;margin:28px auto 0;font-size:0;line-height:0;">&nbsp;</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="pad-lateral" style="padding:46px 36px 0;">
+              <p style="margin:0 0 14px;color:#F0ECE4;font-family:${FUENTE_SERIF};font-size:25px;line-height:1.3;">${primerNombre},</p>
+              <p style="margin:0;color:#A9AEB9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;">${escapeHtml(tSem.intro)}</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="pad-lateral" style="padding:10px 36px 0;">
+              ${cuerpoHTML}
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="pad-lateral" style="padding:44px 36px 0;">
+              <div style="width:64px;border-top:1px solid #1C2B4D;margin:0 auto 26px;font-size:0;line-height:0;">&nbsp;</div>
+              <p style="margin:0 0 8px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;letter-spacing:0.08em;">AKSHA LIFE · aksha.life</p>
+              <p style="margin:0 0 20px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">
+                ${t.contacto}
+                <a href="mailto:Purpose@aksha.life" style="color:#C9A84C;text-decoration:none;">Purpose@aksha.life</a>
+              </p>
+              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">${t.lema}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+// Envía un email del plan semanal al cliente. From reportes@aksha.life, igual
+// que el reporte principal. SIN BCC de auditoría (derivado, no el principal).
+export async function enviarPlanSemanal({ nombre, email, contenidoMd, semana, idioma = 'es' }) {
+  if (!RESEND_API_KEY) {
+    console.error('❌ RESEND_API_KEY no configurada — email semanal no enviado');
+    throw new Error('RESEND_API_KEY no configurada — email semanal no enviado');
+  }
+  const primerNombre = nombre.split(' ')[0];
+  const lang = idioma === 'en' ? 'en' : 'es';
+  const t = TEXTOS_PLAN_SEMANAL[lang] || TEXTOS_PLAN_SEMANAL.es;
+  const tSem = t[semana] || t[1];
+
+  const resultado = await enviarConResend({
+    from: 'AKSHA LIFE <reportes@aksha.life>',
+    to: [email],
+    subject: tSem.asunto(primerNombre),
+    html: formatearEmailPlanHTML(nombre, contenidoMd, semana, lang),
+    text: contenidoMd,
+  }, `email plan semana ${semana} a ${email}`);
+
+  console.log(`✅ Email plan semana ${semana} enviado a:`, email);
+  return resultado;
 }

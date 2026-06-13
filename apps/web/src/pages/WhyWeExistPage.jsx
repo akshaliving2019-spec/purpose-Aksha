@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
-const questionsEN = ['What do I do now?','Am I still useful?','Where do I fit?','What do I have that a machine doesn\'t?'];
-const questionsES = ['¿Qué hago ahora?','¿Sigo siendo útil?','¿Dónde encajo?','¿Qué tengo yo que una máquina no tiene?'];
+const questionsEN = ['What do I do now?','Am I still useful?','Where do I fit?','What do I have that a machine doesn\'t?','What was I born to do?'];
+const questionsES = ['¿Qué hago ahora?','¿Sigo siendo útil?','¿Dónde encajo?','¿Qué tengo yo que una máquina no tiene?','¿Para qué nací realmente?'];
 
 const RotatingQuestion = ({ lang }) => {
   const questions = lang === 'es' ? questionsES : questionsEN;
@@ -43,52 +43,54 @@ const WhyWeExistPage = () => {
 
   const c = {
     en: {
-      meta: 'Why We Exist | AKSHA',
-      metaDesc: 'If you are here, perhaps you are a seeker, just like us. Welcome to the journey of remembering who you are.',
+      meta: 'Why We Exist | AKSHA — Your Purpose Map',
+      metaDesc: 'AI is rewriting every job and every plan. AKSHA exists for one reason: to show you the one thing it can never replace — who you are.',
       eyebrow: 'Why We Exist',
-      manifesto1: 'The greatest challenge of the AI era is not technological.',
-      manifesto2: 'It is human.',
-      pullQuote: '"When survival becomes the priority, self-discovery is often postponed."',
-      p1: 'If you are here, perhaps you are a seeker, just like us.',
-      p2: 'The journey of self-discovery is not the same for everyone.',
-      p3: 'Some are born surrounded by opportunity, guidance, and support. Others spend much of their lives simply trying to survive.',
-      p4: 'We do not all begin from the same starting line.',
-      layersTitle: 'Life adds layers to each of us.',
-      p5: 'Expectations, fears, responsibilities, disappointments, beliefs, and experiences. For some, those layers are few. For others, they can feel endless.',
-      onionText: 'Like peeling a giant onion, the journey back to ourselves can take years, sometimes a lifetime.',
-      p6: 'Yet beneath those layers lives something that has never disappeared:',
-      p6bold: 'your unique gifts, talents, motivations, and potential.',
-      aiTitle: 'A new kind of challenge.',
-      p7: 'As artificial intelligence transforms the world around us, knowing who we truly are may become one of the most important challenges of our time.',
-      missionTitle: 'Why AKSHA was created.',
-      p8: 'AKSHA was created to help people reconnect with that deeper part of themselves — not by telling them who to become, but by helping them discover what has been there all along.',
-      p9: 'Because your path may be different from mine, but your uniqueness matters just as much.',
-      cta: 'Welcome to the journey of remembering who you are.',
-      ctaBtn: 'Begin Your Journey',
+      manifesto1: 'The biggest risk of the AI era is not losing your job.',
+      manifesto2: 'It is never finding out who you are.',
+      pullQuote: '"The most expensive thing you will ever pay for is not knowing what you were born to do."',
+      p1: 'If you are here, you already feel it. The world is changing faster than anyone can keep up — and the only stable ground left is knowing exactly who you are.',
+      p2: 'Here is what nobody tells you: self-discovery was never a level playing field.',
+      p3: 'Some people are handed mentors, options, and a map. The rest of us spend decades just surviving — postponing the one question that decides everything: what am I actually here to do?',
+      p4: 'You did not get a head start. That changes today.',
+      layersTitle: 'Your real potential is buried under layers — and that is not your fault.',
+      p5: 'Other people\'s expectations. Old fears. Responsibilities, disappointments, beliefs you never chose. Year after year the layers pile up — until even you cannot see what is underneath.',
+      onionText: 'Most people spend twenty years or more peeling these layers alone, through trial, error, and expensive detours. AKSHA was built to compress that journey into days.',
+      p6: 'Because beneath every layer, one thing never disappeared:',
+      p6bold: 'your unique gifts, talents, drives, and potential — fully intact, waiting to be named.',
+      aiTitle: 'AI changed the rules. Knowing yourself is the new advantage.',
+      p7: 'Machines can now write, code, design, and analyze. The one thing they cannot copy is you: your exact combination of talents, motivations, and timing. In the next decade, the people who thrive will not be the ones who compete with AI — they will be the ones who know precisely what makes them irreplaceable.',
+      missionTitle: 'That is why AKSHA exists.',
+      p8: 'AKSHA exists to give you what most people never get: a clear, personal map of who you are. Not generic advice. Not another personality quiz. A Purpose Map built around one person — you — synthesizing neuroscience, psychology, archetypes, and chronobiology into answers you can act on the same day you read them.',
+      p9: 'We cannot choose your path for you. We can do something better: show you the one you were already built for.',
+      cta: 'Stop guessing who you are. Start knowing.',
+      ctaOffer: 'Your personal Purpose Map — Founding Member price $47 (soon $79). Delivered to your inbox within 24–48 hours.',
+      ctaBtn: 'Get My Purpose Map',
     },
     es: {
-      meta: 'Por Qué Existimos | AKSHA',
-      metaDesc: 'Si estás aquí, quizás eres un buscador, al igual que nosotros. Bienvenido al viaje de recordar quién eres.',
+      meta: 'Por Qué Existimos | AKSHA — Tu Mapa de Propósito',
+      metaDesc: 'La IA está reescribiendo cada trabajo y cada plan. AKSHA existe por una razón: mostrarte lo único que nunca podrá reemplazar — quién eres tú.',
       eyebrow: 'Por Qué Existimos',
-      manifesto1: 'El mayor desafío de la era de la IA no es tecnológico.',
-      manifesto2: 'Es humano.',
-      pullQuote: '"Cuando la supervivencia se convierte en la prioridad, el autodescubrimiento suele posponerse."',
-      p1: 'Si estás aquí, quizás eres un buscador, al igual que nosotros.',
-      p2: 'El viaje del autodescubrimiento no es igual para todos.',
-      p3: 'Algunos nacen rodeados de oportunidades, guía y apoyo. Otros pasan gran parte de su vida simplemente tratando de sobrevivir.',
-      p4: 'No todos comenzamos desde la misma línea de salida.',
-      layersTitle: 'La vida añade capas a cada uno de nosotros.',
-      p5: 'Expectativas, miedos, responsabilidades, decepciones, creencias y experiencias. Para algunos, esas capas son pocas. Para otros, pueden parecer interminables.',
-      onionText: 'Como pelar una cebolla gigante, el camino de regreso a nosotros mismos puede tomar años, a veces toda una vida.',
-      p6: 'Sin embargo, debajo de esas capas vive algo que nunca ha desaparecido:',
-      p6bold: 'tus dones únicos, talentos, motivaciones y potencial.',
-      aiTitle: 'Un nuevo tipo de desafío.',
-      p7: 'A medida que la inteligencia artificial transforma el mundo a nuestro alrededor, saber quiénes somos realmente puede convertirse en uno de los desafíos más importantes de nuestra época.',
-      missionTitle: 'Por qué se creó AKSHA.',
-      p8: 'AKSHA fue creado para ayudar a las personas a reconectarse con esa parte más profunda de sí mismas — no diciéndoles en quiénes convertirse, sino ayudándoles a descubrir lo que siempre ha estado ahí.',
-      p9: 'Porque tu camino puede ser diferente al mío, pero tu singularidad importa igual.',
-      cta: 'Bienvenido al viaje de recordar quién eres.',
-      ctaBtn: 'Comenzar Mi Viaje',
+      manifesto1: 'El mayor riesgo de la era de la IA no es perder tu trabajo.',
+      manifesto2: 'Es no descubrir nunca quién eres.',
+      pullQuote: '"Lo más caro que pagarás en tu vida es no saber para qué naciste."',
+      p1: 'Si estás aquí, ya lo sientes. El mundo cambia más rápido de lo que nadie puede seguir — y el único terreno firme que queda es saber exactamente quién eres.',
+      p2: 'Esto es lo que nadie te dice: el autodescubrimiento nunca fue un juego justo.',
+      p3: 'A algunos les entregan mentores, opciones y un mapa. El resto pasamos décadas simplemente sobreviviendo — posponiendo la única pregunta que lo decide todo: ¿para qué estoy aquí realmente?',
+      p4: 'No naciste con ventaja. Eso cambia hoy.',
+      layersTitle: 'Tu verdadero potencial está enterrado bajo capas — y no es tu culpa.',
+      p5: 'Las expectativas de otros. Miedos viejos. Responsabilidades, decepciones, creencias que nunca elegiste. Año tras año las capas se acumulan — hasta que ni tú mismo puedes ver lo que hay debajo.',
+      onionText: 'La mayoría pasa veinte años o más pelando estas capas a solas, entre prueba, error y desvíos costosos. AKSHA fue creado para comprimir ese viaje en días.',
+      p6: 'Porque debajo de cada capa, hay algo que nunca desapareció:',
+      p6bold: 'tus dones, talentos, motivaciones y potencial únicos — intactos, esperando ser nombrados.',
+      aiTitle: 'La IA cambió las reglas. Conocerte es la nueva ventaja.',
+      p7: 'Las máquinas ya escriben, programan, diseñan y analizan. Lo único que no pueden copiar eres tú: tu combinación exacta de talentos, motivaciones y momento. En la próxima década, las personas que prosperen no serán las que compitan contra la IA — serán las que sepan con precisión qué las hace irreemplazables.',
+      missionTitle: 'Para eso existe AKSHA.',
+      p8: 'AKSHA existe para darte lo que la mayoría nunca recibe: un mapa claro y personal de quién eres. No consejos genéricos. No otro test de personalidad. Un Mapa de Propósito construido alrededor de una sola persona — tú — que sintetiza neurociencia, psicología, arquetipos y cronobiología en respuestas que puedes aplicar el mismo día que las lees.',
+      p9: 'No podemos elegir tu camino por ti. Podemos hacer algo mejor: mostrarte el que ya estaba hecho para ti.',
+      cta: 'Deja de adivinar quién eres. Empieza a saberlo.',
+      ctaOffer: 'Tu Mapa de Propósito personal — precio de Miembro Fundador: $47 (pronto $79). Entregado en tu correo en 24–48 horas.',
+      ctaBtn: 'Quiero Mi Mapa de Propósito',
     },
   }[lang] || {};
 
@@ -205,7 +207,7 @@ const WhyWeExistPage = () => {
                   }} />
                 ))}
                 <span className="relative text-[10px] font-bold tracking-[0.3em] uppercase"
-                  style={{ color: '#D4AF37' }}>YOU</span>
+                  style={{ color: '#D4AF37' }}>{lang === 'es' ? 'TÚ' : 'YOU'}</span>
               </div>
               <p className="text-base md:text-lg text-foreground/70 leading-relaxed max-w-md mx-auto italic">
                 {c.onionText}
@@ -264,9 +266,14 @@ const WhyWeExistPage = () => {
             style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.07) 0%, transparent 70%)' }} />
           <div className="relative z-10 max-w-xl mx-auto">
             <motion.p {...fadeUp(0)}
-              className="text-3xl md:text-4xl font-bold mb-10 text-foreground leading-snug"
+              className="text-3xl md:text-4xl font-bold mb-6 text-foreground leading-snug"
               style={{ letterSpacing: '-0.01em' }}>
               {c.cta}
+            </motion.p>
+            <motion.p {...fadeUp(0.1)}
+              className="text-base md:text-lg leading-relaxed mb-10"
+              style={{ color: 'rgba(212,175,55,0.85)' }}>
+              {c.ctaOffer}
             </motion.p>
             <motion.div {...fadeUp(0.15)}>
               <Link to="/discover">

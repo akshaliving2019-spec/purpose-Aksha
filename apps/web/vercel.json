@@ -43,12 +43,15 @@
   ],
   "functions": {
     "api/stripe-webhook.js": { "maxDuration": 300 },
+    "api/agregar-historia.js": { "maxDuration": 300 },
     "api/test-pipeline.js": { "maxDuration": 300 },
     "api/reprocesar-pendientes.js": { "maxDuration": 300 },
     "api/feedback-reporte.js": { "maxDuration": 300 },
-    "api/aprobar-reporte.js": { "maxDuration": 60 }
+    "api/aprobar-reporte.js": { "maxDuration": 60 },
+    "api/plan-semanal.js": { "maxDuration": 300 }
   },
   "crons": [
-    { "path": "/api/reprocesar-pendientes", "schedule": "0 13 * * *" }
+    { "path": "/api/reprocesar-pendientes", "schedule": "0 13 * * *" },
+    { "path": "/api/plan-semanal", "schedule": "0 14 * * *" }
   ]
 }

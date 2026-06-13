@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Calendar, Target } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
 const CareerRoadmapCard = ({ title, timeline, actions, priority, index = 0 }) => {
+  const { t } = useLanguage();
   const priorityColors = {
     high: 'bg-destructive/10 text-destructive',
     medium: 'bg-accent/10 text-accent-foreground',
@@ -24,7 +26,7 @@ const CareerRoadmapCard = ({ title, timeline, actions, priority, index = 0 }) =>
             <CardTitle className="text-lg">{title}</CardTitle>
             {priority && (
               <Badge className={priorityColors[priority] || priorityColors.medium}>
-                {priority}
+                {t.dashboard.priority[priority] || priority}
               </Badge>
             )}
           </div>
@@ -40,7 +42,7 @@ const CareerRoadmapCard = ({ title, timeline, actions, priority, index = 0 }) =>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium mb-3">
                 <Target className="w-4 h-4 text-primary" />
-                <span>Action Items</span>
+                <span>{t.dashboard.actionItems}</span>
               </div>
               <ul className="space-y-2">
                 {actions.map((action, idx) => (

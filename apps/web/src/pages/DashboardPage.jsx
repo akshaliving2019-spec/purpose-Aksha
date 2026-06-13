@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/contexts/AuthContext.jsx';
+import { useLanguage } from '@/contexts/LanguageContext.jsx';
 import { pocketbaseClient as pb } from '@/lib/pocketbaseClient';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,8 +13,141 @@ import { Target, Trash2, Calendar, Flame, Fingerprint, Star, Heart, Network } fr
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
+const pillarsEN = [
+  {
+    icon: Flame,
+    title: 'What Keeps You Going',
+    description: 'What keeps you moving when everything changes? The ones who survive disruption are the strongest — they are the ones who know exactly why they get up.',
+  },
+  {
+    icon: Fingerprint,
+    title: 'What Lights You Up',
+    description: 'There is something you do so naturally you barely count it as a talent. It is usually where you have helped others most without noticing.',
+  },
+  {
+    icon: Star,
+    title: 'What You Do Best',
+    description: 'Your greatest advantage may not be what you have learned. It may be what comes naturally to you when you stop trying to be someone else.',
+  },
+  {
+    icon: Heart,
+    title: 'What The World Needs',
+    description: 'Behind every meaningful achievement in your life, there was something that mattered more than the result. That deeper motivation does not disappear. It becomes clearer with time.',
+  },
+  {
+    icon: Network,
+    title: 'Where Everything Connects',
+    description: 'The things that move you deeply are not random. They point toward the place where your strengths, purpose, and contribution become one.',
+  },
+  {
+    icon: Calendar,
+    title: 'Your 4-Week Journey',
+    description: 'Your report is only the beginning. Receive four weeks of guidance, reflections, and micro-actions designed around what your profile needs most.',
+  },
+];
+
+const pillarsES = [
+  {
+    icon: Flame,
+    title: 'Lo Que Te Mantiene En Pie',
+    description: '¿Qué te mantiene en movimiento cuando todo cambia? Los que sobreviven a la disrupción no son los más fuertes — son los que saben exactamente por qué se levantan.',
+  },
+  {
+    icon: Fingerprint,
+    title: 'Lo Que Te Enciende',
+    description: 'Hay algo que haces con tanta naturalidad que apenas lo cuentas como talento. Suele ser donde más has ayudado a otros sin darte cuenta.',
+  },
+  {
+    icon: Star,
+    title: 'Lo Que Mejor Haces',
+    description: 'Tu mayor ventaja puede no ser lo que has aprendido. Puede ser lo que te sale natural cuando dejas de intentar ser otra persona.',
+  },
+  {
+    icon: Heart,
+    title: 'Lo Que El Mundo Necesita',
+    description: 'Detrás de cada logro significativo de tu vida hubo algo que importaba más que el resultado. Esa motivación profunda no desaparece. Se vuelve más clara con el tiempo.',
+  },
+  {
+    icon: Network,
+    title: 'Donde Todo Se Conecta',
+    description: 'Las cosas que te mueven profundamente no son aleatorias. Apuntan hacia el lugar donde tus fortalezas, propósito y contribución se vuelven uno.',
+  },
+  {
+    icon: Calendar,
+    title: 'Tu Viaje de 4 Semanas',
+    description: 'Tu reporte es solo el comienzo. Recibe cuatro semanas de guía, reflexiones y microacciones diseñadas alrededor de lo que tu perfil más necesita.',
+  },
+];
+
+const roadmapEN = [
+  {
+    title: 'Develop Creative Skills',
+    timeline: 'Next 3 months',
+    priority: 'high',
+    actions: [
+      'Enroll in advanced design thinking course',
+      'Build portfolio of creative projects',
+      'Join creative community groups',
+    ],
+  },
+  {
+    title: 'Build Technical Foundation',
+    timeline: '3-6 months',
+    priority: 'medium',
+    actions: [
+      'Learn AI collaboration tools',
+      'Complete data analysis certification',
+      'Practice with real-world datasets',
+    ],
+  },
+  {
+    title: 'Network and Mentor',
+    timeline: '6-12 months',
+    priority: 'medium',
+    actions: [
+      'Attend industry conferences',
+      'Find a mentor in your field',
+      'Start mentoring others',
+    ],
+  },
+];
+
+const roadmapES = [
+  {
+    title: 'Desarrolla Habilidades Creativas',
+    timeline: 'Próximos 3 meses',
+    priority: 'high',
+    actions: [
+      'Inscríbete en un curso avanzado de design thinking',
+      'Construye un portafolio de proyectos creativos',
+      'Únete a comunidades creativas',
+    ],
+  },
+  {
+    title: 'Construye una Base Técnica',
+    timeline: '3-6 meses',
+    priority: 'medium',
+    actions: [
+      'Aprende herramientas de colaboración con IA',
+      'Completa una certificación en análisis de datos',
+      'Practica con datos del mundo real',
+    ],
+  },
+  {
+    title: 'Red de Contactos y Mentoría',
+    timeline: '6-12 meses',
+    priority: 'medium',
+    actions: [
+      'Asiste a conferencias del sector',
+      'Encuentra un mentor en tu campo',
+      'Empieza a ser mentor de otros',
+    ],
+  },
+];
+
 const DashboardPage = () => {
   const { currentUser } = useAuth();
+  const { t, lang } = useLanguage();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,23 +167,23 @@ const DashboardPage = () => {
       });
       setProfiles(records);
     } catch (err) {
-      toast.error(err.message || 'Failed to load profiles');
+      toast.error(err.message || t.dashboard.loadFailed);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this profile?')) {
+    if (!window.confirm(t.dashboard.confirmDelete)) {
       return;
     }
 
     try {
       await pb.collection('userProfiles').delete(id, { $autoCancel: false });
       setProfiles(profiles.filter(p => p.id !== id));
-      toast.success('Profile deleted');
+      toast.success(t.dashboard.deleted);
     } catch (err) {
-      toast.error(err.message || 'Failed to delete profile');
+      toast.error(err.message || t.dashboard.deleteFailed);
     }
   };
 
@@ -57,77 +191,14 @@ const DashboardPage = () => {
     return <LoadingSpinner />;
   }
 
-  const mockPillars = [
-    {
-      icon: Flame,
-      title: 'What Keeps You Going',
-      description: 'What keeps you moving when everything changes? The ones who survive disruption are the strongest — they are the ones who know exactly why they get up.',
-    },
-    {
-      icon: Fingerprint,
-      title: 'What Lights You Up',
-      description: 'There is something you do so naturally you barely count it as a talent. It is usually where you have helped others most without noticing.',
-    },
-    {
-      icon: Star,
-      title: 'What You Do Best',
-      description: 'Your greatest advantage may not be what you have learned. It may be what comes naturally to you when you stop trying to be someone else.',
-    },
-    {
-      icon: Heart,
-      title: 'What The World Needs',
-      description: 'Behind every meaningful achievement in your life, there was something that mattered more than the result. That deeper motivation does not disappear. It becomes clearer with time.',
-    },
-    {
-      icon: Network,
-      title: 'Where Everything Connects',
-      description: 'The things that move you deeply are not random. They point toward the place where your strengths, purpose, and contribution become one.',
-    },
-    {
-      icon: Calendar,
-      title: 'Your 4-Week Journey',
-      description: 'Your report is only the beginning. Receive four weeks of guidance, reflections, and micro-actions designed around what your profile needs most.',
-    },
-  ];
-
-  const mockRoadmap = [
-    {
-      title: 'Develop Creative Skills',
-      timeline: 'Next 3 months',
-      priority: 'high',
-      actions: [
-        'Enroll in advanced design thinking course',
-        'Build portfolio of creative projects',
-        'Join creative community groups',
-      ],
-    },
-    {
-      title: 'Build Technical Foundation',
-      timeline: '3-6 months',
-      priority: 'medium',
-      actions: [
-        'Learn AI collaboration tools',
-        'Complete data analysis certification',
-        'Practice with real-world datasets',
-      ],
-    },
-    {
-      title: 'Network and Mentor',
-      timeline: '6-12 months',
-      priority: 'medium',
-      actions: [
-        'Attend industry conferences',
-        'Find a mentor in your field',
-        'Start mentoring others',
-      ],
-    },
-  ];
+  const mockPillars = lang === 'es' ? pillarsES : pillarsEN;
+  const mockRoadmap = lang === 'es' ? roadmapES : roadmapEN;
 
   return (
     <>
       <Helmet>
-        <title>Dashboard - AKSHA</title>
-        <meta name="description" content="View your purpose profile, career roadmap, and personalized insights." />
+        <title>{t.dashboard.metaTitle}</title>
+        <meta name="description" content={t.dashboard.metaDesc} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
@@ -140,10 +211,10 @@ const DashboardPage = () => {
           >
             <div className="mb-8">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-foreground" style={{ letterSpacing: '-0.02em' }}>
-                Your Purpose Dashboard
+                {t.dashboard.title}
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-prose">
-                Track your journey and explore personalized insights
+                {t.dashboard.subtitle}
               </p>
             </div>
 
@@ -153,12 +224,12 @@ const DashboardPage = () => {
                   <div className="flex justify-center mb-4">
                     <Target className="w-16 h-16 text-muted-foreground/50" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-foreground">No profiles yet</h3>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">{t.dashboard.emptyTitle}</h3>
                   <p className="text-muted-foreground mb-6">
-                    Start your discovery journey to create your first purpose profile
+                    {t.dashboard.emptyText}
                   </p>
                   <Button onClick={() => window.location.href = '/discover'} className="hover:shadow-lg hover:shadow-primary/20">
-                    Discover Your Purpose
+                    {t.dashboard.emptyBtn}
                   </Button>
                 </CardContent>
               </Card>
@@ -166,10 +237,10 @@ const DashboardPage = () => {
               <>
                 <div className="mb-12">
                   <h2 className="text-2xl md:text-3xl font-semibold mb-2 leading-snug text-foreground">
-                    What Your Map Reveals About You
+                    {t.dashboard.revealsTitle}
                   </h2>
                   <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
-                    A comprehensive, highly personalized dossier detailing every facet of your innate potential.
+                    {t.dashboard.revealsSubtitle}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {mockPillars.map((pillar, index) => (
@@ -180,7 +251,7 @@ const DashboardPage = () => {
 
                 <div className="mb-12">
                   <h2 className="text-2xl md:text-3xl font-semibold mb-6 leading-snug text-foreground">
-                    Your Career Roadmap
+                    {t.dashboard.roadmapTitle}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {mockRoadmap.map((item, index) => (
@@ -191,7 +262,7 @@ const DashboardPage = () => {
 
                 <div>
                   <h2 className="text-2xl md:text-3xl font-semibold mb-6 leading-snug text-foreground">
-                    Saved Profiles
+                    {t.dashboard.savedTitle}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {profiles.map((profile, index) => (
@@ -209,7 +280,7 @@ const DashboardPage = () => {
                                 <CardDescription className="flex items-center gap-2 mt-2 text-muted-foreground">
                                   <Calendar className="w-4 h-4" />
                                   {profile.birthDate}
-                                  {profile.birthTime && ` at ${profile.birthTime}`}
+                                  {profile.birthTime && ` ${t.dashboard.atTime} ${profile.birthTime}`}
                                 </CardDescription>
                               </div>
                               <Button
@@ -224,7 +295,7 @@ const DashboardPage = () => {
                           </CardHeader>
                           <CardContent className="mt-auto pt-4">
                             <p className="text-sm text-muted-foreground">
-                              Created {new Date(profile.created).toLocaleDateString()}
+                              {t.dashboard.created} {new Date(profile.created).toLocaleDateString(lang === 'es' ? 'es' : 'en')}
                             </p>
                           </CardContent>
                         </Card>

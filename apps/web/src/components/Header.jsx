@@ -29,8 +29,10 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <img
-              src="https://horizons-cdn.hostinger.com/3b1220b8-90b4-4363-97a3-2c8f1d706937/a66a354821956cff37d05e5c46b27d1b.png"
+              src="/aksha-logo-mark.png"
               alt="AKSHA Logo"
+              width="200"
+              height="200"
               className="w-[40px] md:w-[50px] h-auto object-contain"
             />
           </Link>
@@ -94,7 +96,7 @@ const Header = () => {
             <button
               className="flex md:hidden items-center justify-center w-9 h-9 rounded-lg transition-colors hover:bg-primary/10"
               onClick={() => setMenuOpen(v => !v)}
-              aria-label="Menu"
+              aria-label={lang === 'es' ? 'Menú' : 'Menu'}
             >
               {menuOpen ? <X className="w-5 h-5 text-primary" /> : <Menu className="w-5 h-5" style={{ color: 'rgba(212,175,55,0.8)' }} />}
             </button>

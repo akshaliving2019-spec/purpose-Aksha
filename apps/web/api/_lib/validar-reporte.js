@@ -18,6 +18,20 @@ function normalizar(s) {
 
 const SIGNOS_NORM = SIGNOS.map(normalizar);
 
+// Equivalencias EN→ES para validar reportes en inglés con la misma carta.
+const SIGNOS_EN = [
+  'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
+  'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
+];
+const SIGNO_EN_A_ES = Object.fromEntries(SIGNOS_EN.map((s, i) => [s, SIGNOS_NORM[i]]));
+const NOMBRES_EN = {
+  sun: 'sol', moon: 'luna', mercury: 'mercurio', venus: 'venus',
+  mars: 'marte', jupiter: 'jupiter', saturn: 'saturno', uranus: 'urano',
+  neptune: 'neptuno', pluto: 'pluton', 'north node': 'nodo norte',
+  'south node': 'nodo sur', chiron: 'quiron', ascendant: 'ascendente',
+  midheaven: 'medio cielo', lilith: 'lilith',
+};
+
 // Casa Placidus de una longitud eclíptica dada (mismo algoritmo que index.py)
 function casaDe(longitud, cuspides) {
   const lon = ((longitud % 360) + 360) % 360;
@@ -89,8 +103,72 @@ function detectarGlifosProhibidos(reporte) {
   ];
 }
 
-export function validarReporte(reporte, carta) {
-  const erroresEstilo = detectarGlifosProhibidos(reporte);
+// Estándar top-tier 2026 (.claude/skills/reportes-top-tier): la astrología es
+// motor interno y el texto al cliente no la menciona. Lista deliberadamente
+// conservadora: solo términos sin uso plausible en prosa personal normal
+// ("casa", "oposición" o "tránsito" a secas quedan fuera por ambiguos).
+const TERMINOS_ASTRO = new RegExp(
+  '\\b(trigono|cuadratura|sextil|quincuncio|ascendente|medio cielo|dispositor|' +
+  'quiron|carta natal|zodiaco|zodiacal|efemerides|swiss ephemeris|luminaria|' +
+  'trine|sextile|quincunx|ascendant|midheaven|natal chart|zodiac|ephemeris|' +
+  'chiron)\\b' +
+  `|\\bcasa\\s+\\d{1,2}\\b|\\ben\\s+(?:${SIGNOS_NORM.join('|')})\\b` +
+  `|\\bin\\s+the\\s+\\d{1,2}(?:st|nd|rd|th)\\s+house\\b` +
+  `|\\b(?:${Object.keys(NOMBRES_EN).join('|')})\\s+in\\s+(?:${SIGNOS_EN.join('|')})\\b`,
+  'g',
+);
+
+// Máximo 8 hojas: objetivo 2200-3000 palabras; tolerancia de validación 3300.
+// Cuando el reporte incluye la sección opcional "Oportunidades en tu
+// territorio" (Pieza 2, hasta 250 palabras), el techo por defecto sube a 3600.
+// Un reporte muy corto delata truncamiento o secciones faltantes. Estos son
+// los límites del reporte principal; el plan semanal pasa sus propios límites
+// (min/max explícitos), y un `max` explícito SIEMPRE manda sobre el default.
+const PALABRAS_MAX = 3300;
+const PALABRAS_MAX_CON_TERRITORIO = 3600;
+const PALABRAS_MIN = 1600;
+
+// La sección de territorio se reconoce por su título (es/en).
+const PATRON_SECCION_TERRITORIO = /oportunidades en tu territorio|opportunities in your territory/i;
+
+function validarEstandarEditorial(reporte, { min = PALABRAS_MIN, max } = {}) {
+  const errores = [];
+  const texto = normalizar(reporte || '');
+
+  const astro = [...new Set(texto.match(TERMINOS_ASTRO) || [])];
+  if (astro.length > 0) {
+    errores.push(
+      `El reporte menciona términos astrológicos (${astro.join(', ')}) — el estándar ` +
+      'top-tier exige traducirlos a situación vivida, sin vocabulario de carta.',
+    );
+  }
+
+  const palabras = (String(reporte || '').trim().match(/\S+/g) || []).length;
+  // El `max` explícito manda (lo usa el plan semanal con {min:400,max:1100}).
+  // Cuando no viene, el default sube a 3600 si está la sección de territorio
+  // (Pieza 2), si no se queda en 3300.
+  const techo = max ?? (PATRON_SECCION_TERRITORIO.test(String(reporte || ''))
+    ? PALABRAS_MAX_CON_TERRITORIO
+    : PALABRAS_MAX);
+  if (palabras > techo) {
+    errores.push(
+      `El reporte tiene ${palabras} palabras — excede el máximo de ${techo}. ` +
+      'Cortar secciones, no adjetivos.',
+    );
+  } else if (palabras > 0 && palabras < min) {
+    errores.push(
+      `El reporte tiene solo ${palabras} palabras — por debajo del mínimo de ${min} ` +
+      '(posible truncamiento o secciones faltantes).',
+    );
+  }
+  return errores;
+}
+
+export function validarReporte(reporte, carta, opciones = {}) {
+  const erroresEstilo = [
+    ...detectarGlifosProhibidos(reporte),
+    ...validarEstandarEditorial(reporte, opciones),
+  ];
 
   if (!reporte || !carta || carta.fallback || !Array.isArray(carta.planetas)) {
     return {
@@ -132,6 +210,44 @@ export function validarReporte(reporte, carta) {
         (otro) => otro !== clave && new RegExp(`\\b${otro}\\b`).test(m[1]),
       );
       if (otroEnMedio) continue;
+      if (punto.casas.size > 0 && !punto.casas.has(Number(m[2]))) {
+        errores.push(
+          `${punto.etiqueta} mencionado en Casa ${m[2]} — la carta dice Casa ${[...punto.casas].join(' / ')}.`,
+        );
+      }
+    }
+  }
+
+  // Posiciones afirmadas en inglés: se traducen al nombre/signo ES y se
+  // cruzan contra los mismos puntos de la carta.
+  for (const [nombreEn, claveEs] of Object.entries(NOMBRES_EN)) {
+    const punto = puntos.get(claveEs);
+    if (!punto) continue;
+    const patronSignoEn = new RegExp(
+      `\\b(?:the\\s+)?${nombreEn}(?:\\s+is)?\\s+in\\s+(?:the\\s+sign\\s+of\\s+)?(${SIGNOS_EN.join('|')})\\b`,
+      'g',
+    );
+    for (const m of texto.matchAll(patronSignoEn)) {
+      if (!punto.signos.has(SIGNO_EN_A_ES[m[1]])) {
+        errores.push(
+          `${punto.etiqueta} mencionado en ${m[1]} — la carta dice ${[...punto.signos].join(' / ') || '(sin posición)'}.`,
+        );
+      }
+    }
+    const patronCasaEn = new RegExp(
+      `\\b${nombreEn}\\b([^.;\\n]{0,45}?)\\bthe\\s+(\\d{1,2})(?:st|nd|rd|th)\\s+house\\b`,
+      'g',
+    );
+    for (const m of texto.matchAll(patronCasaEn)) {
+      // Misma guarda que el bucle ES: si otro punto (en ES o en EN) aparece
+      // entre el nombre y la casa, la casa pertenece a ese otro punto.
+      const otroEnMedio = [...puntos.keys()].some(
+        (otro) => otro !== claveEs && new RegExp(`\\b${otro}\\b`).test(m[1]),
+      );
+      const otroEnMedioEn = Object.entries(NOMBRES_EN).some(
+        ([otroEn, otroEs]) => otroEs !== claveEs && new RegExp(`\\b${otroEn}\\b`).test(m[1]),
+      );
+      if (otroEnMedio || otroEnMedioEn) continue;
       if (punto.casas.size > 0 && !punto.casas.has(Number(m[2]))) {
         errores.push(
           `${punto.etiqueta} mencionado en Casa ${m[2]} — la carta dice Casa ${[...punto.casas].join(' / ')}.`,

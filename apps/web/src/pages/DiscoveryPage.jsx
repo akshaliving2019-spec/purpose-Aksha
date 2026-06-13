@@ -13,95 +13,6 @@ import { Calendar, Clock, MapPin, Sparkles, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Human silhouette — original dark-background version, +15% bigger, slightly clearer
-const HumanSilhouette = () => {
-  const { lang } = useLanguage();
-
-  const leftLabels = lang === 'es'
-    ? ['miedos', 'expectativas', 'creencias', 'decepciones']
-    : ['fears', 'expectations', 'beliefs', 'disappointments'];
-
-  const rightLabels = lang === 'es'
-    ? ['energía', 'fortalezas', 'don', 'propósito']
-    : ['energy', 'strengths', 'gift', 'purpose'];
-
-  return (
-    <div className="flex justify-center my-10">
-      <svg viewBox="0 0 200 320" width="207" height="331" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="hs-left-orig">
-            <rect x="0" y="0" width="100" height="320" />
-          </clipPath>
-          <clipPath id="hs-right-orig">
-            <rect x="100" y="0" width="100" height="320" />
-          </clipPath>
-          <radialGradient id="glowGoldOrig" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* Glow */}
-        <ellipse cx="100" cy="165" rx="88" ry="128" fill="url(#glowGoldOrig)" />
-
-        {/* Onion rings — gold dashed, clearly visible */}
-        {[
-          { rx: 105, ry: 145, op: 0.35 },
-          { rx: 88,  ry: 122, op: 0.28 },
-          { rx: 70,  ry: 99,  op: 0.22 },
-          { rx: 52,  ry: 76,  op: 0.16 },
-        ].map((ring, i) => (
-          <ellipse key={i} cx="100" cy="170"
-            rx={ring.rx} ry={ring.ry}
-            fill="none"
-            stroke={`rgba(212,175,55,${ring.op})`}
-            strokeWidth="1.2"
-            strokeDasharray="5 4"
-          />
-        ))}
-
-        {/* Body paths — head + torso/arms/legs */}
-        {/* LEFT HALF: slightly lighter navy so figure is visible */}
-        <g clipPath="url(#hs-left-orig)">
-          <circle cx="100" cy="50" r="28" fill="rgba(30,55,110,0.98)" />
-          <path d="M82,79 C68,83 58,92 54,104 C50,116 50,132 52,148 L50,190 L48,220 L54,228 L60,220 L64,190 L68,148 L72,220 L70,270 L66,290 L74,292 L78,272 L82,240 L86,272 L90,292 L98,290 L94,270 L92,220 L96,148 L100,220 L104,240 L108,272 L112,290 L120,292 L116,270 L114,220 L118,148 L122,190 L126,220 L132,228 L138,220 L136,190 L134,148 L136,132 L136,116 C136,104 130,94 118,88 L110,83 C106,82 103,81 100,81 C97,81 94,82 90,83 Z"
-            fill="rgba(30,55,110,0.98)" />
-        </g>
-
-        {/* RIGHT HALF: gold outline */}
-        <g clipPath="url(#hs-right-orig)">
-          <circle cx="100" cy="50" r="28" fill="none" stroke="rgba(212,175,55,0.7)" strokeWidth="1.5" />
-          <path d="M82,79 C68,83 58,92 54,104 C50,116 50,132 52,148 L50,190 L48,220 L54,228 L60,220 L64,190 L68,148 L72,220 L70,270 L66,290 L74,292 L78,272 L82,240 L86,272 L90,292 L98,290 L94,270 L92,220 L96,148 L100,220 L104,240 L108,272 L112,290 L120,292 L116,270 L114,220 L118,148 L122,190 L126,220 L132,228 L138,220 L136,190 L134,148 L136,132 L136,116 C136,104 130,94 118,88 L110,83 C106,82 103,81 100,81 C97,81 94,82 90,83 Z"
-            fill="none" stroke="rgba(212,175,55,0.7)" strokeWidth="1.5" />
-        </g>
-
-        {/* Dividing line */}
-        <line x1="100" y1="18" x2="100" y2="300" stroke="rgba(212,175,55,0.35)" strokeWidth="0.8" strokeDasharray="3 3" />
-
-        {/* Left labels */}
-        {leftLabels.map((label, i) => (
-          <text key={i} x="94" y={108 + i * 22}
-            textAnchor="end" fontSize="7.5"
-            fill="rgba(255,255,255,0.38)"
-            fontFamily="Georgia, serif">
-            {label}
-          </text>
-        ))}
-
-        {/* Right labels — gold */}
-        {rightLabels.map((label, i) => (
-          <text key={i} x="106" y={108 + i * 22}
-            textAnchor="start" fontSize="7.5"
-            fill="rgba(212,175,55,0.75)"
-            fontFamily="Georgia, serif">
-            {label}
-          </text>
-        ))}
-      </svg>
-    </div>
-  );
-};
-
 const DiscoveryPage = () => {
   const { currentUser } = useAuth();
   const { lang } = useLanguage();
@@ -208,20 +119,15 @@ const DiscoveryPage = () => {
                 </p>
               </div>
 
-              {/* Human silhouette with layers */}
+              {/* Human silhouette with layers — la imagen ya incluye título y subtítulo */}
               <div className="rounded-2xl p-6 mb-8 text-center" style={{ backgroundColor: 'rgba(7,20,47,0.6)', border: '1px solid rgba(212,175,55,0.15)' }}>
-                <p className="text-lg font-semibold text-white mb-1">
-                  {es ? 'La vida añade capas a cada uno de nosotros.' : 'Life adds layers to each of us.'}
-                </p>
-                <p className="text-sm mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {es
-                    ? 'Expectativas, miedos, responsabilidades, decepciones, creencias y experiencias.'
-                    : 'Expectations, fears, responsibilities, disappointments, beliefs and experiences.'}
-                </p>
+                <img
+                  src={es ? '/silueta-humana-es.jpg' : '/silueta-humana-en.jpg'}
+                  alt={es ? 'La vida añade capas a cada uno de nosotros' : 'Life adds layers to each of us'}
+                  className="w-full max-w-xl mx-auto h-auto rounded-xl"
+                />
 
-                <HumanSilhouette />
-
-                <p className="text-sm italic mt-2" style={{ color: 'rgba(212,175,55,0.7)' }}>
+                <p className="text-sm italic mt-4" style={{ color: 'rgba(212,175,55,0.7)' }}>
                   {es
                     ? 'Es como pelar una cebolla gigante — el camino de regreso a nosotros mismos puede tomar años, a veces toda una vida.'
                     : 'Like peeling a giant onion — the journey back to ourselves can take years, sometimes a lifetime.'}
