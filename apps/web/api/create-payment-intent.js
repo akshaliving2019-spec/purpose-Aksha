@@ -4,6 +4,7 @@ import {
   validarCupon, precioConCupon, mensajeCuponInvalido, PRECIO_BASE_CENTAVOS,
 } from './_lib/cupones.js';
 import { trocearHistoria } from './_lib/historia-vida.js';
+import { normalizarPaisCiudad } from './_lib/pais-residencia.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -41,6 +42,19 @@ export default async function handler(req, res) {
   // Idioma del reporte: 'es' o 'en'. Cualquier otra cosa (o ausencia) cae a
   // 'es' — los pedidos viejos no traen este campo y no deben romperse.
   const idiomaReporte = idioma === 'en' ? 'en' : 'es';
+
+  // País/ciudad de residencia por IP, SIN fricción: Vercel inyecta estos
+  // headers en runtime (ausentes en local/preview). La ciudad puede venir
+  // URL-encoded. No hay campo de formulario ni cookie; si el header falta, el
+  // pipeline deriva el país del lugar de nacimiento (respaldo de la Pieza 2).
+  const { pais: paisResidencia, ciudad: ciudadResidencia } = normalizarPaisCiudad(
+    req.headers['x-vercel-ip-city'],
+    req.headers['x-vercel-ip-country'],
+  );
+  const metadataResidencia = {
+    ...(paisResidencia ? { pais_residencia: paisResidencia } : {}),
+    ...(ciudadResidencia ? { ciudad_residencia: ciudadResidencia } : {}),
+  };
 
   // La historia de vida ya no se pide en el checkout: se recoge DESPUÉS del
   // pago en la página de gracias (/api/agregar-historia), para que el
@@ -84,6 +98,7 @@ export default async function handler(req, res) {
     birth_time: birthTime || '',
     birth_place: birthPlace,
     idioma: idiomaReporte,
+    ...metadataResidencia,
     ...(esperaHistoria ? { espera_historia: '1' } : {}),
     ...(cuponAplicado
       ? { cupon: cuponAplicado.codigo, descuento_pct: String(cuponAplicado.pct) }

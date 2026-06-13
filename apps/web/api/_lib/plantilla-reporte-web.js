@@ -49,6 +49,7 @@ const TEXTOS = {
     desafios: 'Desafíos de nacimiento',
     ventanas: 'Ventanas abiertas',
     cierre: 'Cierre',
+    territorio: 'En tu territorio <span class="dim">· oportunidades reales</span>',
     lema: 'La IA no crea el conocimiento. Lo conecta.',
   },
   en: {
@@ -63,6 +64,7 @@ const TEXTOS = {
     desafios: 'Birth challenges',
     ventanas: 'Open windows',
     cierre: 'Closing',
+    territorio: 'In your territory <span class="dim">· real opportunities</span>',
     lema: 'AI does not create knowledge. It connects it.',
   },
 };
@@ -109,6 +111,7 @@ function clasificarTitulo(titulo) {
   if (/activando|ahora|transito|activating|\bnow\b/.test(t)) return 'ahora';
   if (/camino|2026|contexto|path/.test(t)) return 'camino';
   if (/cierre|closing/.test(t)) return 'cierre';
+  if (/oportunidades|territorio|opportunities|territory/.test(t)) return 'oportunidades';
   return 'otra';
 }
 
@@ -311,6 +314,18 @@ function renderSintesis(seccion) {
 </div></section>`;
 }
 
+function renderOportunidades(seccion, t) {
+  const partes = bloques(seccion.texto);
+  if (!partes.length) return '';
+  return `
+<section class="converge"><div class="wrap rv">
+  <div class="converge-card">
+    <span class="overline">${t.territorio}</span>
+    <div class="converge-nota" style="text-align:left">${prosa(partes)}</div>
+  </div>
+</div></section>`;
+}
+
 function renderAhora(seccion, t) {
   const partes = bloques(seccion.texto);
   if (!partes.length) return '';
@@ -400,6 +415,7 @@ export function renderReporteWeb({ nombre, reporte, idioma = 'es', fecha = new D
     if (s.tipo === 'sintesis') { cuerpo.push(renderSintesis(s)); continue; }
     if (s.tipo === 'ahora') { cuerpo.push(renderAhora(s, t)); continue; }
     if (s.tipo === 'cierre') { cuerpo.push(renderCierre(s, t)); continue; }
+    if (s.tipo === 'oportunidades') { cuerpo.push(renderOportunidades(s, t)); continue; }
     cuerpo.push(seccionProsa(s)); // resumen, camino, otras
   }
 
