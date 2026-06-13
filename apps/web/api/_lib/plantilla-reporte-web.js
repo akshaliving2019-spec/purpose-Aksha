@@ -344,6 +344,8 @@ function renderCierre(seccion, t) {
 // ── Render principal ────────────────────────────────────────────────────────
 
 export function renderReporteWeb({ nombre, reporte, idioma = 'es', fecha = new Date() }) {
+  // Normaliza una vez: el resto (textos, lang, fecha) parte de un valor seguro.
+  idioma = idioma === 'en' ? 'en' : 'es';
   const t = TEXTOS[idioma] || TEXTOS.es;
   const etiquetasModulo = idioma === 'en' ? ETIQUETAS_MODULO_EN : ETIQUETAS_MODULO;
 

@@ -270,6 +270,8 @@ export function reporteAHtml(reporte) {
 }
 
 export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb = '', idioma = 'es') {
+  // Normaliza una vez para que el atributo lang nunca reciba un valor crudo.
+  idioma = idioma === 'en' ? 'en' : 'es';
   const t = TEXTOS_EMAIL[idioma] || TEXTOS_EMAIL.es;
   const primerNombre = escapeHtml(nombre.split(' ')[0]);
   const reporteHTML = reporteAHtml(reporte);
