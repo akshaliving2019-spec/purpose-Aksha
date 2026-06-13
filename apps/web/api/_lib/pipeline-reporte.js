@@ -14,6 +14,7 @@ import { renderReporteWeb } from './plantilla-reporte-web.js';
 import {
   modoRevisionActivo, emailRevision, guardarReportePendiente, urlAprobacion, urlFeedback,
 } from './revision-reporte.js';
+import { GRACIA_HISTORIA_MS } from './historia-vida.js';
 
 // Versión web del Mapa (plantilla top-tier): se genera SIEMPRE y se guarda en
 // Blob con URL impredecible; el email lleva el botón "Abrir tu Mapa". Si el
@@ -65,6 +66,14 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
   const intentos = parseInt(md.reporte_intentos || '0', 10);
 
   if (!forzar) {
+    // La historia de vida se pide DESPUÉS del pago en la página de gracias:
+    // su formulario (enviar u omitir) dispara el pipeline al instante vía
+    // /api/agregar-historia; si el cliente cierra la pestaña, la ventana
+    // expira y el cron diario procesa el pedido sin historia.
+    if (md.espera_historia === '1' && !historiaVida &&
+        Date.now() - pi.created * 1000 < GRACIA_HISTORIA_MS) {
+      return { estado: 'esperando_historia' };
+    }
     if (md.reporte_status === 'enviado') return { estado: 'ya_enviado' };
     if (md.reporte_status === 'en_revision') return { estado: 'en_revision' };
     if (md.reporte_status === 'procesando') {
@@ -203,7 +212,11 @@ export async function reprocesarPendientes({ maxPedidos = 1, dryRun = false } = 
 
   const pendientes = lista.data.filter((pi) => {
     const md = pi.metadata || {};
-    if (pi.status !== 'succeeded') return false;
+    // Pedidos con cupón 100% no se pagan nunca: el PaymentIntent queda sin
+    // confirmar y cupon_gratis='1' es lo que los marca como pedidos reales.
+    if (pi.status !== 'succeeded' && md.cupon_gratis !== '1') return false;
+    // Aún dentro de la ventana para añadir historia de vida: no apurarlo.
+    if (md.espera_historia === '1' && Date.now() - pi.created * 1000 < GRACIA_HISTORIA_MS) return false;
     if (!md.customer_email || !md.birth_date) return false;
     if (md.reporte_status === 'enviado') return false;
     if (md.reporte_status === 'en_revision') return false; // espera aprobación, no reprocesar

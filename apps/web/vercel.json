@@ -43,6 +43,7 @@
   ],
   "functions": {
     "api/stripe-webhook.js": { "maxDuration": 300 },
+    "api/agregar-historia.js": { "maxDuration": 300 },
     "api/test-pipeline.js": { "maxDuration": 300 },
     "api/reprocesar-pendientes.js": { "maxDuration": 300 },
     "api/feedback-reporte.js": { "maxDuration": 300 },

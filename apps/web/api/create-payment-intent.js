@@ -1,5 +1,9 @@
 // Vercel Serverless Function — creates a Stripe PaymentIntent with user birth data
 import Stripe from 'stripe';
+import {
+  validarCupon, precioConCupon, mensajeCuponInvalido, PRECIO_BASE_CENTAVOS,
+} from './_lib/cupones.js';
+import { trocearHistoria } from './_lib/historia-vida.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -19,7 +23,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { name, email, birthDate, birthTime, birthPlace, historiaVida, idioma } = req.body || {};
+  const { name, email, birthDate, birthTime, birthPlace, historiaVida, idioma, cupon } = req.body || {};
 
   if (!name || !email || !birthDate || !birthPlace) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -38,37 +42,82 @@ export default async function handler(req, res) {
   // 'es' — los pedidos viejos no traen este campo y no deben romperse.
   const idiomaReporte = idioma === 'en' ? 'en' : 'es';
 
-  // La metadata de Stripe acepta máx. 500 caracteres por valor: la historia
-  // de vida viaja troceada en historia_vida_1..N y el pipeline la rearma.
-  const historia = (historiaVida || '').trim();
-  const metadataHistoria = {};
-  for (let inicio = 0, n = 1; inicio < historia.length; n++) {
-    let fin = Math.min(inicio + 450, historia.length);
-    // No partir un par sustituto (emoji) en el borde del trozo
-    if (fin < historia.length && /[\uD800-\uDBFF]/.test(historia[fin - 1])) fin--;
-    metadataHistoria[`historia_vida_${n}`] = historia.slice(inicio, fin);
-    inicio = fin;
+  // La historia de vida ya no se pide en el checkout: se recoge DESPUÉS del
+  // pago en la página de gracias (/api/agregar-historia), para que el
+  // formulario de compra no espante con preguntas largas. Si aun así llega
+  // aquí (cliente viejo en caché), se respeta; si no, espera_historia avisa
+  // al pipeline que dé una ventana antes de generar el reporte.
+  const metadataHistoria = trocearHistoria(historiaVida);
+  const esperaHistoria = Object.keys(metadataHistoria).length === 0;
+
+  // Cupón: se revalida aquí aunque el frontend ya lo validó — el cupo pudo
+  // agotarse entre "Aplicar" y "Pagar". Si Stripe no responde, se rechaza.
+  let cuponAplicado = null;
+  if (cupon) {
+    if (typeof cupon !== 'string' || cupon.length > 50) {
+      return res.status(400).json({ error: mensajeCuponInvalido('no_existe', idiomaReporte) });
+    }
+    try {
+      const v = await validarCupon(cupon, { email });
+      if (!v.valido) {
+        return res.status(400).json({ error: mensajeCuponInvalido(v.motivo, idiomaReporte) });
+      }
+      cuponAplicado = v;
+    } catch (error) {
+      console.error('Error validando cupón:', error.message);
+      return res.status(503).json({
+        error: idiomaReporte === 'en'
+          ? 'Could not validate the coupon right now. Please try again.'
+          : 'No pudimos validar el cupón en este momento. Intenta de nuevo.',
+      });
+    }
   }
 
+  const metadata = {
+    product: 'AKSHA Purpose Report',
+    customer_name: name,
+    customer_email: email,
+    birth_date: birthDate,
+    // Vacío cuando el cliente no la conoce: el pipeline activa el
+    // protocolo de Historia de Vida con valor falsy ('Not provided'
+    // truthy lo rompía).
+    birth_time: birthTime || '',
+    birth_place: birthPlace,
+    idioma: idiomaReporte,
+    ...(esperaHistoria ? { espera_historia: '1' } : {}),
+    ...(cuponAplicado
+      ? { cupon: cuponAplicado.codigo, descuento_pct: String(cuponAplicado.pct) }
+      : {}),
+    ...metadataHistoria,
+  };
+
   try {
+    // Cupón 100%: no hay cobro. El PaymentIntent se crea solo como registro
+    // del pedido (importe nominal, nunca se confirma como pago). El pipeline
+    // NO arranca aquí: la página de gracias pide la historia de vida y su
+    // formulario (/api/agregar-historia) lo dispara; si el cliente cierra la
+    // pestaña, el cron lo procesa al expirar la ventana de espera.
+    if (cuponAplicado?.pct === 100) {
+      const pedido = await stripe.paymentIntents.create({
+        amount: PRECIO_BASE_CENTAVOS,
+        currency: 'usd',
+        metadata: { ...metadata, cupon_gratis: '1' },
+      });
+
+      console.log(`🎁 [${pedido.id}] Pedido gratis con cupón ${cuponAplicado.codigo}`);
+      return res.status(200).json({
+        gratis: true,
+        paymentIntentId: pedido.id,
+        clientSecret: pedido.client_secret,
+      });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 4700, // $47.00
+      amount: cuponAplicado ? precioConCupon(cuponAplicado.pct) : PRECIO_BASE_CENTAVOS,
       currency: 'usd',
       automatic_payment_methods: { enabled: true },
       receipt_email: email,
-      metadata: {
-        product: 'AKSHA Purpose Report',
-        customer_name: name,
-        customer_email: email,
-        birth_date: birthDate,
-        // Vacío cuando el cliente no la conoce: el pipeline activa el
-        // protocolo de Historia de Vida con valor falsy ('Not provided'
-        // truthy lo rompía).
-        birth_time: birthTime || '',
-        birth_place: birthPlace,
-        idioma: idiomaReporte,
-        ...metadataHistoria,
-      },
+      metadata,
     });
 
     return res.status(200).json({ clientSecret: paymentIntent.client_secret });

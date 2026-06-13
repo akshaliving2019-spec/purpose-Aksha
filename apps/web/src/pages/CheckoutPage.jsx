@@ -8,7 +8,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import { motion } from 'framer-motion';
-import { Shield, Clock, Sparkles, Lock } from 'lucide-react';
+import { Shield, Clock, Sparkles, Lock, Tag, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext.jsx';
 
 // La clave publicable de Stripe puede vivir en el cliente; la env var permite
@@ -31,8 +31,14 @@ const MONTHS_EN = [
   { v:'10', label:'October' },{ v:'11', label:'November' },{ v:'12', label:'December' },
 ];
 
+// Centavos → etiqueta de precio: 4700 → "$47", 3760 → "$37.60"
+const precioLabel = (centavos) => {
+  const dolares = centavos / 100;
+  return Number.isInteger(dolares) ? `$${dolares}` : `$${dolares.toFixed(2)}`;
+};
+
 // ── Payment form (inside Stripe Elements context) ──
-const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang }) => {
+const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang, precio }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -91,7 +97,7 @@ const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang }) =
         <Lock className="w-5 h-5" />
         {loading
           ? (es ? 'Procesando...' : 'Processing...')
-          : (es ? 'Pagar $47 — Obtener Mi Reporte' : 'Pay $47 — Get My Report')}
+          : (es ? `Pagar ${precioLabel(precio)} — Obtener Mi Reporte` : `Pay ${precioLabel(precio)} — Get My Report`)}
       </button>
 
       <div className="flex items-center justify-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -117,15 +123,51 @@ const CheckoutPage = () => {
   const [birthYear, setBirthYear] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [birthPlace, setBirthPlace] = useState('');
-  const [historiaVida, setHistoriaVida] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [step, setStep] = useState('info');
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [cuponInput, setCuponInput] = useState('');
+  const [cupon, setCupon] = useState(null); // { codigo, pct, precioFinal } validado por el servidor
+  const [cuponError, setCuponError] = useState('');
+  const [cuponLoading, setCuponLoading] = useState(false);
 
   const MONTHS = es ? MONTHS_ES : MONTHS_EN;
   const birthDate = birthDay && birthMonth && birthYear
     ? `${birthDay.padStart(2,'0')}/${birthMonth}/${birthYear}` : '';
+
+  const PRECIO_BASE = 4700;
+  const precioFinal = cupon ? cupon.precioFinal : PRECIO_BASE;
+  const esGratis = cupon?.pct === 100;
+
+  const aplicarCupon = async () => {
+    const codigo = cuponInput.trim();
+    if (!codigo || cuponLoading) return;
+    setCuponLoading(true);
+    setCuponError('');
+    try {
+      const res = await fetch('/api/validar-cupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codigo, idioma: lang }),
+      });
+      const data = await res.json();
+      if (data.valido) {
+        setCupon({ codigo: data.codigo, pct: data.pct, precioFinal: data.precioFinal });
+        setCuponInput('');
+      } else {
+        setCuponError(data.error || (es ? 'Cupón no válido.' : 'Invalid coupon code.'));
+      }
+    } catch {
+      setCuponError(es ? 'Error de conexión. Intenta de nuevo.' : 'Connection error. Please try again.');
+    }
+    setCuponLoading(false);
+  };
+
+  const quitarCupon = () => {
+    setCupon(null);
+    setCuponError('');
+  };
 
   const handleContinue = async (e) => {
     e.preventDefault();
@@ -146,10 +188,22 @@ const CheckoutPage = () => {
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, birthDate, birthTime, birthPlace, historiaVida, idioma: lang }),
+        body: JSON.stringify({
+          name, email, birthDate, birthTime, birthPlace, idioma: lang,
+          cupon: cupon?.codigo || '',
+        }),
       });
       const data = await res.json();
       if (data.error) { setFormError(data.error); setSubmitting(false); return; }
+      // Cupón 100%: el pedido ya quedó registrado — no hay paso de pago. Se
+      // pasan los mismos parámetros que añade Stripe al volver de un pago,
+      // para que la página de gracias pida la historia de vida igual.
+      // (Se deja submitting activo durante la redirección.)
+      if (data.gratis) {
+        window.location.href = `/thank-you?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}` +
+          `&payment_intent=${encodeURIComponent(data.paymentIntentId)}&payment_intent_client_secret=${encodeURIComponent(data.clientSecret)}`;
+        return;
+      }
       setClientSecret(data.clientSecret);
       setStep('payment');
     } catch {
@@ -203,9 +257,19 @@ const CheckoutPage = () => {
             {es ? 'Tu Mapa de Propósito' : 'Your Purpose Map'}
           </h1>
           <div className="flex items-center justify-center gap-3 mt-2">
-            <span className="text-4xl font-bold" style={{ color: '#D4AF37' }}>$47</span>
-            <span className="text-xl line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>$79</span>
+            <span className="text-4xl font-bold" style={{ color: '#D4AF37' }}>
+              {esGratis ? (es ? 'Gratis' : 'Free') : precioLabel(precioFinal)}
+            </span>
+            <span className="text-xl line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              {cupon ? '$47' : '$79'}
+            </span>
           </div>
+          {cupon && (
+            <p className="text-xs mt-2 flex items-center justify-center gap-1.5" style={{ color: '#7DDF9A' }}>
+              <Tag className="w-3 h-3" />
+              {es ? `Cupón ${cupon.codigo} aplicado: −${cupon.pct}%` : `Coupon ${cupon.codigo} applied: −${cupon.pct}%`}
+            </p>
+          )}
         </div>
 
         {/* Card */}
@@ -285,7 +349,9 @@ const CheckoutPage = () => {
                     <input type="time" value={birthTime} onChange={e => setBirthTime(e.target.value)}
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                     <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                      {es ? 'Si la conoces, aparece en tu registro civil o certificado de nacimiento' : 'If you know it, it appears on your birth certificate'}
+                      {birthTime
+                        ? (es ? 'Si la conoces, aparece en tu registro civil o certificado de nacimiento' : 'If you know it, it appears on your birth certificate')
+                        : (es ? '¿No la conoces? No pasa nada: tu mapa se construye completo igual.' : "Don't know it? No problem — your map is built just as complete.")}
                     </p>
                   </div>
 
@@ -298,44 +364,43 @@ const CheckoutPage = () => {
                       className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                   </div>
 
-                  {!birthTime && (
-                    <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                      <div className="flex items-start gap-2.5">
-                        <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                        <div>
-                          <p className="text-sm font-semibold text-white mb-1">
-                            {es ? '¿No conoces tu hora exacta?' : "Don't know your exact time?"}
-                          </p>
-                          <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                            {es
-                              ? 'Tu mapa se construye completo igual: la IA de AKSHA te hace estas preguntas y usa tu historia de vida en el análisis. Respóndelas abajo:'
-                              : "Your map is built just as complete: AKSHA's AI asks you these questions and uses your life story in the analysis. Answer them below:"}
-                          </p>
-                          <ul className="text-xs space-y-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                            <li>· {es ? '¿Qué eventos marcaron tu camino? (carrera, mudanzas, relaciones, logros, giros — con fechas aproximadas)' : 'Which events shaped your path? (career, moves, relationships, achievements, turning points — with approximate dates)'}</li>
-                            <li>· {es ? '¿Qué se te repite una y otra vez?' : 'What keeps repeating in your life?'}</li>
-                            <li>· {es ? '¿Cómo reaccionas bajo presión?' : 'How do you react under pressure?'}</li>
-                            <li>· {es ? '¿Dónde fluyes sin esfuerzo y dónde te frenas?' : 'Where do you flow effortlessly, and where do you hold back?'}</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
+                  {/* ── Cupón de descuento ── */}
                   <div>
                     <label className="block text-xs font-medium mb-1.5 uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                      {es ? 'Tu historia de vida (opcional)' : 'Your life story (optional)'}
+                      {es ? '¿Tienes un cupón?' : 'Have a coupon?'}
                     </label>
-                    <textarea value={historiaVida} onChange={e => setHistoriaVida(e.target.value)}
-                      maxLength={2500} rows={4}
-                      placeholder={es
-                        ? 'Eventos importantes con fechas aproximadas (cambios de carrera, mudanzas, relaciones, logros, giros de rumbo) y patrones que se te repiten'
-                        : 'Key events with approximate dates (career changes, moves, relationships, achievements, turning points) and patterns that repeat in your life'}
-                      className={`w-full rounded-lg px-4 py-3 text-sm outline-none transition-all duration-200 resize-none ${inputFocusStyle}`}
-                      style={inputStyle} />
-                    <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                      {es ? 'Tu experiencia vivida también alimenta tu mapa: lo hace único para ti' : 'Your lived experience also feeds your map: it makes it unique to you'}
-                    </p>
+                    {cupon ? (
+                      <div className="flex items-center justify-between rounded-lg px-4 py-3"
+                        style={{ backgroundColor: 'rgba(125,223,154,0.08)', border: '1px solid rgba(125,223,154,0.35)' }}>
+                        <span className="flex items-center gap-2 text-sm" style={{ color: '#7DDF9A' }}>
+                          <Tag className="w-4 h-4" />
+                          <strong>{cupon.codigo}</strong>
+                          {esGratis
+                            ? (es ? '· 100% de descuento' : '· 100% off')
+                            : `· −${cupon.pct}%`}
+                        </span>
+                        <button type="button" onClick={quitarCupon} aria-label={es ? 'Quitar cupón' : 'Remove coupon'}
+                          className="p-1 rounded transition-colors" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input type="text" value={cuponInput}
+                          onChange={e => { setCuponInput(e.target.value.toUpperCase()); setCuponError(''); }}
+                          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); aplicarCupon(); } }}
+                          placeholder={es ? 'Código de cupón' : 'Coupon code'}
+                          className={`${inputClass} ${inputFocusStyle} flex-1 uppercase`} style={inputStyle} />
+                        <button type="button" onClick={aplicarCupon} disabled={cuponLoading || !cuponInput.trim()}
+                          className="h-11 px-5 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                          style={{ border: '1px solid rgba(212,175,55,0.5)', color: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.08)' }}>
+                          {cuponLoading ? '...' : (es ? 'Aplicar' : 'Apply')}
+                        </button>
+                      </div>
+                    )}
+                    {cuponError && (
+                      <p className="text-xs mt-1.5" style={{ color: '#f87171' }}>{cuponError}</p>
+                    )}
                   </div>
 
                   {formError && (
@@ -349,7 +414,9 @@ const CheckoutPage = () => {
                     style={{ background: 'linear-gradient(135deg, #D4AF37, #B8942A)', color: '#0a0f1e', boxShadow: '0 4px 24px rgba(212,175,55,0.3)' }}>
                     {submitting
                       ? (es ? 'Un momento...' : 'One moment...')
-                      : (es ? 'Continuar al pago →' : 'Continue to payment →')}
+                      : esGratis
+                        ? (es ? 'Obtener mi reporte gratis →' : 'Get my free report →')
+                        : (es ? 'Continuar al pago →' : 'Continue to payment →')}
                   </button>
 
                   <p className="text-center text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
@@ -370,6 +437,11 @@ const CheckoutPage = () => {
                         <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
                           {birthDate}{birthTime ? ` · ${birthTime}` : ''} · {birthPlace}
                         </p>
+                        {cupon && (
+                          <p className="text-xs flex items-center gap-1" style={{ color: '#7DDF9A' }}>
+                            <Tag className="w-3 h-3" /> {cupon.codigo} · −{cupon.pct}% → {precioLabel(precioFinal)}
+                          </p>
+                        )}
                       </div>
                       <button onClick={() => setStep('info')} className="text-xs underline ml-4 flex-shrink-0" style={{ color: 'rgba(212,175,55,0.7)' }}>
                         {es ? 'Editar' : 'Edit'}
@@ -382,7 +454,7 @@ const CheckoutPage = () => {
                       <CheckoutForm
                         name={name} email={email}
                         birthDate={birthDate} birthTime={birthTime} birthPlace={birthPlace}
-                        lang={lang}
+                        lang={lang} precio={precioFinal}
                       />
                     </Elements>
                   ) : (
