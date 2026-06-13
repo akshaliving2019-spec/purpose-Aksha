@@ -25,6 +25,20 @@ Birth challenges. You idealize projects until reality feels small.
 
 IPN 60%. Six out of ten parts of this area's potential are available.
 
+## Profession · What you are good at
+
+Score 15/20 · TENSION · IN DEVELOPMENT
+
+You work best when the result can be touched.
+
+The raw material is plentiful.
+
+Birth gifts. You build things that last.
+
+Birth challenges. You doubt your own judgment.
+
+IPN 53%. A little over half of this area's potential is available.
+
 ## Mission · What the world needs
 
 Score 8/20 · FLOW · IN DEVELOPMENT
@@ -65,7 +79,7 @@ const espera = (nombre, cond) => {
 
 const html = renderReporteWeb({ nombre: 'Test Client', reporte: reporteEn, idioma: 'en' });
 
-espera('detecta 2 módulos', (html.match(/class="modulo/g) || []).length === 2);
+espera('detecta 3 módulos', (html.match(/class="modulo/g) || []).length === 3);
 espera('score 13/20 parseado', html.includes('13<small>/20'));
 espera('semáforo FLOW sin acento', html.includes('FLOW') && !html.includes('TENSIÓN'));
 espera('IPN 60% parseado', html.includes('60<small>% IPN'));

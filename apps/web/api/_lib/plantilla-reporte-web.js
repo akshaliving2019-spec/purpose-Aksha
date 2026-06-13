@@ -216,7 +216,7 @@ function seccionProsa(seccion) {
 
 function renderNumeros(modulos, t, etiquetasModulo) {
   const conDatos = modulos.filter((m) => m.ipn != null || m.score != null);
-  if (conDatos.length < 2) return '';
+  if (conDatos.length < 3) return '';
   const tarjetas = conDatos.map((m) => {
     const [nombre, pregunta] = etiquetasModulo[m.tipo];
     const color = COLORES_MODULO[m.tipo];
