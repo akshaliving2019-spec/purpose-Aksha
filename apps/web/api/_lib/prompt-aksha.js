@@ -179,7 +179,7 @@ REGLAS DE LENGUAJE (INNEGOCIABLES)
   interno de análisis.
 `;
 
-export function construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, historiaVida }) {
+export function construirMensajeCliente({ nombre, email, birthDate, birthTime, birthPlace, carta, observaciones, historiaVida, idioma }) {
   const edad = calcularEdad(birthDate);
   // Texto libre del cliente: fuera caracteres de caja, que podrían suplantar
   // los delimitadores internos de este mensaje.
@@ -246,6 +246,31 @@ toda comparación con un reporte que "habría sido" distinto, y el
 vocabulario del motor interno: "anclaje", "corroboración", "hipótesis",
 "protocolo", "sólido", "ambiguo", "validación". ${aperturaSinHora}`;
 
+  const bloqueIdioma = idioma !== 'en' ? '' : `
+
+LANGUAGE OF THE REPORT (NON-NEGOTIABLE):
+Write the ENTIRE REPORT IN ENGLISH — natural, warm, native-level English, not
+a literal translation. Every rule of the system prompt applies unchanged.
+Official English vocabulary (exact strings, the rendering pipeline parses them):
+- Traffic light, always as a WORD: FLOW / TENSION / BRAKE.
+- Diagnosis: ACTIVE / IN DEVELOPMENT / BLOCKED / TRANSCENDED.
+- Gifts and challenges blocks open exactly with "Birth gifts." and
+  "Birth challenges." (prose follows on the same line).
+- The index keeps its initials: "Natal Potential Index (IPN)"; each module
+  line keeps the format "IPN 60%. <one reading line>". The word "natal" may
+  ONLY appear inside "Natal Potential Index".
+- Life stages: Exploration / Construction / Revision / Integration / Legacy.
+  In the opening, name the client's stage with the exact phrase
+  "<Stage> stage" (e.g. "you are closing the Exploration stage").
+- Section titles, exactly: "Opening" · "Passion · What you love" ·
+  "Profession · What you are good at" · "Vocation · What you can be paid
+  for" · "Mission · What the world needs" · "The wound that becomes a gift" ·
+  "Summary of your map" · "Synthesis · Gifts and challenges" ·
+  "What is activating now" · "Your path in 2026" · "Closing".
+- Never "problem" (use "challenge"), never "weakness" (use "growth area").
+- Closing signature, exactly:
+  "AKSHA LIFE · AI does not create knowledge. It connects it."`;
+
   // Las reglas de uso acompañan SIEMPRE a la historia (con o sin hora de
   // nacimiento): sin ellas el modelo podría citarla textualmente.
   const bloqueHistoriaVida = historia ? `
@@ -270,7 +295,7 @@ Email: ${email}
 Fecha de nacimiento: ${birthDate}${edad ? ` (edad actual: ${edad} años)` : ''}
 Hora de nacimiento: ${birthTime || 'No proporcionada'}
 Lugar de nacimiento: ${birthPlace}
-─────────────────────────────────────────${avisoSinHora}${bloqueHistoriaVida}
+─────────────────────────────────────────${avisoSinHora}${bloqueHistoriaVida}${bloqueIdioma}
 
 ${carta.texto}${bloqueObservaciones}
 
