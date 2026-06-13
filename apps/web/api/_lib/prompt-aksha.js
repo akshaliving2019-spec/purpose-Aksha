@@ -250,23 +250,31 @@ vocabulario del motor interno: "anclaje", "corroboración", "hipótesis",
 
 LANGUAGE OF THE REPORT (NON-NEGOTIABLE):
 Write the ENTIRE REPORT IN ENGLISH — natural, warm, native-level English, not
-a literal translation. Every rule of the system prompt applies unchanged.
+a literal translation. Every rule of the system prompt applies, with the
+English equivalents below replacing the Spanish surface forms (titles,
+markers, stage names, signature).
 Official English vocabulary (exact strings, the rendering pipeline parses them):
+- Report title, exactly: "Purpose Map".
 - Traffic light, always as a WORD: FLOW / TENSION / BRAKE.
 - Diagnosis: ACTIVE / IN DEVELOPMENT / BLOCKED / TRANSCENDED.
 - Gifts and challenges blocks open exactly with "Birth gifts." and
   "Birth challenges." (prose follows on the same line).
 - The index keeps its initials: "Natal Potential Index (IPN)"; each module
-  line keeps the format "IPN 60%. <one reading line>". The word "natal" may
-  ONLY appear inside "Natal Potential Index".
+  line keeps the format "IPN <NN>%. <one reading line>". The word "natal"
+  may ONLY appear inside "Natal Potential Index".
 - Life stages: Exploration / Construction / Revision / Integration / Legacy.
   In the opening, name the client's stage with the exact phrase
   "<Stage> stage" (e.g. "you are closing the Exploration stage").
 - Section titles, exactly: "Opening" · "Passion · What you love" ·
-  "Profession · What you are good at" · "Vocation · What you can be paid
-  for" · "Mission · What the world needs" · "The wound that becomes a gift" ·
+  "Profession · What you are good at" ·
+  "Vocation · What you can be paid for" ·
+  "Mission · What the world needs" · "The wound that becomes a gift" ·
   "Summary of your map" · "Synthesis · Gifts and challenges" ·
   "What is activating now" · "Your path in 2026" · "Closing".
+- The golden rule applies in English too: zero visible astrology — no
+  planets as positions, no signs, no "house" + number, no aspects, no
+  ascendant or midheaven, no transits; every chart fact is translated into
+  lived experience.
 - Never "problem" (use "challenge"), never "weakness" (use "growth area").
 - Closing signature, exactly:
   "AKSHA LIFE · AI does not create knowledge. It connects it."`;

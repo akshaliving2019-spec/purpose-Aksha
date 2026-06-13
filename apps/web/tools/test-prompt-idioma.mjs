@@ -20,6 +20,8 @@ const en = construirMensajeCliente({ ...base, idioma: 'en' });
 
 espera('es: sin bloque de inglés', !es.includes('ENTIRE REPORT IN ENGLISH'));
 espera('sin idioma: sin bloque de inglés', !sin.includes('ENTIRE REPORT IN ENGLISH'));
+espera('es y sin-idioma idénticos', es === sin);
+espera('es: sin firma EN', !es.includes('AI does not create knowledge'));
 espera('en: bloque de inglés presente', en.includes('ENTIRE REPORT IN ENGLISH'));
 espera('en: semáforo oficial', en.includes('FLOW / TENSION / BRAKE'));
 espera('en: dones oficiales', en.includes('Birth gifts.') && en.includes('Birth challenges.'));
@@ -27,6 +29,7 @@ espera('en: IPN conserva sigla', en.includes('Natal Potential Index (IPN)'));
 espera('en: etapas oficiales', en.includes('Exploration stage'));
 espera('en: firma oficial', en.includes('AKSHA LIFE · AI does not create knowledge. It connects it.'));
 espera('en: títulos de sección', en.includes('The wound that becomes a gift'));
+espera('en: título oficial', en.includes('"Purpose Map"'));
 
 console.log(fallos === 0 ? '\nTODOS LOS CASOS PASAN' : `\n${fallos} CASO(S) FALLARON`);
 process.exit(fallos === 0 ? 0 : 1);
