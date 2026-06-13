@@ -18,9 +18,9 @@ import {
 // Versión web del Mapa (plantilla top-tier): se genera SIEMPRE y se guarda en
 // Blob con URL impredecible; el email lleva el botón "Abrir tu Mapa". Si el
 // render o el Blob fallan, el reporte sigue su curso solo por email.
-async function generarMapaWeb(paymentIntentId, nombre, reporte) {
+async function generarMapaWeb(paymentIntentId, nombre, reporte, idioma) {
   try {
-    const html = renderReporteWeb({ nombre, reporte });
+    const html = renderReporteWeb({ nombre, reporte, idioma });
     const { url } = await put(`mapas/${paymentIntentId}.html`, html, {
       access: 'public',
       addRandomSuffix: true,
@@ -42,6 +42,9 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
   const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
   const md = pi.metadata || {};
   const { customer_name, customer_email, birth_date, birth_time, birth_place, producto } = md;
+
+  // Idioma del reporte ('es'|'en'); pedidos antiguos no lo traen → 'es'.
+  const idioma = md.idioma === 'en' ? 'en' : 'es';
 
   if (!customer_name || !customer_email || !birth_date || !birth_place) {
     return { estado: 'datos_incompletos' };
@@ -96,6 +99,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       observaciones,
       historiaVida,
       producto,
+      idioma,
     });
 
     // Lineamiento AKSHA: el texto generado se valida contra la carta Swiss
@@ -106,7 +110,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       console.warn(`⚠️ [${paymentIntentId}] Validación:`, validacion.errores);
     }
 
-    const urlWeb = await generarMapaWeb(paymentIntentId, customer_name, reporte);
+    const urlWeb = await generarMapaWeb(paymentIntentId, customer_name, reporte, idioma);
 
     // Modo revisión: el reporte va primero a la revisora con link de
     // aprobación; el cliente lo recibe cuando ella aprueba (/api/aprobar-reporte).
@@ -147,7 +151,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     }
 
     console.log(`📧 [${paymentIntentId}] Enviando reporte a:`, customer_email);
-    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte, urlWeb });
+    const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte, urlWeb, idioma });
 
     await stripe.paymentIntents.update(paymentIntentId, {
       metadata: {
