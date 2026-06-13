@@ -67,6 +67,12 @@ const TEXTOS = {
   },
 };
 
+// ES necesita tabla (acentos: EXPLORACIÓN, REVISIÓN…); EN es el match en mayúsculas.
+const ETAPAS_ES = {
+  exploracion: 'EXPLORACIÓN', construccion: 'CONSTRUCCIÓN', revision: 'REVISIÓN',
+  integracion: 'INTEGRACIÓN', legado: 'LEGADO',
+};
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -100,7 +106,7 @@ function clasificarTitulo(titulo) {
   if (/herida|wound/.test(t)) return 'herida';
   if (/resumen|summary|glance/.test(t)) return 'resumen';
   if (/sintesis|synthesis/.test(t)) return 'sintesis';
-  if (/activando|ahora|transito|activating|now/.test(t)) return 'ahora';
+  if (/activando|ahora|transito|activating|\bnow\b/.test(t)) return 'ahora';
   if (/camino|2026|contexto|path/.test(t)) return 'camino';
   if (/cierre|closing/.test(t)) return 'cierre';
   return 'otra';
@@ -354,14 +360,7 @@ export function renderReporteWeb({ nombre, reporte, idioma = 'es', fecha = new D
   const mEtapa = normalizar(apertura?.texto || '').match(
     /etapa de (exploracion|construccion|revision|integracion|legado)|(exploration|construction|revision|integration|legacy) stage/,
   );
-  const ETAPAS = {
-    exploracion: 'EXPLORACIÓN', construccion: 'CONSTRUCCIÓN', revision: 'REVISIÓN',
-    integracion: 'INTEGRACIÓN', legado: 'LEGADO',
-    'en:exploration': 'EXPLORATION', 'en:construction': 'CONSTRUCTION',
-    'en:revision': 'REVISION', 'en:integration': 'INTEGRATION', 'en:legacy': 'LEGACY',
-  };
-  const claveEtapa = mEtapa ? (mEtapa[2] ? `en:${mEtapa[2]}` : mEtapa[1]) : '';
-  const etapa = claveEtapa ? (ETAPAS[claveEtapa] || '') : '';
+  const etapa = mEtapa ? (mEtapa[2] ? mEtapa[2].toUpperCase() : ETAPAS_ES[mEtapa[1]] || '') : '';
 
   const partesNombre = String(nombre || '').trim().split(/\s+/);
   const nombreHtml = partesNombre.length > 1

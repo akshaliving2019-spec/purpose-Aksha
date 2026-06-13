@@ -83,12 +83,13 @@ espera('detecta 3 módulos', (html.match(/class="modulo/g) || []).length === 3);
 espera('score 13/20 parseado', html.includes('13<small>/20'));
 espera('semáforo FLOW sin acento', html.includes('FLOW') && !html.includes('TENSIÓN'));
 espera('IPN 60% parseado', html.includes('60<small>% IPN'));
-espera('Birth gifts en ficha', html.includes('Birth gifts'));
+espera('Birth gifts en ficha', html.includes('<h4>Birth gifts</h4>'));
 espera('etapa EXPLORATION', html.includes('EXPLORATION'));
 espera('lang="en"', html.includes('<html lang="en">'));
 espera('título Purpose Map', html.includes('· Purpose Map</title>'));
 espera('overline EN de apertura', html.includes('Before you begin'));
 espera('lema EN', html.includes('AI does not create knowledge. It connects it.'));
+espera('ventanas EN', html.includes('Open windows'));
 
 // Regresión ES: el render español no cambia.
 const htmlEs = renderReporteWeb({ nombre: 'Test', reporte: '## Apertura\n\nHola.\n\n## Cierre\n\nAdiós.\n\nAKSHA LIFE · La IA no crea el conocimiento. Lo conecta.' });
