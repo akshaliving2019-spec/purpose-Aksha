@@ -119,11 +119,19 @@ const TERMINOS_ASTRO = new RegExp(
 );
 
 // Máximo 8 hojas: objetivo 2200-3000 palabras; tolerancia de validación 3300.
-// Un reporte muy corto delata truncamiento o secciones faltantes.
+// Cuando el reporte incluye la sección opcional "Oportunidades en tu
+// territorio" (Pieza 2, hasta 250 palabras), el techo por defecto sube a 3600.
+// Un reporte muy corto delata truncamiento o secciones faltantes. Estos son
+// los límites del reporte principal; el plan semanal pasa sus propios límites
+// (min/max explícitos), y un `max` explícito SIEMPRE manda sobre el default.
 const PALABRAS_MAX = 3300;
+const PALABRAS_MAX_CON_TERRITORIO = 3600;
 const PALABRAS_MIN = 1600;
 
-function validarEstandarEditorial(reporte) {
+// La sección de territorio se reconoce por su título (es/en).
+const PATRON_SECCION_TERRITORIO = /oportunidades en tu territorio|opportunities in your territory/i;
+
+function validarEstandarEditorial(reporte, { min = PALABRAS_MIN, max } = {}) {
   const errores = [];
   const texto = normalizar(reporte || '');
 
@@ -136,24 +144,30 @@ function validarEstandarEditorial(reporte) {
   }
 
   const palabras = (String(reporte || '').trim().match(/\S+/g) || []).length;
-  if (palabras > PALABRAS_MAX) {
+  // El `max` explícito manda (lo usa el plan semanal con {min:400,max:1100}).
+  // Cuando no viene, el default sube a 3600 si está la sección de territorio
+  // (Pieza 2), si no se queda en 3300.
+  const techo = max ?? (PATRON_SECCION_TERRITORIO.test(String(reporte || ''))
+    ? PALABRAS_MAX_CON_TERRITORIO
+    : PALABRAS_MAX);
+  if (palabras > techo) {
     errores.push(
-      `El reporte tiene ${palabras} palabras — excede el máximo de 8 hojas ` +
-      '(objetivo 2200-3000). Cortar secciones, no adjetivos.',
+      `El reporte tiene ${palabras} palabras — excede el máximo de ${techo}. ` +
+      'Cortar secciones, no adjetivos.',
     );
-  } else if (palabras > 0 && palabras < PALABRAS_MIN) {
+  } else if (palabras > 0 && palabras < min) {
     errores.push(
-      `El reporte tiene solo ${palabras} palabras — por debajo del mínimo editorial ` +
+      `El reporte tiene solo ${palabras} palabras — por debajo del mínimo de ${min} ` +
       '(posible truncamiento o secciones faltantes).',
     );
   }
   return errores;
 }
 
-export function validarReporte(reporte, carta) {
+export function validarReporte(reporte, carta, opciones = {}) {
   const erroresEstilo = [
     ...detectarGlifosProhibidos(reporte),
-    ...validarEstandarEditorial(reporte),
+    ...validarEstandarEditorial(reporte, opciones),
   ];
 
   if (!reporte || !carta || carta.fallback || !Array.isArray(carta.planetas)) {

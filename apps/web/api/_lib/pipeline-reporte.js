@@ -15,6 +15,9 @@ import {
   modoRevisionActivo, emailRevision, guardarReportePendiente, urlAprobacion, urlFeedback,
 } from './revision-reporte.js';
 import { GRACIA_HISTORIA_MS } from './historia-vida.js';
+import { buscarOportunidades } from './lookup-territorio.js';
+import { paisDesdeLugar } from './pais-residencia.js';
+import { calcularElementoDebil, guardarReporteMd, metadataBasePlan } from './plan-elemento.js';
 
 // Versión web del Mapa (plantilla top-tier): se genera SIEMPRE y se guarda en
 // Blob con URL impredecible; el email lleva el botón "Abrir tu Mapa". Si el
@@ -46,6 +49,10 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
 
   // Idioma del reporte ('es'|'en'); pedidos antiguos no lo traen → 'es'.
   const idioma = md.idioma === 'en' ? 'en' : 'es';
+
+  // País de residencia por IP (Pieza 2); respaldo: país del lugar de
+  // nacimiento. La ciudad, si llegó, enriquece el insumo del prompt.
+  const ciudadResidencia = md.ciudad_residencia || '';
 
   if (!customer_name || !customer_email || !birth_date || !birth_place) {
     return { estado: 'datos_incompletos' };
@@ -97,6 +104,19 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       nombre: customer_name,
     });
 
+    // Pieza 2 — Oportunidades del territorio. El país manda por IP; si no
+    // llegó, se deriva del lugar de nacimiento. Lookup híbrido: banco en Blob
+    // o investigación en vivo (persistida antes de generar). Sin insumo, el
+    // prompt omite la sección. Un fallo del lookup NUNCA bloquea el reporte.
+    const paisResidencia = md.pais_residencia || paisDesdeLugar(birth_place);
+    let oportunidades = null;
+    try {
+      oportunidades = await buscarOportunidades(paisResidencia);
+      if (ciudadResidencia && oportunidades?.tieneInsumo) oportunidades.ciudad = ciudadResidencia;
+    } catch (error) {
+      console.warn(`⚠️ [${paymentIntentId}] Oportunidades del territorio no disponibles (continúa sin la sección):`, String(error).slice(0, 200));
+    }
+
     console.log(`🤖 [${paymentIntentId}] Generando reporte con Claude...`);
     const reporte = await generarReporte({
       nombre: customer_name,
@@ -109,6 +129,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
       historiaVida,
       producto,
       idioma,
+      oportunidades,
     });
 
     // Lineamiento AKSHA: el texto generado se valida contra la carta Swiss
@@ -162,6 +183,19 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
     console.log(`📧 [${paymentIntentId}] Enviando reporte a:`, customer_email);
     const envio = await enviarReporte({ nombre: customer_name, email: customer_email, reporte, urlWeb, idioma });
 
+    // Base del plan de 4 semanas: el cliente YA recibió el reporte, así que
+    // fijamos su elemento débil y guardamos el reporte.md como insumo. Si algo
+    // de esto falla, el reporte ya salió: no rompemos el envío (cron lo retoma).
+    let metaPlan = {};
+    try {
+      const debil = calcularElementoDebil(reporte, carta);
+      const reporteMdUrl = await guardarReporteMd(paymentIntentId, reporte);
+      metaPlan = metadataBasePlan({ elemento: debil.elemento, reporteMdUrl });
+      console.log(`🗓️ [${paymentIntentId}] Plan 4 semanas — elemento débil: ${debil.elemento} (${debil.modulo}, vía ${debil.via})`);
+    } catch (planError) {
+      console.warn(`⚠️ [${paymentIntentId}] No se pudo fijar la base del plan:`, String(planError).slice(0, 200));
+    }
+
     await stripe.paymentIntents.update(paymentIntentId, {
       metadata: {
         reporte_status: 'enviado',
@@ -169,6 +203,7 @@ export async function procesarPedido(paymentIntentId, { forzar = false, observac
         reporte_resend_id: envio?.id || '',
         reporte_enviado_at: new Date().toISOString(),
         reporte_error: '',
+        ...metaPlan,
       },
     });
 
