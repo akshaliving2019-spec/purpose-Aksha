@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { name, email, birthDate, birthTime, birthPlace, historiaVida } = req.body || {};
+  const { name, email, birthDate, birthTime, birthPlace, historiaVida, idioma } = req.body || {};
 
   if (!name || !email || !birthDate || !birthPlace) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -33,6 +33,10 @@ export default async function handler(req, res) {
       typeof birthPlace !== 'string' || birthPlace.length > 200) {
     return res.status(400).json({ error: 'Invalid field format.' });
   }
+
+  // Idioma del reporte: 'es' o 'en'. Cualquier otra cosa (o ausencia) cae a
+  // 'es' — los pedidos viejos no traen este campo y no deben romperse.
+  const idiomaReporte = idioma === 'en' ? 'en' : 'es';
 
   // La metadata de Stripe acepta máx. 500 caracteres por valor: la historia
   // de vida viaja troceada en historia_vida_1..N y el pipeline la rearma.
@@ -62,6 +66,7 @@ export default async function handler(req, res) {
         // truthy lo rompía).
         birth_time: birthTime || '',
         birth_place: birthPlace,
+        idioma: idiomaReporte,
         ...metadataHistoria,
       },
     });

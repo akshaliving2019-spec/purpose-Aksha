@@ -146,7 +146,7 @@ const CheckoutPage = () => {
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, birthDate, birthTime, birthPlace, historiaVida }),
+        body: JSON.stringify({ name, email, birthDate, birthTime, birthPlace, historiaVida, idioma: lang }),
       });
       const data = await res.json();
       if (data.error) { setFormError(data.error); setSubmitting(false); return; }
