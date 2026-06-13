@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext.jsx';
 const dimensionsES = [
   {
     id: 'energy', label: 'ENERGÍA', Icon: Zap,
-    panelTop: '7%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '13%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17.6%',
     color: '#D4AF37',
     definition: 'Lo que te mueve de forma natural.',
     expanded: 'La ENERGÍA es el combustible detrás de todo lo que haces. No se trata de cafeína ni de fuerza de voluntad — se trata de las actividades, entornos y experiencias que activan tu motivación desde adentro.',
@@ -21,7 +21,7 @@ const dimensionsES = [
   },
   {
     id: 'strengths', label: 'FORTALEZAS', Icon: Star,
-    panelTop: '30%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '31.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17.5%',
     color: '#D4AF37',
     definition: 'Lo que haces bien de forma consistente.',
     expanded: 'Las FORTALEZAS son las habilidades que expresas repetidamente y que producen resultados confiables — a menudo cosas que das por sentadas porque se sienten naturales.',
@@ -35,7 +35,7 @@ const dimensionsES = [
   },
   {
     id: 'gift', label: 'DON', Icon: Gift,
-    panelTop: '52%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '49.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '18%',
     color: '#D4AF37',
     definition: 'Lo que te sale de forma innata.',
     expanded: 'Tu DON es tu inteligencia natural más profunda — el patrón cognitivo que procesa la realidad de manera diferente. No se aprende, es inherente. Y cuando se desarrolla, se convierte en tu mayor contribución.',
@@ -49,7 +49,7 @@ const dimensionsES = [
   },
   {
     id: 'impact', label: 'IMPACTO', Icon: Leaf,
-    panelTop: '74%', panelLeft: '67%', panelWidth: '28%', panelHeight: '18%',
+    panelTop: '67.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17%',
     color: '#D4AF37',
     definition: 'Dónde tu contribución importa.',
     expanded: 'El IMPACTO es la intersección donde tus habilidades se encuentran con las necesidades del mundo. Es donde lo que haces crea un cambio significativo — para personas, comunidades o sistemas.',
@@ -66,7 +66,7 @@ const dimensionsES = [
 const dimensionsEN = [
   {
     id: 'energy', label: 'ENERGY', Icon: Zap,
-    panelTop: '7%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '13%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17.6%',
     color: '#D4AF37',
     definition: 'What moves you naturally.',
     expanded: 'ENERGY is the fuel behind everything you do. It\'s not about caffeine or willpower — it\'s about the activities, environments, and experiences that activate your motivation from within.',
@@ -80,7 +80,7 @@ const dimensionsEN = [
   },
   {
     id: 'strengths', label: 'STRENGTHS', Icon: Star,
-    panelTop: '30%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '31.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17.5%',
     color: '#D4AF37',
     definition: 'What you do consistently well.',
     expanded: 'STRENGTHS are the skills you repeatedly express that produce reliable results — often things you take for granted because they feel natural.',
@@ -94,7 +94,7 @@ const dimensionsEN = [
   },
   {
     id: 'gift', label: 'GIFT', Icon: Gift,
-    panelTop: '52%', panelLeft: '67%', panelWidth: '28%', panelHeight: '21%',
+    panelTop: '49.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '18%',
     color: '#D4AF37',
     definition: 'What comes to you innately.',
     expanded: 'Your GIFT is your deepest natural intelligence — the cognitive pattern that processes reality differently. It\'s not learned, it\'s inherent. And when developed, it becomes your greatest contribution.',
@@ -108,7 +108,7 @@ const dimensionsEN = [
   },
   {
     id: 'impact', label: 'IMPACT', Icon: Leaf,
-    panelTop: '74%', panelLeft: '67%', panelWidth: '28%', panelHeight: '18%',
+    panelTop: '67.5%', panelLeft: '71.5%', panelWidth: '24%', panelHeight: '17%',
     color: '#D4AF37',
     definition: 'Where your contribution matters.',
     expanded: 'IMPACT is the intersection where your abilities meet the world\'s needs. It\'s where what you do creates meaningful change — for people, communities, or systems.',
