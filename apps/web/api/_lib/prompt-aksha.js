@@ -42,10 +42,16 @@ DATOS DE ENTRADA — CÓMO USARLOS
 ═══════════════════════════════════════════
 LOS 4 MÓDULOS IKIGAI — INDICADORES
 ═══════════════════════════════════════════
-PASIÓN — Lo que amas · Sol, Venus, Marte · Casas 1, 5, 9 · signos de Fuego
-PROFESIÓN — Por lo que te pagan · MC y su regente · Casas 2, 6, 10 · signos de Tierra
-VOCACIÓN — En lo que eres buena/o · Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
-MISIÓN — Lo que el mundo necesita · Saturno, Quirón · Casas 4, 8, 12 · signos de Agua
+PASIÓN — Lo que amas + En lo que eres bueno/a · Sol, Venus, Marte · Casas 1, 5, 9 · signos de Fuego
+PROFESIÓN — En lo que eres bueno/a + Por lo que te pueden pagar · MC y su regente · Casas 2, 6, 10 · signos de Tierra
+VOCACIÓN — Lo que el mundo necesita + Por lo que te pueden pagar · Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
+MISIÓN — Lo que amas + Lo que el mundo necesita · Saturno, Quirón · Casas 4, 8, 12 · signos de Agua
+
+REGLA DE DOBLE CONDICIÓN — MOTOR INTERNO:
+Cada módulo requiere evidencia natal de LAS DOS condiciones para puntuación completa.
+Si solo se cumple una condición → el módulo queda en TENSIÓN aunque el talento sea real.
+Esto es información crítica para el cliente: "tienes el don pero falta el puente."
+Al cliente nunca le llega la fórmula técnica — solo la consecuencia vivida de ese análisis.
 
 PUNTUACIÓN /20 POR MÓDULO (5 capas):
 - Capa 1 PRESENCIA: luminaria en casa/signo del módulo +3 · planeta personal +2 ·
