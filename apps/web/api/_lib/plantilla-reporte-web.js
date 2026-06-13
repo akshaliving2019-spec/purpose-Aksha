@@ -29,6 +29,44 @@ const ETIQUETAS_MODULO = {
   mision: ['Misión', 'lo que el mundo necesita'],
 };
 
+const ETIQUETAS_MODULO_EN = {
+  pasion: ['Passion', 'what you love'],
+  profesion: ['Profession', 'what you are good at'],
+  vocacion: ['Vocation', 'what you can be paid for'],
+  mision: ['Mission', 'what the world needs'],
+};
+
+const TEXTOS = {
+  es: {
+    tituloDoc: 'Mapa de Propósito',
+    mapaActivo: 'mapa activo',
+    etapaVida: 'Etapa de vida',
+    antesDeEmpezar: 'Antes de empezar <span class="dim">· cómo leer tu mapa</span>',
+    primeroNumeros: 'Primero <span class="dim">· los números</span>',
+    dimensiones: 'Tus cuatro dimensiones, medidas',
+    dimensionesIntro: 'El detalle de cada una viene después. Esta es la foto completa.',
+    dones: 'Dones de nacimiento',
+    desafios: 'Desafíos de nacimiento',
+    ventanas: 'Ventanas abiertas',
+    cierre: 'Cierre',
+    lema: 'La IA no crea el conocimiento. Lo conecta.',
+  },
+  en: {
+    tituloDoc: 'Purpose Map',
+    mapaActivo: 'active map',
+    etapaVida: 'Life stage',
+    antesDeEmpezar: 'Before you begin <span class="dim">· how to read your map</span>',
+    primeroNumeros: 'First <span class="dim">· the numbers</span>',
+    dimensiones: 'Your four dimensions, measured',
+    dimensionesIntro: 'The detail of each one comes later. This is the full picture.',
+    dones: 'Birth gifts',
+    desafios: 'Birth challenges',
+    ventanas: 'Open windows',
+    cierre: 'Closing',
+    lema: 'AI does not create knowledge. It connects it.',
+  },
+};
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -44,21 +82,27 @@ function normalizar(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
+// El semáforo solo lleva acento en español (TENSIÓN); en inglés queda tal cual.
+function etiquetaSemaforo(palabra, idioma) {
+  const up = palabra.toUpperCase();
+  return idioma === 'en' ? up : up.replace('TENSION', 'TENSIÓN');
+}
+
 // ── Parser ──────────────────────────────────────────────────────────────────
 
 function clasificarTitulo(titulo) {
   const t = normalizar(titulo);
-  if (/pasion/.test(t)) return 'pasion';
-  if (/profesion/.test(t)) return 'profesion';
-  if (/vocacion/.test(t)) return 'vocacion';
-  if (/mision/.test(t)) return 'mision';
-  if (/apertura/.test(t)) return 'apertura';
-  if (/herida/.test(t)) return 'herida';
-  if (/resumen/.test(t)) return 'resumen';
-  if (/sintesis/.test(t)) return 'sintesis';
-  if (/activando|ahora|transito/.test(t)) return 'ahora';
-  if (/camino|2026|contexto/.test(t)) return 'camino';
-  if (/cierre/.test(t)) return 'cierre';
+  if (/pasion|passion/.test(t)) return 'pasion';
+  if (/profesion|profession/.test(t)) return 'profesion';
+  if (/vocacion|vocation/.test(t)) return 'vocacion';
+  if (/mision|mission/.test(t)) return 'mision';
+  if (/apertura|opening/.test(t)) return 'apertura';
+  if (/herida|wound/.test(t)) return 'herida';
+  if (/resumen|summary|glance/.test(t)) return 'resumen';
+  if (/sintesis|synthesis/.test(t)) return 'sintesis';
+  if (/activando|ahora|transito|activating|now/.test(t)) return 'ahora';
+  if (/camino|2026|contexto|path/.test(t)) return 'camino';
+  if (/cierre|closing/.test(t)) return 'cierre';
   return 'otra';
 }
 
@@ -93,7 +137,7 @@ function bloques(texto) {
     .filter((b) => !/AKSHA LIFE\s*·/i.test(b));
 }
 
-function parsearModulo(seccion) {
+function parsearModulo(seccion, idioma) {
   const todos = bloques(seccion.texto);
   const mod = {
     tipo: seccion.tipo,
@@ -107,22 +151,22 @@ function parsearModulo(seccion) {
 
     const esMarcador = plano.length < 90 && /\d{1,2}\s*\/\s*20/.test(plano);
     const mScore = plano.match(/(\d{1,2})\s*\/\s*20/);
-    const mSem = norm.match(/\b(flujo|tension|freno)\b/);
-    const mDiag = norm.match(/\b(activo|en desarrollo|bloqueado|trascendido)\b/);
-    const mIpn = plano.match(/(?:índice de potencial natal|ipn)[^0-9]{0,12}(\d{1,3})\s*%/i);
+    const mSem = norm.match(/\b(flujo|tension|freno|flow|brake)\b/);
+    const mDiag = norm.match(/\b(activo|en desarrollo|bloqueado|trascendido|active|in development|blocked|transcended)\b/);
+    const mIpn = plano.match(/(?:índice de potencial natal|natal potential index|ipn)[^0-9]{0,12}(\d{1,3})\s*%/i);
 
     if (esMarcador) {
       if (mScore) mod.score = mScore[1];
-      if (mSem) mod.semaforo = mSem[1].toUpperCase().replace('TENSION', 'TENSIÓN');
+      if (mSem) mod.semaforo = etiquetaSemaforo(mSem[1], idioma);
       if (mDiag) mod.diagnostico = mDiag[1].toUpperCase();
       continue;
     }
-    if (/^dones de nacimiento/i.test(norm)) {
-      mod.dones = plano.replace(/^dones de nacimiento[.:]?\s*/i, '');
+    if (/^(dones de nacimiento|birth gifts)/i.test(norm)) {
+      mod.dones = plano.replace(/^(dones de nacimiento|birth gifts)[.:]?\s*/i, '');
       continue;
     }
-    if (/^desaf/i.test(norm)) {
-      mod.desafios = plano.replace(/^desaf[íi]os de nacimiento[.:]?\s*/i, '');
+    if (/^(desaf|birth challenges)/i.test(norm)) {
+      mod.desafios = plano.replace(/^(desaf[íi]os de nacimiento|birth challenges)[.:]?\s*/i, '');
       continue;
     }
     if (mIpn) {
@@ -133,7 +177,7 @@ function parsearModulo(seccion) {
     // Detección suelta de marcadores fuera de bloque corto
     if (!mod.score && mScore && plano.length < 200) {
       mod.score = mScore[1];
-      if (mSem) mod.semaforo = mSem[1].toUpperCase().replace('TENSION', 'TENSIÓN');
+      if (mSem) mod.semaforo = etiquetaSemaforo(mSem[1], idioma);
       if (mDiag) mod.diagnostico = mDiag[1].toUpperCase();
     }
     // Los primeros 1-2 bloques narrativos son las oraciones elementales
@@ -170,11 +214,11 @@ function seccionProsa(seccion) {
 </div></section>`;
 }
 
-function renderNumeros(modulos) {
+function renderNumeros(modulos, t, etiquetasModulo) {
   const conDatos = modulos.filter((m) => m.ipn != null || m.score != null);
-  if (conDatos.length < 3) return '';
+  if (conDatos.length < 2) return '';
   const tarjetas = conDatos.map((m) => {
-    const [nombre, pregunta] = ETIQUETAS_MODULO[m.tipo];
+    const [nombre, pregunta] = etiquetasModulo[m.tipo];
     const color = COLORES_MODULO[m.tipo];
     const ipn = m.ipn != null ? m.ipn : '';
     const titular = inline(primeraFrase(m.elementales[0] || nombre));
@@ -193,16 +237,16 @@ function renderNumeros(modulos) {
   return `
 <section><div class="wrap">
   <div class="rv">
-    <div class="overline">Primero <span class="dim">· los números</span></div>
-    <h2 class="sec-title">Tus cuatro dimensiones, medidas</h2>
-    <p class="sec-intro">El detalle de cada una viene después. Esta es la foto completa.</p>
+    <div class="overline">${t.primeroNumeros}</div>
+    <h2 class="sec-title">${t.dimensiones}</h2>
+    <p class="sec-intro">${t.dimensionesIntro}</p>
   </div>
   <div class="medidas">${tarjetas}</div>
 </div></section>`;
 }
 
-function renderModulo(mod, indice) {
-  const [nombre, pregunta] = ETIQUETAS_MODULO[mod.tipo];
+function renderModulo(mod, indice, t, etiquetasModulo) {
+  const [nombre, pregunta] = etiquetasModulo[mod.tipo];
   const color = COLORES_MODULO[mod.tipo];
   const flip = indice % 2 === 1 ? ' flip' : '';
   const titulo = inline(primeraFrase(mod.elementales[0] || nombre));
@@ -215,8 +259,8 @@ function renderModulo(mod, indice) {
         <span class="sem">${[mod.semaforo, mod.diagnostico ? mod.diagnostico.toLowerCase() : ''].filter(Boolean).join(' · ')}</span>
       </div>
       <div class="ficha-body">
-        ${mod.dones ? `<h4>Dones de nacimiento</h4><p>${inline(mod.dones)}</p>` : ''}
-        ${mod.desafios ? `<h4>Desafíos de nacimiento</h4><p>${inline(mod.desafios)}</p>` : ''}
+        ${mod.dones ? `<h4>${t.dones}</h4><p>${inline(mod.dones)}</p>` : ''}
+        ${mod.desafios ? `<h4>${t.desafios}</h4><p>${inline(mod.desafios)}</p>` : ''}
         ${mod.ipn != null ? `<div class="ipn-line"><b>IPN ${mod.ipn}%</b>${mod.ipnTexto ? ` · ${inline(mod.ipnTexto)}` : ''}</div>` : ''}
       </div>
     </div></aside>` : '';
@@ -261,7 +305,7 @@ function renderSintesis(seccion) {
 </div></section>`;
 }
 
-function renderAhora(seccion) {
+function renderAhora(seccion, t) {
   const partes = bloques(seccion.texto);
   if (!partes.length) return '';
   if (partes.length < 2 || partes.length > 5) return seccionProsa(seccion);
@@ -273,47 +317,58 @@ function renderAhora(seccion) {
   return `
 <section class="tight"><div class="wrap">
   <div class="rv"><div class="overline">${inline(seccion.titulo)}</div>
-  <h2 class="sec-title">Ventanas abiertas</h2></div>
+  <h2 class="sec-title">${t.ventanas}</h2></div>
   <div class="ventanas">${ventanas}</div>
 </div></section>`;
 }
 
-function renderCierre(seccion) {
+function renderCierre(seccion, t) {
   const partes = bloques(seccion.texto);
   return `
 <section class="cierre"><div class="wrap rv">
-  <div class="overline">Cierre</div>
+  <div class="overline">${t.cierre}</div>
   ${prosa(partes)}
   <div class="firma">
     <div class="sello">AKSHA LIFE</div>
-    <div class="lema">La IA no crea el conocimiento. Lo conecta.</div>
+    <div class="lema">${t.lema}</div>
   </div>
 </div></section>`;
 }
 
 // ── Render principal ────────────────────────────────────────────────────────
 
-export function renderReporteWeb({ nombre, reporte, fecha = new Date() }) {
+export function renderReporteWeb({ nombre, reporte, idioma = 'es', fecha = new Date() }) {
+  const t = TEXTOS[idioma] || TEXTOS.es;
+  const etiquetasModulo = idioma === 'en' ? ETIQUETAS_MODULO_EN : ETIQUETAS_MODULO;
+
   const secciones = seccionar(reporte);
   const modulos = [];
   for (const s of secciones) {
-    if (COLORES_MODULO[s.tipo]) modulos.push(parsearModulo(s));
+    if (COLORES_MODULO[s.tipo]) modulos.push(parsearModulo(s, idioma));
   }
 
   const apertura = secciones.find((s) => s.tipo === 'apertura');
   const bloquesApertura = apertura ? bloques(apertura.texto) : [];
   const heroFrase = bloquesApertura[0] || '';
   const restoApertura = bloquesApertura.slice(1);
-  const mEtapa = normalizar(apertura?.texto || '').match(/etapa de (exploracion|construccion|revision|integracion|legado)/);
-  const etapa = mEtapa ? mEtapa[1].toUpperCase().replace('REVISION', 'REVISIÓN')
-    .replace('EXPLORACION', 'EXPLORACIÓN').replace('CONSTRUCCION', 'CONSTRUCCIÓN') : '';
+  const mEtapa = normalizar(apertura?.texto || '').match(
+    /etapa de (exploracion|construccion|revision|integracion|legado)|(exploration|construction|revision|integration|legacy) stage/,
+  );
+  const ETAPAS = {
+    exploracion: 'EXPLORACIÓN', construccion: 'CONSTRUCCIÓN', revision: 'REVISIÓN',
+    integracion: 'INTEGRACIÓN', legado: 'LEGADO',
+    'en:exploration': 'EXPLORATION', 'en:construction': 'CONSTRUCTION',
+    'en:revision': 'REVISION', 'en:integration': 'INTEGRATION', 'en:legacy': 'LEGACY',
+  };
+  const claveEtapa = mEtapa ? (mEtapa[2] ? `en:${mEtapa[2]}` : mEtapa[1]) : '';
+  const etapa = claveEtapa ? (ETAPAS[claveEtapa] || '') : '';
 
   const partesNombre = String(nombre || '').trim().split(/\s+/);
   const nombreHtml = partesNombre.length > 1
     ? `${escapeHtml(partesNombre[0])} <span class="apellido">${escapeHtml(partesNombre.slice(1).join(' '))}</span>`
     : escapeHtml(nombre || '');
 
-  const mesAno = new Intl.DateTimeFormat('es', { month: 'long', year: 'numeric' }).format(fecha);
+  const mesAno = new Intl.DateTimeFormat(idioma === 'en' ? 'en' : 'es', { month: 'long', year: 'numeric' }).format(fecha);
   const mesAnoCap = mesAno.charAt(0).toUpperCase() + mesAno.slice(1);
 
   // Cuerpo: cada sección se renderiza según su tipo, en el orden original
@@ -325,7 +380,7 @@ export function renderReporteWeb({ nombre, reporte, fecha = new Date() }) {
       if (restoApertura.length) {
         cuerpo.push(`
 <section class="tight"><div class="wrap rv">
-  <div class="overline">Antes de empezar <span class="dim">· cómo leer tu mapa</span></div>
+  <div class="overline">${t.antesDeEmpezar}</div>
   <div class="prosa">${prosa(restoApertura)}</div>
 </div></section>`);
       }
@@ -333,27 +388,27 @@ export function renderReporteWeb({ nombre, reporte, fecha = new Date() }) {
     }
     if (COLORES_MODULO[s.tipo]) {
       if (!numerosPuestos) {
-        cuerpo.push(renderNumeros(modulos));
+        cuerpo.push(renderNumeros(modulos, t, etiquetasModulo));
         numerosPuestos = true;
       }
-      cuerpo.push(renderModulo(modulos[indiceModulo], indiceModulo));
+      cuerpo.push(renderModulo(modulos[indiceModulo], indiceModulo, t, etiquetasModulo));
       indiceModulo++;
       continue;
     }
     if (s.tipo === 'herida') { cuerpo.push(renderHerida(s)); continue; }
     if (s.tipo === 'sintesis') { cuerpo.push(renderSintesis(s)); continue; }
-    if (s.tipo === 'ahora') { cuerpo.push(renderAhora(s)); continue; }
-    if (s.tipo === 'cierre') { cuerpo.push(renderCierre(s)); continue; }
+    if (s.tipo === 'ahora') { cuerpo.push(renderAhora(s, t)); continue; }
+    if (s.tipo === 'cierre') { cuerpo.push(renderCierre(s, t)); continue; }
     cuerpo.push(seccionProsa(s)); // resumen, camino, otras
   }
 
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${idioma}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>AKSHA · ${escapeHtml(partesNombre[0] || '')} · Mapa de Propósito</title>
+<title>AKSHA · ${escapeHtml(partesNombre[0] || '')} · ${t.tituloDoc}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
@@ -481,11 +536,11 @@ strong{color:var(--ink);font-weight:500}
 <main>
 <header class="hero wrap">
   <img class="ld logo-hero" src="${BASE_ASSETS}/reportes/mapa-logo.png" width="190" height="190" alt="AKSHA">
-  <div class="ld marca-sub">Mapa de Propósito · ${escapeHtml(mesAnoCap)}</div>
+  <div class="ld marca-sub">${t.tituloDoc} · ${escapeHtml(mesAnoCap)}</div>
   <h1 class="ld">${nombreHtml}</h1>
-  <div class="ld hero-meta">mapa activo</div>
+  <div class="ld hero-meta">${t.mapaActivo}</div>
   ${heroFrase ? `<p class="ld hero-frase">${inline(heroFrase)}</p>` : ''}
-  ${etapa ? `<div class="ld" style="display:flex;justify-content:center"><span class="etapa">Etapa de vida <span class="sep"></span> <b>${etapa}</b></span></div>` : ''}
+  ${etapa ? `<div class="ld" style="display:flex;justify-content:center"><span class="etapa">${t.etapaVida} <span class="sep"></span> <b>${etapa}</b></span></div>` : ''}
 </header>
 ${cuerpo.join('\n')}
 </main>
