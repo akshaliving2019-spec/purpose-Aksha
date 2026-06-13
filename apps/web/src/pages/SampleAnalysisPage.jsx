@@ -96,8 +96,8 @@ const SampleAnalysisPage = () => {
       <Helmet>
         <title>{isEs ? 'Ejemplo de Reporte — AKSHA' : 'Sample Report — AKSHA'}</title>
         <meta name="description" content={isEs
-          ? 'Así se ve un Mapa de Propósito AKSHA real — Datos, Análisis, Síntesis, Descubrimiento y Acción.'
-          : 'This is what a real AKSHA Purpose Map looks like — Data, Analysis, Synthesis, Discovery and Action.'} />
+          ? 'Mira un Mapa de Propósito AKSHA real, paso a paso: los números, el análisis, la síntesis y las rutas de acción de un perfil en Nueva York.'
+          : 'See a real AKSHA Purpose Map, step by step: the numbers, the analysis, the synthesis and the action routes of a New York profile.'} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -117,8 +117,8 @@ const SampleAnalysisPage = () => {
             </h1>
             <p className="text-lg text-white/50 leading-relaxed max-w-xl mx-auto">
               {isEs
-                ? 'M.R. — 43 años — Bogotá, Colombia. Directora de proyectos. Sintió durante años que algo no encajaba. Este es su reporte.'
-                : 'M.R. — 43 years old — Bogotá, Colombia. Project manager. Felt for years something didn\'t fit. This is her report.'}
+                ? 'M.R. · 43 años · Nueva York. Directora de proyectos en Manhattan. Veinte años de carrera sólida y la sensación persistente de estar en el lugar equivocado. Este es su reporte.'
+                : 'M.R. · 43 · New York City. Project manager in Manhattan. Twenty years of solid career and the persistent feeling of being in the wrong place. This is her report.'}
             </p>
             <div className="mt-8 flex justify-center">
               <ChevronDown className="w-6 h-6 animate-bounce" style={{ color: 'rgba(212,175,55,0.5)' }} />
@@ -131,20 +131,20 @@ const SampleAnalysisPage = () => {
           <Section
             step={isEs ? 'Paso 1' : 'Step 1'}
             label={isEs ? 'Los números' : 'The numbers'}
-            title={isEs ? 'Tus 4 dimensiones de propósito' : 'Your 4 dimensions of purpose'}
+            title={isEs ? 'Las 4 dimensiones que tu mapa mide' : 'The 4 dimensions your map measures'}
           >
             {/* Contexto ANTES de los números */}
             <div className="rounded-2xl p-6 mb-8"
               style={{ backgroundColor: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
               <p className="text-white/70 text-sm leading-relaxed mb-4">
                 {isEs
-                  ? 'Antes de ver los números, necesitas saber qué estás mirando. Tu propósito tiene 4 dimensiones — no son categorías, son 4 preguntas que tu vida ya está respondiendo sin que te lo hayas preguntado.'
-                  : 'Before seeing the numbers, you need to know what you\'re looking at. Your purpose has 4 dimensions — they\'re not categories, they\'re 4 questions your life is already answering without you realizing it.'}
+                  ? 'Antes de los números, qué estás mirando: tu propósito tiene 4 dimensiones, y tu vida ya las está respondiendo aunque nunca te lo hayas preguntado. El mapa mide qué tan activa está cada una hoy.'
+                  : 'Before the numbers, what you\'re looking at: your purpose has 4 dimensions, and your life is already answering them even if you never asked. The map measures how active each one is today.'}
               </p>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 {[
                   { key: isEs ? 'PASIÓN' : 'PASSION', q: isEs ? '¿Qué harías aunque no te pagaran?' : 'What would you do even if unpaid?', c: COLORS.pasion },
-                  { key: isEs ? 'PROFESIÓN' : 'PROFESSION', q: isEs ? '¿En qué eres tan bueno que te buscan?' : 'What are you so good at people seek you out?', c: COLORS.profesion },
+                  { key: isEs ? 'PROFESIÓN' : 'PROFESSION', q: isEs ? '¿En qué eres tan buena que te buscan?' : 'What are you so good at people seek you out?', c: COLORS.profesion },
                   { key: isEs ? 'VOCACIÓN' : 'VOCATION', q: isEs ? '¿Qué necesita el mundo que tú puedes dar?' : 'What does the world need that you can give?', c: COLORS.vocacion },
                   { key: isEs ? 'MISIÓN' : 'MISSION', q: isEs ? '¿Por qué causa moverías montañas?' : 'What cause would you move mountains for?', c: COLORS.mision },
                 ].map(d => (
@@ -156,24 +156,24 @@ const SampleAnalysisPage = () => {
               </div>
               <p className="text-white/40 text-xs mt-4">
                 {isEs
-                  ? '* El % no es una calificación. Es qué tan activa está esa dimensión en tu vida HOY.'
-                  : '* The % is not a grade. It shows how active that dimension is in your life TODAY.'}
+                  ? '* El porcentaje muestra qué tan activa está esa dimensión en tu vida HOY.'
+                  : '* The percentage shows how active that dimension is in your life TODAY.'}
               </p>
             </div>
 
             {/* Los 4 números de M.R. */}
             <ModuleCard name={isEs ? 'PASIÓN' : 'PASSION'} pct={87} color={COLORS.pasion}
-              phrase={isEs ? 'Sintetizar — convertir lo complejo en comprensible.' : 'Synthesizing — turning complex into clear.'}
-              detail={isEs ? 'Su energía se activa cuando traduce información difícil para que otros la entiendan. Lo ha hecho toda su vida sin darse cuenta de que es su don.' : 'Her energy peaks when translating complex information so others understand it. She\'s been doing this her whole life without realizing it\'s her gift.'} />
+              phrase={isEs ? 'Sintetizar: convertir lo complejo en algo que cualquiera entiende.' : 'Synthesizing: turning the complex into something anyone can grasp.'}
+              detail={isEs ? 'Su energía sube cuando traduce información difícil. Lleva toda la vida haciéndolo gratis, en reuniones, con amigos, sin registrarlo como un don.' : 'Her energy rises when she translates difficult information. She\'s done it free her whole life, in meetings, with friends, never registering it as a gift.'} />
             <ModuleCard name={isEs ? 'PROFESIÓN' : 'PROFESSION'} pct={92} color={COLORS.profesion}
-              phrase={isEs ? 'Pensamiento sistémico — ve el todo cuando otros ven partes.' : 'Systems thinking — sees the whole when others see parts.'}
-              detail={isEs ? 'Coordina equipos, proyectos y personas con una habilidad que sus colegas describen como "natural". Ella cree que cualquiera puede hacerlo. No es cierto.' : 'She coordinates teams, projects and people with a skill her colleagues describe as "natural." She thinks anyone can do it. They can\'t.'} />
+              phrase={isEs ? 'Pensamiento sistémico: ve el todo donde otros ven partes.' : 'Systems thinking: she sees the whole where others see parts.'}
+              detail={isEs ? 'Coordina equipos y proyectos con una soltura que sus colegas llaman "natural". Ella asume que cualquiera puede hacerlo. Sus jefes saben que no.' : 'She coordinates teams and projects with an ease her colleagues call "natural." She assumes anyone can do it. Her bosses know better.'} />
             <ModuleCard name={isEs ? 'VOCACIÓN' : 'VOCATION'} pct={78} color={COLORS.vocacion}
-              phrase={isEs ? 'Puente entre lo técnico y lo humano — donde pocos saben estar.' : 'Bridge between technical and human — where few can stand.'}
-              detail={isEs ? 'El mercado paga muy bien por personas que hablan el lenguaje de la tecnología Y el de las personas. M.R. lo hace sin esfuerzo.' : 'The market pays very well for people who speak both the language of technology AND people. M.R. does this effortlessly.'} />
+              phrase={isEs ? 'Puente entre lo técnico y lo humano, donde pocos saben pararse.' : 'A bridge between the technical and the human, where few can stand.'}
+              detail={isEs ? 'Las empresas pagan caro a quien habla el idioma de la tecnología y el de las personas a la vez. M.R. lo hace sin esfuerzo, y por eso mismo lo ha estado regalando.' : 'Companies pay a premium for someone fluent in both technology and people. M.R. does it effortlessly, which is exactly why she\'s been giving it away.'} />
             <ModuleCard name={isEs ? 'MISIÓN' : 'MISSION'} pct={85} color={COLORS.mision}
-              phrase={isEs ? 'Que la tecnología siga siendo humana — esa es su causa.' : 'Keeping technology human — that\'s her cause.'}
-              detail={isEs ? 'A medida que la IA automatiza todo, alguien tiene que asegurarse de que lo que queda sea humano. M.R. nació para ese rol.' : 'As AI automates everything, someone has to ensure what remains is human. M.R. was born for that role.'} />
+              phrase={isEs ? 'Que la tecnología siga siendo humana. Esa es su causa.' : 'Keeping technology human. That\'s her cause.'}
+              detail={isEs ? 'Mientras la IA automatiza todo lo automatizable, alguien tiene que decidir qué se queda humano. Ese rol existe, y encaja con ella.' : 'While AI automates everything automatable, someone has to decide what stays human. That role exists, and it fits her.'} />
           </Section>
 
           {/* ══════════════════════════════════════════════════════
@@ -182,26 +182,26 @@ const SampleAnalysisPage = () => {
           <Section
             step={isEs ? 'Paso 2' : 'Step 2'}
             label={isEs ? 'Lo que significan' : 'What they mean'}
-            title={isEs ? 'Qué dice el análisis sobre M.R.' : 'What the analysis says about M.R.'}
+            title={isEs ? 'Lo que el análisis vio en M.R.' : 'What the analysis saw in M.R.'}
           >
             {[
               {
-                titulo: isEs ? 'Su 92% en Profesión no es un accidente' : 'Her 92% in Profession is not an accident',
+                titulo: isEs ? 'Su 92% en Profesión lleva décadas construyéndose' : 'Her 92% in Profession took decades to build',
                 texto: isEs
-                  ? 'Desde que era niña organizaba cosas. Sus amigos siempre le pedían que coordinara. En el trabajo siempre es la persona que "tiene todo claro". Eso no es experiencia — es un patrón de comportamiento que lleva décadas activo.'
-                  : 'Since she was a child she organized things. Friends always asked her to coordinate. At work she\'s always the person who "has it all clear." That\'s not experience — it\'s a behavioral pattern active for decades.',
+                  ? 'De niña organizaba los juegos. En la universidad coordinaba a todos. En cada trabajo termina siendo la persona que "tiene todo claro". Un patrón tan viejo y tan constante deja de ser casualidad: es la materia prima de su carrera, y el reporte lo pone por escrito por primera vez.'
+                  : 'As a kid she organized the games. In college she coordinated everyone. In every job she ends up being the person who "has it all clear." A pattern that old and that consistent stops being coincidence: it\'s the raw material of her career, and the report puts it in writing for the first time.',
               },
               {
-                titulo: isEs ? 'Su 78% en Vocación esconde una tensión real' : 'Her 78% in Vocation hides a real tension',
+                titulo: isEs ? 'Su 78% en Vocación esconde dinero sobre la mesa' : 'Her 78% in Vocation hides money left on the table',
                 texto: isEs
-                  ? 'Sabe que es buena en lo que hace. Pero nunca ha cobrado lo que vale. Acepta proyectos por debajo de su nivel porque no sabe cómo nombrar exactamente qué ofrece. El análisis lo nombra: es una arquitecta de sistemas humanos — y eso tiene precio en el mercado.'
-                  : 'She knows she\'s good at what she does. But she\'s never charged what she\'s worth. She accepts below-level projects because she doesn\'t know how to name what she offers. The analysis names it: she\'s a human systems architect — and that has market price.',
+                  ? 'Sabe que es buena. Aun así cobra menos de lo que el mercado de Nueva York paga por su perfil, porque nunca ha sabido nombrar exactamente qué ofrece. El análisis lo nombra: arquitecta de sistemas humanos. Con ese nombre, la conversación de tarifas cambia de tono.'
+                  : 'She knows she\'s good. She still charges less than the New York market pays for her profile, because she\'s never known how to name exactly what she offers. The analysis names it: human systems architect. With that name, the rate conversation changes tone.',
               },
               {
-                titulo: isEs ? 'Su 85% en Misión explica su frustración de los últimos 3 años' : 'Her 85% in Mission explains her frustration of the last 3 years',
+                titulo: isEs ? 'Su 85% en Misión explica la frustración de los últimos 3 años' : 'Her 85% in Mission explains the last 3 years of frustration',
                 texto: isEs
-                  ? 'Ha trabajado en empresas donde el resultado importa más que las personas. Cada vez que propone algo "más humano" la ignoran. No es que esté equivocada — es que está en el entorno equivocado. Su misión requiere otro tipo de escenario.'
-                  : 'She\'s worked at companies where results matter more than people. Every time she proposes something "more human" she\'s ignored. She\'s not wrong — she\'s in the wrong environment. Her mission requires a different type of stage.',
+                  ? 'Ha pasado por empresas donde el resultado pesa más que las personas, y cada propuesta "más humana" termina en un cajón. El problema nunca fue su criterio. Era el escenario. Una misión de ese tamaño necesita organizaciones que la estén buscando, y existen.'
+                  : 'She\'s been through companies where results outweigh people, and every "more human" proposal ends up in a drawer. The problem was never her judgment. It was the stage. A mission that size needs organizations actively looking for it, and they exist.',
               },
             ].map((item, i) => (
               <motion.div key={i}
@@ -237,8 +237,8 @@ const SampleAnalysisPage = () => {
             </div>
             <p className="text-white/45 text-sm leading-relaxed text-center">
               {isEs
-                ? 'Esta frase no es poética. Es literal. Es el único punto donde su Pasión de sintetizar + su Profesión de coordinar sistemas + su Vocación de puente técnico-humano + su Misión de humanizar la tecnología — se convierten en una sola dirección.'
-                : 'This sentence is not poetic. It\'s literal. It\'s the only point where her Passion for synthesizing + her Profession of coordinating systems + her Vocation as a technical-human bridge + her Mission of humanizing technology — become one single direction.'}
+                ? 'Una sola dirección donde convergen las cuatro dimensiones: lo que la enciende, lo que domina, lo que el mercado paga y la causa que la mueve. Cuando las cuatro apuntan al mismo punto, decidir deja de doler.'
+                : 'One single direction where all four dimensions converge: what lights her up, what she masters, what the market pays for and the cause that moves her. When all four point to the same spot, deciding stops hurting.'}
             </p>
           </Section>
 
@@ -257,14 +257,14 @@ const SampleAnalysisPage = () => {
               </p>
               {[
                 isEs
-                  ? 'Llevas 20 años siendo buena en algo que no sabías nombrar. No es "gestión de proyectos" — es arquitectura de sistemas humanos. Esa diferencia de nombre vale 3 veces más en el mercado.'
-                  : 'You\'ve spent 20 years being good at something you didn\'t know how to name. It\'s not "project management" — it\'s human systems architecture. That naming difference is worth 3x more in the market.',
+                  ? 'Llevas 20 años siendo buena en algo que no sabías nombrar. "Gestión de proyectos" describe tu cargo; "arquitectura de sistemas humanos" describe tu valor. En el mercado, esa diferencia de nombre se paga hasta 3 veces más.'
+                  : 'You\'ve spent 20 years being good at something you didn\'t know how to name. "Project management" describes your job title; "human systems architecture" describes your value. The market pays up to 3x more for that difference in name.',
                 isEs
-                  ? 'Tu frustración no es con tu carrera. Es con los entornos donde tu misión no tiene espacio. El problema no eres tú — es que has estado en las organizaciones equivocadas.'
-                  : 'Your frustration is not with your career. It\'s with the environments where your mission has no space. The problem is not you — it\'s that you\'ve been in the wrong organizations.',
+                  ? 'Tu frustración nunca fue con tu carrera. Era con entornos donde tu misión no tenía espacio. Cambiar de empresa sin cambiar de tipo de empresa solo habría repetido el ciclo.'
+                  : 'Your frustration was never with your career. It was with environments where your mission had no room. Changing companies without changing the type of company would only have repeated the cycle.',
                 isEs
-                  ? 'El mercado que necesitas no es el corporativo tradicional. Es el espacio donde tecnología y humanidad se están negociando ahora mismo — startups de IA, consultoras de transformación digital, ONGs tech. Ahí es donde tu perfil vale más.'
-                  : 'The market you need is not traditional corporate. It\'s the space where technology and humanity are being negotiated right now — AI startups, digital transformation consulting, tech NGOs. That\'s where your profile is worth the most.',
+                  ? 'Tu mercado real está donde la tecnología y lo humano se negocian ahora mismo: startups de IA, consultoría de transformación, equipos de producto responsable. En Nueva York, ese mercado te queda a tres paradas de metro.'
+                  : 'Your real market is where technology and humanity are being negotiated right now: AI startups, transformation consulting, responsible product teams. In New York, that market is three subway stops away.',
               ].map((txt, i) => (
                 <div key={i} className="flex gap-4 mb-5 last:mb-0">
                   <span className="text-xl flex-shrink-0" style={{ color: '#D4AF37' }}>→</span>
@@ -284,19 +284,19 @@ const SampleAnalysisPage = () => {
           >
             <p className="text-white/40 text-sm mb-6">
               {isEs
-                ? 'Cada ruta está anclada en su análisis. No son sugerencias genéricas — son consecuencias lógicas de todo lo anterior.'
-                : 'Each route is anchored in her analysis. These aren\'t generic suggestions — they\'re logical consequences of everything above.'}
+                ? 'Cada ruta sale directamente de su análisis, con tiempos, costos y un primer paso para esta misma semana.'
+                : 'Each route comes straight from her analysis, with timelines, costs and a first step for this very week.'}
             </p>
             <RutaCard num={1}
               title={isEs ? 'Consultora independiente de transformación digital con enfoque humano' : 'Independent digital transformation consultant with human focus'}
               tiempo={isEs ? '3–6 meses para primeros clientes' : '3–6 months to first clients'}
-              costo={isEs ? '$0 inversión inicial · tarifa $80–150 USD/hr' : '$0 initial investment · rate $80–150 USD/hr'}
+              costo={isEs ? '$0 inversión inicial · tarifa NYC $150–250 USD/hr' : '$0 initial investment · NYC rate $150–250 USD/hr'}
               paso={isEs ? 'Reescribir tu LinkedIn con el lenguaje "arquitecta de sistemas humanos" esta semana.' : 'Rewrite your LinkedIn with "human systems architect" language this week.'} />
             <RutaCard num={2}
-              title={isEs ? 'Directora de Operaciones en startup de IA (seed o Serie A)' : 'COO at AI startup (seed or Series A)'}
+              title={isEs ? 'Directora de Operaciones en startup de IA de Nueva York (seed o Serie A)' : 'COO at a New York AI startup (seed or Series A)'}
               tiempo={isEs ? '2–4 meses de búsqueda activa' : '2–4 months of active search'}
               costo={isEs ? '$200 en cursos de IA básica para hablar el lenguaje' : '$200 in basic AI courses to speak the language'}
-              paso={isEs ? 'Crear perfil en Wellfound (AngelList) y aplicar a 5 startups esta semana.' : 'Create profile on Wellfound (AngelList) and apply to 5 startups this week.'} />
+              paso={isEs ? 'Crear perfil en Wellfound (AngelList) y aplicar a 5 startups de NYC esta semana.' : 'Create a Wellfound (AngelList) profile and apply to 5 NYC startups this week.'} />
             <RutaCard num={3}
               title={isEs ? 'Programa de certificación en Diseño Centrado en el Humano (IDEO o Stanford d.school)' : 'Human-Centered Design certification (IDEO or Stanford d.school)'}
               tiempo={isEs ? '6 semanas · online' : '6 weeks · online'}
@@ -315,7 +315,7 @@ const SampleAnalysisPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="text-center py-16 rounded-2xl"
+            className="text-center py-16 px-6 rounded-2xl"
             style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%)', border: '1.5px solid rgba(212,175,55,0.2)' }}
           >
             <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.7)' }}>
@@ -326,15 +326,34 @@ const SampleAnalysisPage = () => {
             </h3>
             <p className="text-white/45 mb-8 max-w-md mx-auto text-sm leading-relaxed">
               {isEs
-                ? 'Porque tú eres diferente. Mismos 5 pasos — otro perfil, otras rutas, otro descubrimiento. El tuyo.'
-                : 'Because you are different. Same 5 steps — different profile, different routes, different discovery. Yours.'}
+                ? 'M.R. necesitaba un nombre para lo que ya sabía hacer. Tú quizá necesitas una dirección, un permiso o un primer paso. Tu reporte responde con tus datos, en los mismos 5 pasos.'
+                : 'M.R. needed a name for what she already knew how to do. You might need a direction, a permission or a first step. Your report answers with your data, in the same 5 steps.'}
             </p>
+
+            {/* Anclaje de precio real */}
+            <div className="flex items-end justify-center gap-3 mb-2">
+              <div className="flex items-start">
+                <span className="text-xl font-bold mt-1" style={{ color: '#D4AF37' }}>$</span>
+                <span className="text-6xl font-bold leading-none" style={{ color: '#D4AF37', letterSpacing: '-0.04em' }}>47</span>
+              </div>
+              <span className="text-xl text-white/25 line-through mb-1">$79</span>
+            </div>
+            <p className="text-xs text-white/40 uppercase tracking-widest mb-8">
+              {isEs ? 'Precio Miembro Fundador · Pago único · Entrega en 24–48 h' : 'Founding Member price · One-time payment · Delivered in 24–48 h'}
+            </p>
+
             <Link to="/pricing">
               <Button size="lg" className="text-base px-8 py-6 transition-all duration-300 hover:shadow-[0_0_25px_rgba(212,175,55,0.35)] active:scale-[0.98]">
                 {isEs ? 'Generar Mi Mapa de Propósito' : 'Generate My Purpose Map'}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
+
+            <p className="text-white/35 text-xs mt-6 max-w-sm mx-auto leading-relaxed">
+              {isEs
+                ? 'Hoy $47, pronto $79. Cuesta menos que una cena en Manhattan y se queda contigo para siempre.'
+                : 'Today $47, soon $79. Less than dinner in Manhattan, and it stays with you forever.'}
+            </p>
           </motion.div>
 
         </div>
