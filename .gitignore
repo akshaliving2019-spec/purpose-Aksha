@@ -23,6 +23,9 @@ apps/pocketbase/pb_data/
 ejemplos-privados/
 .playwright-mcp/
 
+# Libros fuente (PDFs con derechos de autor) y su texto extraído — solo local
+libros/
+
 # Python
 __pycache__/
 *.pyc
