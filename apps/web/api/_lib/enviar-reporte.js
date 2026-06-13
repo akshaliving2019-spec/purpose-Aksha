@@ -16,10 +16,10 @@ const RESEND_API_KEY = ((process.env.RESEND_API_KEY || '').match(/re_[A-Za-z0-9_
 
 // Copia oculta de auditoría/compliance (pedida por el dueño): cada reporte
 // que sale a un cliente — envío directo o aprobado en revisión — llega
-// también a este buzón, idéntico a lo que recibió el cliente. Se cambia con
-// AUDITORIA_EMAIL; ponerla en '0' lo apaga.
+// también al buzón interno de AKSHA, idéntico a lo que recibió el cliente.
+// Se cambia con AUDITORIA_EMAIL; ponerla en '0' lo apaga.
 const EMAIL_AUDITORIA = (() => {
-  const valor = (process.env.AUDITORIA_EMAIL ?? 'developer@basileasystems.com').trim();
+  const valor = (process.env.AUDITORIA_EMAIL ?? 'Purpose@aksha.life').trim();
   return valor && valor !== '0' ? valor : '';
 })();
 
