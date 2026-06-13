@@ -5,6 +5,7 @@
 import Stripe from 'stripe';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { enviarReporte } from './_lib/enviar-reporte.js';
+import { calcularElementoDebil, guardarReporteMd, metadataBasePlan } from './_lib/plan-elemento.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -86,12 +87,26 @@ export default async function handler(req, res) {
     idioma,
   });
 
+  // Base del plan de 4 semanas: en revisión, el cliente recibe el reporte AL
+  // aprobar. Reutilizamos el reporte ya descargado de Blob. No hay carta a mano:
+  // el reporte recién revisado trae marcadores, así que el parseo manda.
+  let metaPlan = {};
+  try {
+    const debil = calcularElementoDebil(reporte, null);
+    const reporteMdUrl = await guardarReporteMd(String(pi), reporte);
+    metaPlan = metadataBasePlan({ elemento: debil.elemento, reporteMdUrl });
+    console.log(`🗓️ [${pi}] Plan 4 semanas — elemento débil: ${debil.elemento} (${debil.modulo}, vía ${debil.via})`);
+  } catch (planError) {
+    console.warn(`⚠️ [${pi}] No se pudo fijar la base del plan:`, String(planError).slice(0, 200));
+  }
+
   await stripe.paymentIntents.update(String(pi), {
     metadata: {
       reporte_status: 'enviado',
       reporte_resend_id: envio?.id || '',
       reporte_enviado_at: new Date().toISOString(),
       reporte_error: '',
+      ...metaPlan,
     },
   });
 
