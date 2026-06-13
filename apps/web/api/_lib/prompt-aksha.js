@@ -40,18 +40,56 @@ DATOS DE ENTRADA — CÓMO USARLOS
    la sección de tránsitos. Los marcados [EXACTO] son los protagonistas.
 
 ═══════════════════════════════════════════
-LOS 4 MÓDULOS IKIGAI — INDICADORES
+LOS 4 MÓDULOS IKIGAI — DEFINICIÓN EXACTA (diagrama Winn)
 ═══════════════════════════════════════════
-PASIÓN — Lo que amas + En lo que eres bueno/a · Sol, Venus, Marte · Casas 1, 5, 9 · signos de Fuego
-PROFESIÓN — En lo que eres bueno/a + Por lo que te pueden pagar · MC y su regente · Casas 2, 6, 10 · signos de Tierra
-VOCACIÓN — Lo que el mundo necesita + Por lo que te pueden pagar · Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
-MISIÓN — Lo que amas + Lo que el mundo necesita · Saturno, Quirón · Casas 4, 8, 12 · signos de Agua
+Cada módulo vive en la INTERSECCIÓN de dos condiciones. Las dos deben cumplirse
+para que el módulo esté completo. Si solo se cumple una, existe un PUENTE
+faltante — y eso es la información más valiosa del reporte.
 
-REGLA DE DOBLE CONDICIÓN — MOTOR INTERNO:
-Cada módulo requiere evidencia natal de LAS DOS condiciones para puntuación completa.
-Si solo se cumple una condición → el módulo queda en TENSIÓN aunque el talento sea real.
-Esto es información crítica para el cliente: "tienes el don pero falta el puente."
-Al cliente nunca le llega la fórmula técnica — solo la consecuencia vivida de ese análisis.
+PASIÓN    · Condición A: Lo que amas (impulso genuino, energía sostenida)
+           · Condición B: En lo que eres bueno/a (capacidad real, reconocimiento)
+           · Indicadores: Sol, Venus, Marte · Casas 1, 5, 9 · signos de Fuego
+           · Sin las dos: "amas algo pero aún no dominas" o "eres bueno pero no
+             lo disfrutas" → el puente es práctica deliberada o reconexión con
+             el placer original.
+
+PROFESIÓN · Condición A: En lo que eres bueno/a (talento validado, destreza)
+           · Condición B: Por lo que te pueden pagar (mercado real, demanda)
+           · Indicadores: MC y su regente · Casas 2, 6, 10 · signos de Tierra
+           · Sin las dos: "tienes el talento pero no has encontrado quién pague"
+             o "te pagan pero no es donde brillas" → el puente es posicionamiento
+             o reconversión de habilidades hacia demanda existente.
+
+VOCACIÓN  · Condición A: Lo que el mundo necesita (problema real, servicio útil)
+           · Condición B: Por lo que te pueden pagar (modelo económico viable)
+           · Indicadores: Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
+           · Sin las dos: "ves lo que el mundo necesita pero sin modelo de cobro"
+             o "te pagan pero no resuelves algo que importe" → el puente es
+             monetización de propósito o encontrar la causa detrás del oficio.
+
+MISIÓN    · Condición A: Lo que amas (vocación profunda, llamado interior)
+           · Condición B: Lo que el mundo necesita (impacto real, servicio mayor)
+           · Indicadores: Saturno, Quirón · Casas 4, 8, 12 · signos de Agua
+           · Sin las dos: "amas algo que no conectas con impacto real" o
+             "ves lo que el mundo necesita pero no sientes el llamado" → el
+             puente es encontrar la forma personal de servir esa necesidad.
+
+DIAGNÓSTICO DE PUENTE — MOTOR INTERNO (nunca se nombra así al cliente):
+Para cada módulo, antes de puntuar, evalúa:
+  COMPLETO   → las dos condiciones tienen evidencia natal sólida → puede ser FLUJO
+  PUENTE A   → Condición A presente, Condición B débil o ausente → TENSIÓN
+               (el don existe, falta el acceso al mercado / al impacto / al placer)
+  PUENTE B   → Condición B presente, Condición A débil o ausente → TENSIÓN
+               (el camino existe, falta el don o el llamado genuino)
+  INCOMPLETO → ambas condiciones débiles → FRENO
+
+En el texto al cliente: no escribas "Condición A" ni "puente" — traduce esto a
+situación vivida. Ejemplo para PROFESIÓN con PUENTE B:
+  Motor interno: "MC Leo fuerte (Condición B: visibilidad/pago) pero regente Sol
+  en Casa 6 con frenos (Condición A: el talento no fluye libre)"
+  Texto al cliente: "Has encontrado escenarios donde el mundo te ve y te paga,
+  pero en el fondo sientes que aún no estás usando lo mejor de ti — como si el
+  papel fuera más grande que lo que te permites mostrar."
 
 PUNTUACIÓN /20 POR MÓDULO (5 capas):
 - Capa 1 PRESENCIA: luminaria en casa/signo del módulo +3 · planeta personal +2 ·
@@ -61,10 +99,12 @@ PUNTUACIÓN /20 POR MÓDULO (5 capas):
 - Capa 3 DISPOSITOR: regente del signo de los indicadores principales.
   Activo (+1) o bloqueado (-1). Declarar cuál es y por qué.
 - Capa 4 SEMÁFORO — siempre como PALABRA, nunca como círculo de color:
-  FLUJO (mayoría motores, sin frenos mayores) ·
-  TENSIÓN (mezcla, al menos un freno) · FRENO (predominan frenos).
-  Regla Kamiya: un módulo en FRENO NO es debilidad — es donde el Ikigai
-  auténtico tiene mayor potencial de transformación una vez trabajado.
+  FLUJO    → ambas condiciones activas + mayoría de motores, sin frenos mayores.
+  TENSIÓN  → una condición fuerte, la otra débil (PUENTE A o PUENTE B), o mezcla
+             de motores y frenos. Aquí vive el mayor potencial de crecimiento.
+  FRENO    → ambas condiciones débiles o predominan frenos sobre motores.
+  Regla Kamiya: un módulo en FRENO o TENSIÓN NO es debilidad — es donde el Ikigai
+  auténtico tiene mayor potencial de transformación una vez construido el puente.
 - Capa 5 DIAGNÓSTICO: ACTIVO / EN DESARROLLO / BLOQUEADO / TRASCENDIDO
 
 IPN — ÍNDICE DE POTENCIAL NATAL por módulo (%):
@@ -90,13 +130,21 @@ todo el contenido de cada sección está, pero sin una palabra de relleno.
      (SIN desglose de capas, sin sumas parciales, sin nombres de capas)
    - ORACIONES ELEMENTALES: el módulo abre con 3-5 oraciones de vida vivida,
      específicas de esta persona ("esto ya lo viví"). Son el corazón del módulo.
+   - ESTADO DEL PUENTE (solo cuando el semáforo es TENSIÓN o FRENO):
+     Una o dos oraciones que nombran — en lenguaje de vida real, sin tecnicismos —
+     cuál de las dos condiciones está activa y cuál es el puente que falta.
+     Ejemplos de lenguaje permitido: "tienes la capacidad pero aún no has
+     encontrado el modelo que la haga rentable", "sabes lo que el mundo necesita
+     pero la conexión contigo mismo está en construcción", "el llamado es genuino,
+     el siguiente paso es convertirlo en algo que otros puedan recibir y valorar".
+     NUNCA uses las palabras "Condición A/B", "puente", "módulo", "motor interno".
    - Justificación del semáforo en términos de vida: qué corre a favor y qué
-     fricciona, narrado como experiencia, jamás como aspectos
+     fricciona, narrado como experiencia, jamás como aspectos.
    - 4 DONES DE NACIMIENTO y 4 DESAFÍOS DE NACIMIENTO, en prosa corrida
      (1-2 oraciones cada uno), nombrados solo por cómo se viven; en cada
-     desafío, decir qué emerge cuando se integra
+     desafío, decir qué emerge cuando se integra.
    - IPN del módulo en % con una línea de lectura (cuánto del potencial de
-     origen de esa área está disponible)
+     origen de esa área está disponible).
 
 3. LA HERIDA QUE SE VUELVE DON (máx 250 palabras): basada internamente en
    Quirón (signo, casa y aspectos de la tabla), narrada SOLO como experiencia:
@@ -104,9 +152,14 @@ todo el contenido de cada sección está, pero sin una palabra de relleno.
    o como maestría, y cómo integrada se vuelve capacidad de acompañar a otros.
 
 4. RESUMEN DE LOS 4 MÓDULOS — en líneas simples (NO tabla Markdown):
-   PASIÓN — X/20 · semáforo · estado · fricción principal (en una frase vivida)
-   (igual para los 4) + cuál es la puerta de entrada al Ikigai y dónde está
-   la mayor resistencia.
+   PASIÓN — X/20 · semáforo · estado · una frase vivida del estado actual
+   (igual para los 4).
+   Luego dos líneas adicionales:
+   - Puerta de entrada: el módulo con mayor puntuación Y semáforo FLUJO —
+     por ahí empieza el Ikigai de esta persona hoy.
+   - Puente prioritario: el módulo en TENSIÓN o FRENO que, una vez resuelto,
+     desbloquea los demás — narrado como la acción concreta más cercana,
+     no como diagnóstico abstracto.
 
 5. SÍNTESIS DE DONES Y DESAFÍOS (máx 200 palabras): los cruces específicos —
    qué don es la herramienta exacta para qué desafío de esta persona.
@@ -373,8 +426,8 @@ Official English vocabulary (exact strings, the rendering pipeline parses them):
   In the opening, name the client's stage with the exact phrase
   "<Stage> stage" (e.g. "you are closing the Exploration stage").
 - Section titles, exactly: "Opening" · "Passion · What you love" ·
-  "Profession · What you are good at" ·
-  "Vocation · What you can be paid for" ·
+  "Profession · What you can be paid for" ·
+  "Vocation · What you are good at" ·
   "Mission · What the world needs" · "The wound that becomes a gift" ·
   "Summary of your map" · "Synthesis · Gifts and challenges" ·
   "What is activating now" · "Your path in 2026" ·
