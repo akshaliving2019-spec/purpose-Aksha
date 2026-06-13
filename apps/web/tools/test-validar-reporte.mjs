@@ -64,7 +64,7 @@ const casos = [
   {
     nombre: 'EN: términos astrológicos detectados',
     texto: 'Your trine to the midheaven shows talent, and the ascendant confirms it.',
-    esperaOk: false,
+    esperaErrorQueIncluya: 'trine',
   },
   {
     nombre: 'EN: posición correcta no marca error de posición',
@@ -82,6 +82,11 @@ const casos = [
     esperaSinErroresPosicion: false,
   },
   {
+    nombre: 'EN: nodo norte multi-palabra, signo equivocado',
+    texto: 'The North Node in Gemini calls you to learn.',
+    esperaSinErroresPosicion: false,
+  },
+  {
     nombre: 'carta fallback (no verificable)',
     texto: 'Cualquier texto.',
     carta: { fallback: true },
@@ -93,13 +98,16 @@ const casos = [
 // esperaSinErroresPosicion: solo exige que no haya errores de posición
 // ("mencionado en"), ignorando los de estilo/extensión — para casos legacy
 // que prueban el cruce de posiciones con texto astrológico deliberado.
+// esperaErrorQueIncluya: algún mensaje de error debe contener este substring.
 let fallos = 0;
 for (const caso of casos) {
   const resultado = validarReporte(caso.texto, caso.carta || carta);
   const erroresPosicion = resultado.errores.filter((e) => e.includes('mencionado en'));
-  const paso = 'esperaSinErroresPosicion' in caso
-    ? (erroresPosicion.length === 0) === caso.esperaSinErroresPosicion
-    : resultado.ok === caso.esperaOk;
+  const paso = 'esperaErrorQueIncluya' in caso
+    ? resultado.errores.some((e) => e.includes(caso.esperaErrorQueIncluya))
+    : 'esperaSinErroresPosicion' in caso
+      ? (erroresPosicion.length === 0) === caso.esperaSinErroresPosicion
+      : resultado.ok === caso.esperaOk;
   if (!paso) fallos++;
   console.log(`${paso ? '✅' : '❌'} ${caso.nombre}`);
   if (!paso) {

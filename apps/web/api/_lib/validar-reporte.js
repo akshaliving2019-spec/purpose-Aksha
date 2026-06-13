@@ -111,7 +111,7 @@ const TERMINOS_ASTRO = new RegExp(
   '\\b(trigono|cuadratura|sextil|quincuncio|ascendente|medio cielo|dispositor|' +
   'quiron|carta natal|zodiaco|zodiacal|efemerides|swiss ephemeris|luminaria|' +
   'trine|sextile|quincunx|ascendant|midheaven|natal chart|zodiac|ephemeris|' +
-  'chiron|luminary)\\b' +
+  'chiron)\\b' +
   `|\\bcasa\\s+\\d{1,2}\\b|\\ben\\s+(?:${SIGNOS_NORM.join('|')})\\b` +
   `|\\bin\\s+the\\s+\\d{1,2}(?:st|nd|rd|th)\\s+house\\b` +
   `|\\b(?:${Object.keys(NOMBRES_EN).join('|')})\\s+in\\s+(?:${SIGNOS_EN.join('|')})\\b`,
@@ -225,6 +225,15 @@ export function validarReporte(reporte, carta) {
       'g',
     );
     for (const m of texto.matchAll(patronCasaEn)) {
+      // Misma guarda que el bucle ES: si otro punto (en ES o en EN) aparece
+      // entre el nombre y la casa, la casa pertenece a ese otro punto.
+      const otroEnMedio = [...puntos.keys()].some(
+        (otro) => otro !== claveEs && new RegExp(`\\b${otro}\\b`).test(m[1]),
+      );
+      const otroEnMedioEn = Object.entries(NOMBRES_EN).some(
+        ([otroEn, otroEs]) => otroEs !== claveEs && new RegExp(`\\b${otroEn}\\b`).test(m[1]),
+      );
+      if (otroEnMedio || otroEnMedioEn) continue;
       if (punto.casas.size > 0 && !punto.casas.has(Number(m[2]))) {
         errores.push(
           `${punto.etiqueta} mencionado en Casa ${m[2]} — la carta dice Casa ${[...punto.casas].join(' / ')}.`,
