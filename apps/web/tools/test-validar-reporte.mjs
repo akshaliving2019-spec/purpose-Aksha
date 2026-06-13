@@ -35,9 +35,9 @@ const casos = [
     esperaSinErroresPosicion: true,
   },
   {
-    nombre: 'error clásico: Júpiter en Capricornio',
-    texto: 'Júpiter en Capricornio te pide disciplina en la carrera.',
-    esperaSinErroresPosicion: true,
+    nombre: 'signo equivocado para Júpiter',
+    texto: 'Júpiter en Virgo te pide disciplina en la carrera.',
+    esperaSinErroresPosicion: false,
   },
   {
     nombre: 'signo equivocado para el Sol',
