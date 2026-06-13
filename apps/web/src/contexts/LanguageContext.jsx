@@ -47,7 +47,6 @@ export const translations = {
       ctaHighlight: 'You Really Are',
       ctaSubtitle: 'Enter your birth date. Get a clear map of your natural talents, strengths and purpose.\nEvery discipline studies a part of you. AKSHA LIFE synthesizes them all.',
       ctaBtn: 'Get My Purpose Map',
-      reviewsTitle: 'What people discovered about themselves',
     },
     common: {
       loading: 'Loading...',
@@ -178,7 +177,6 @@ export const translations = {
       ctaHighlight: 'Eres Realmente',
       ctaSubtitle: 'Introduce tu fecha de nacimiento. Recibe un mapa claro de tus talentos naturales, fortalezas y propósito.\nCada disciplina estudia una parte de ti. AKSHA LIFE las sintetiza todas.',
       ctaBtn: 'Obtener Mi Mapa de Propósito',
-      reviewsTitle: 'Lo que otros descubrieron sobre sí mismos',
     },
     common: {
       loading: 'Cargando...',

@@ -51,73 +51,8 @@ const RotatingQuestion = ({ lang }) => {
   );
 };
 
-// Placeholder reviews — replace with real ones from Aaron, Yofred, NRB
-const reviewsEN = [
-  {
-    name: 'Aaron B.',
-    country: 'USA',
-    text: 'I never connected the dots between my different skills until AKSHA LIFE showed me how they all fit together.',
-    stars: 5,
-  },
-  {
-    name: 'Yofred G.',
-    country: 'Venezuela',
-    text: 'The report revealed something about me I had always felt but never been able to put into words.',
-    stars: 5,
-  },
-  {
-    name: 'Ricardo C.',
-    country: 'Colombia',
-    text: 'For the first time I have a clear direction — not based on what others expect, but on who I actually am.',
-    stars: 5,
-  },
-];
-
-const reviewsES = [
-  {
-    name: 'Aaron B.',
-    country: 'EE.UU.',
-    text: 'Nunca conecté los puntos entre mis diferentes habilidades hasta que AKSHA LIFE me mostró cómo encajan.',
-    stars: 5,
-  },
-  {
-    name: 'Yofred G.',
-    country: 'Venezuela',
-    text: 'El informe reveló algo sobre mí que siempre había sentido pero nunca había podido poner en palabras.',
-    stars: 5,
-  },
-  {
-    name: 'Ricardo C.',
-    country: 'Colombia',
-    text: 'Por primera vez tengo una dirección clara — no basada en lo que otros esperan, sino en quién realmente soy.',
-    stars: 5,
-  },
-];
-
-const ReviewCard = ({ review }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5 }}
-    className="rounded-2xl p-6 flex flex-col gap-3"
-    style={{ backgroundColor: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}
-  >
-    <div className="flex gap-1">
-      {Array.from({ length: review.stars }).map((_, i) => (
-        <span key={i} style={{ color: '#D4AF37' }}>★</span>
-      ))}
-    </div>
-    <p className="text-white/75 text-sm leading-relaxed italic">"{review.text}"</p>
-    <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(212,175,55,0.6)' }}>
-      — {review.name} · {review.country}
-    </p>
-  </motion.div>
-);
-
 const HomePage = () => {
   const { t, lang } = useLanguage();
-  const reviews = lang === 'es' ? reviewsES : reviewsEN;
 
   return (
     <>
@@ -255,17 +190,15 @@ const HomePage = () => {
           </motion.div>
         </section>
 
-        {/* HUELLA + REVIEWS */}
+        {/* HUELLA */}
         <section className="py-24 bg-background border-t" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-
-            {/* HUELLA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="flex flex-col items-center text-center mb-16"
+              className="flex flex-col items-center text-center"
             >
               <img
                 src="/aksha-huella.png"
@@ -278,23 +211,6 @@ const HomePage = () => {
                   : 'Your purpose is as unique as your fingerprint.\nNo one else has exactly yours.'
                 }
               </p>
-            </motion.div>
-
-            {/* REVIEWS */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-foreground">
-                {t.home.reviewsTitle}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {reviews.map((review, i) => (
-                  <ReviewCard key={i} review={review} />
-                ))}
-              </div>
             </motion.div>
           </div>
         </section>
