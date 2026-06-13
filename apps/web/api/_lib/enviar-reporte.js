@@ -177,7 +177,7 @@ const TEXTOS_EMAIL = {
   es: {
     asunto: (nombre) => `${nombre}, tu Mapa de Propósito está listo`,
     producto: 'Mapa de Propósito',
-    preheader: 'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.',
+    preheader: 'Tu lectura completa: los cuatro módulos de tu Mapa de Vida, tus dones y desafíos de nacimiento, y las ventanas activas de este ciclo.',
     intro: `Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
                 los patrones únicos de tu nacimiento con el contexto actual del mundo —
                 para que puedas actuar con claridad.`,
@@ -190,7 +190,7 @@ const TEXTOS_EMAIL = {
   en: {
     asunto: (nombre) => `${nombre}, your Purpose Map is ready`,
     producto: 'Purpose Map',
-    preheader: 'Your full reading: the four Ikigai modules, your birth gifts and challenges, and the windows of this cycle.',
+    preheader: 'Your full reading: the four Life Map modules, your birth gifts and challenges, and the active windows of this cycle.',
     intro: `Your Purpose Map is ready. What you are about to read connects the unique
                 patterns of your birth with the world as it is today —
                 so you can act with clarity.`,
