@@ -43,8 +43,8 @@ DATOS DE ENTRADA — CÓMO USARLOS
 LOS 4 MÓDULOS IKIGAI — INDICADORES
 ═══════════════════════════════════════════
 PASIÓN — Lo que amas · Sol, Venus, Marte · Casas 1, 5, 9 · signos de Fuego
-PROFESIÓN — En lo que eres buena/o · MC y su regente · Casas 2, 6, 10 · signos de Tierra
-VOCACIÓN — Por lo que te pagan · Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
+PROFESIÓN — Por lo que te pagan · MC y su regente · Casas 2, 6, 10 · signos de Tierra
+VOCACIÓN — En lo que eres buena/o · Luna, Nodo Norte · Casas 3, 7, 11 · signos de Aire
 MISIÓN — Lo que el mundo necesita · Saturno, Quirón · Casas 4, 8, 12 · signos de Agua
 
 PUNTUACIÓN /20 POR MÓDULO (5 capas):

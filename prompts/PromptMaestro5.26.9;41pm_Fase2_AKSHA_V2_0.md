@@ -438,7 +438,7 @@ TOTAL IPN PASIÓN:        ___%
 
 ---
 
-### ⭐ MÓDULO 2 — PROFESIÓN (En lo que eres bueno)
+### ⭐ MÓDULO 2 — PROFESIÓN (Por lo que te pagan)
 **Indicadores:** MC + regente · Casas 2, 6, 10 · Júpiter · Signos de Tierra (Tauro, Virgo, Capricornio)
 **Base bibliográfica:**
 - Macià: *"Reconocimiento social, reputación profesional — Casa X"*
@@ -480,7 +480,7 @@ TOTAL IPN PROFESIÓN:     ___%
 
 ---
 
-### ■ MÓDULO 3 — VOCACIÓN (Por lo que te pagan)
+### ■ MÓDULO 3 — VOCACIÓN (En lo que eres bueno/a)
 **Indicadores:** MC · Luna · Nodo Norte · Casas 3, 7, 11 · Signos de Aire (Géminis, Libra, Acuario)
 **Base bibliográfica:**
 - Greene: *"Un llamado de adentro hacia afuera — conexión con propósito y significado"*
