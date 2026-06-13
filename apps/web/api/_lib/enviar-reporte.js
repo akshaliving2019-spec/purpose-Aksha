@@ -14,6 +14,15 @@ function escapeHtml(str) {
 const RESEND_API_KEY = ((process.env.RESEND_API_KEY || '').match(/re_[A-Za-z0-9_-]{10,}/) ||
   [(process.env.RESEND_API_KEY || '').trim()])[0];
 
+// Copia oculta de auditoría/compliance (pedida por el dueño): cada reporte
+// que sale a un cliente — envío directo o aprobado en revisión — llega
+// también a este buzón, idéntico a lo que recibió el cliente. Se cambia con
+// AUDITORIA_EMAIL; ponerla en '0' lo apaga.
+const EMAIL_AUDITORIA = (() => {
+  const valor = (process.env.AUDITORIA_EMAIL ?? 'developer@basileasystems.com').trim();
+  return valor && valor !== '0' ? valor : '';
+})();
+
 async function enviarConResend(payload, descripcion) {
   let ultimoError;
   for (let intento = 1; intento <= 3; intento++) {
@@ -54,6 +63,9 @@ export async function enviarReporte({ nombre, email, reporte, urlWeb = '', idiom
   const resultado = await enviarConResend({
     from: 'AKSHA LIFE <reportes@aksha.life>',
     to: [email],
+    ...(EMAIL_AUDITORIA && EMAIL_AUDITORIA.toLowerCase() !== email.toLowerCase()
+      ? { bcc: [EMAIL_AUDITORIA] }
+      : {}),
     subject: t.asunto(primerNombre),
     html: formatearEmailHTML(nombre, reporte, '', urlWeb, idioma),
     text: (urlWeb ? `${t.abrirWeb} ${urlWeb}\n\n` : '') + reporte,
