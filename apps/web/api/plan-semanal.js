@@ -34,7 +34,9 @@ async function candidatos() {
   const ahora = Date.now();
   return lista.data
     .map((pi) => ({ pi, semana: semanaPendiente(pi.metadata || {}, ahora) }))
-    .filter((c) => c.semana > 0);
+    // Sin reporte_md_url no hay insumo: descartar para no gastar los 3 intentos
+    // en un fetch('') que falla antes de llamar al modelo.
+    .filter((c) => c.semana > 0 && (c.pi.metadata || {}).reporte_md_url);
 }
 
 async function procesarUno(pi, semana) {
