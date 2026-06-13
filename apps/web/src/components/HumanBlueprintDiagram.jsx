@@ -207,7 +207,7 @@ const HumanBlueprintDiagram = () => {
       <div className="relative w-full flex justify-center px-4 md:px-8 py-4">
         <div className="relative w-full max-w-4xl mx-auto">
           <img
-            src="/human-blueprint.jpg"
+            src={lang === 'es' ? '/human-blueprint-es.jpg' : '/human-blueprint.jpg'}
             alt={lang === 'es' ? 'AKSHA LIFE — Mapa de Propósito Humano' : 'AKSHA LIFE — Human Purpose Map'}
             className="w-full h-auto block rounded-xl"
           />
