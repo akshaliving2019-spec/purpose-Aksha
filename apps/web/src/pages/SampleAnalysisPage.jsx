@@ -319,15 +319,15 @@ const SampleAnalysisPage = () => {
             style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%)', border: '1.5px solid rgba(212,175,55,0.2)' }}
           >
             <p className="text-xs uppercase tracking-[0.4em] font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.7)' }}>
-              {isEs ? 'Tu turno' : 'Your turn'}
+              {isEs ? 'Tu turno. Tu mapa.' : 'Your turn. Your map.'}
             </p>
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ letterSpacing: '-0.02em' }}>
-              {isEs ? 'Tu mapa será diferente a este.' : 'Your map will be different from this one.'}
+              {isEs ? 'Tu mapa es completamente único.' : 'Your map is completely unique.'}
             </h3>
             <p className="text-white/45 mb-8 max-w-md mx-auto text-sm leading-relaxed">
               {isEs
-                ? 'M.R. necesitaba un nombre para lo que ya sabía hacer. Tú quizá necesitas una dirección, un permiso o un primer paso. Tu reporte responde con tus datos, en los mismos 5 pasos.'
-                : 'M.R. needed a name for what she already knew how to do. You might need a direction, a permission or a first step. Your report answers with your data, in the same 5 steps.'}
+                ? 'Diana necesitaba un nombre para lo que hacía hace 20 años. Tú quizá necesitas permiso de ti mismo, una dirección clara, o las tres rutas diferentes para elegir. Tu reporte lo entrega con tus números, tu narrativa, tu mercado. Los mismos 5 pasos, datos completamente tuyos.'
+                : 'Diana needed a name for what she\'d done for 20 years. You might need permission from yourself, a clear direction, or three different paths to choose from. Your report delivers it with your numbers, your narrative, your market. Same 5 steps, completely your data.'}
             </p>
 
             {/* Anclaje de precio real */}
@@ -351,8 +351,8 @@ const SampleAnalysisPage = () => {
 
             <p className="text-white/35 text-xs mt-6 max-w-sm mx-auto leading-relaxed">
               {isEs
-                ? 'Hoy $47, pronto $79. Cuesta menos que una cena en Manhattan y se queda contigo para siempre.'
-                : 'Today $47, soon $79. Less than dinner in Manhattan, and it stays with you forever.'}
+                ? 'Hoy $47, pronto $79. Menos que una reunión de café en Brooklyn; queda en tu poder de por vida.'
+                : 'Today $47, soon $79. Less than a coffee meeting in Brooklyn; stays with you for life.'}
             </p>
           </motion.div>
 
