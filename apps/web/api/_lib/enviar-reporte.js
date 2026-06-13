@@ -14,6 +14,14 @@ function escapeHtml(str) {
 const RESEND_API_KEY = ((process.env.RESEND_API_KEY || '').match(/re_[A-Za-z0-9_-]{10,}/) ||
   [(process.env.RESEND_API_KEY || '').trim()])[0];
 
+// Copia oculta de auditoría/compliance: cada reporte que sale a un cliente
+// (envío directo o aprobado en revisión) llega también a este buzón, idéntico
+// a lo que recibió el cliente. Se cambia con AUDITORIA_EMAIL; '0' lo apaga.
+const EMAIL_AUDITORIA = (() => {
+  const valor = (process.env.AUDITORIA_EMAIL ?? 'developer@basileasystems.com').trim();
+  return valor && valor !== '0' ? valor : '';
+})();
+
 async function enviarConResend(payload, descripcion) {
   let ultimoError;
   for (let intento = 1; intento <= 3; intento++) {
@@ -41,7 +49,7 @@ async function enviarConResend(payload, descripcion) {
   throw ultimoError;
 }
 
-export async function enviarReporte({ nombre, email, reporte, urlWeb = '' }) {
+export async function enviarReporte({ nombre, email, reporte, urlWeb = '', idioma = 'es' }) {
   if (!RESEND_API_KEY) {
     console.error('❌ RESEND_API_KEY no configurada');
     await enviarNotificacionInterna({ nombre, email, reporte });
@@ -49,13 +57,17 @@ export async function enviarReporte({ nombre, email, reporte, urlWeb = '' }) {
   }
 
   const primerNombre = nombre.split(' ')[0];
+  const t = TEXTOS_EMAIL[idioma] || TEXTOS_EMAIL.es;
 
   const resultado = await enviarConResend({
     from: 'AKSHA LIFE <reportes@aksha.life>',
     to: [email],
-    subject: `${primerNombre}, tu Mapa de Propósito está listo`,
-    html: formatearEmailHTML(nombre, reporte, '', urlWeb),
-    text: (urlWeb ? `Abre tu Mapa en la web: ${urlWeb}\n\n` : '') + reporte,
+    ...(EMAIL_AUDITORIA && EMAIL_AUDITORIA.toLowerCase() !== email.toLowerCase()
+      ? { bcc: [EMAIL_AUDITORIA] }
+      : {}),
+    subject: t.asunto(primerNombre),
+    html: formatearEmailHTML(nombre, reporte, '', urlWeb, idioma),
+    text: (urlWeb ? `${t.abrirWeb} ${urlWeb}\n\n` : '') + reporte,
   }, `email a ${email}`);
 
   console.log('✅ Email enviado a:', email);
@@ -160,6 +172,35 @@ async function enviarNotificacionInterna({ nombre, email, reporte }) {
 
 const FUENTE_SERIF = "Georgia,'Times New Roman',serif";
 
+const TEXTOS_EMAIL = {
+  es: {
+    asunto: (nombre) => `${nombre}, tu Mapa de Propósito está listo`,
+    producto: 'Mapa de Propósito',
+    preheader: 'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.',
+    intro: `Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
+                los patrones únicos de tu nacimiento con el contexto actual del mundo —
+                para que puedas actuar con claridad.`,
+    botonMapa: 'Abrir tu Mapa en la web',
+    botonNota: 'La misma lectura, en su versión interactiva. Abajo la tienes completa en este correo.',
+    abrirWeb: 'Abre tu Mapa en la web:',
+    contacto: 'Si tienes preguntas, escríbenos a',
+    lema: 'La IA no crea el conocimiento. Lo conecta.',
+  },
+  en: {
+    asunto: (nombre) => `${nombre}, your Purpose Map is ready`,
+    producto: 'Purpose Map',
+    preheader: 'Your full reading: the four Ikigai modules, your birth gifts and challenges, and the windows of this cycle.',
+    intro: `Your Purpose Map is ready. What you are about to read connects the unique
+                patterns of your birth with the world as it is today —
+                so you can act with clarity.`,
+    botonMapa: 'Open your Map on the web',
+    botonNota: 'The same reading, in its interactive version. The full text is below in this email.',
+    abrirWeb: 'Open your Map on the web:',
+    contacto: 'Questions? Write to us at',
+    lema: 'AI does not create knowledge. It connects it.',
+  },
+};
+
 const ESTILO = {
   p: `margin:0 0 18px;color:#D9D5C9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;`,
   h2: `margin:38px 0 16px;padding:30px 0 0;border-top:1px solid #1C2B4D;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:23px;line-height:1.35;font-weight:normal;letter-spacing:0.03em;`,
@@ -227,27 +268,27 @@ export function reporteAHtml(reporte) {
   return bloques.join('\n');
 }
 
-export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb = '') {
+export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb = '', idioma = 'es') {
+  const t = TEXTOS_EMAIL[idioma] || TEXTOS_EMAIL.es;
   const primerNombre = escapeHtml(nombre.split(' ')[0]);
   const reporteHTML = reporteAHtml(reporte);
   const botonMapa = urlWeb ? `
           <tr>
             <td align="center" class="pad-lateral" style="padding:34px 36px 0;">
-              <a href="${urlWeb}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-family:${FUENTE_SERIF};font-weight:bold;font-size:16px;letter-spacing:0.04em;padding:15px 34px;border-radius:8px;text-decoration:none;">Abrir tu Mapa en la web</a>
-              <p style="margin:14px 0 0;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">La misma lectura, en su versión interactiva. Abajo la tienes completa en este correo.</p>
+              <a href="${urlWeb}" style="display:inline-block;background-color:#C9A84C;color:#07142F;font-family:${FUENTE_SERIF};font-weight:bold;font-size:16px;letter-spacing:0.04em;padding:15px 34px;border-radius:8px;text-decoration:none;">${t.botonMapa}</a>
+              <p style="margin:14px 0 0;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">${t.botonNota}</p>
             </td>
           </tr>` : '';
-  const preheader =
-    'Tu lectura completa: los cuatro módulos Ikigai, tus dones y desafíos de nacimiento, Quirón y los tránsitos de este ciclo.';
+  const preheader = t.preheader;
 
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${idioma}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="supported-color-schemes" content="dark">
-  <title>AKSHA · Mapa de Propósito</title>
+  <title>AKSHA · ${t.producto}</title>
   <style>
     body { margin:0; padding:0; background-color:#07142F; }
     a { color:#E8C97A; }
@@ -268,7 +309,7 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb
           <tr>
             <td align="center" class="pad-lateral" style="padding:56px 36px 0;">
               <div style="color:#C9A84C;font-family:${FUENTE_SERIF};font-size:26px;font-weight:bold;letter-spacing:0.4em;">AKSHA&nbsp;LIFE</div>
-              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">Mapa de Propósito</div>
+              <div style="color:#8E94A6;font-family:${FUENTE_SERIF};font-size:11px;letter-spacing:0.34em;text-transform:uppercase;margin-top:12px;">${t.producto}</div>
               <div style="width:64px;border-top:1px solid #C9A84C;margin:28px auto 0;font-size:0;line-height:0;">&nbsp;</div>
             </td>
           </tr>
@@ -276,9 +317,7 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb
             <td class="pad-lateral" style="padding:46px 36px 0;">
               <p style="margin:0 0 14px;color:#F0ECE4;font-family:${FUENTE_SERIF};font-size:25px;line-height:1.3;">${primerNombre},</p>
               <p style="margin:0;color:#A9AEB9;font-family:${FUENTE_SERIF};font-size:16px;line-height:1.85;">
-                Tu Mapa de Propósito está listo. Lo que vas a leer es el resultado de conectar
-                los patrones únicos de tu nacimiento con el contexto actual del mundo —
-                para que puedas actuar con claridad.
+                ${t.intro}
               </p>
             </td>
           </tr>${botonMapa}
@@ -292,10 +331,10 @@ export function formatearEmailHTML(nombre, reporte, encabezadoExtra = '', urlWeb
               <div style="width:64px;border-top:1px solid #1C2B4D;margin:0 auto 26px;font-size:0;line-height:0;">&nbsp;</div>
               <p style="margin:0 0 8px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;letter-spacing:0.08em;">AKSHA LIFE · aksha.life</p>
               <p style="margin:0 0 20px;color:#8E94A6;font-family:${FUENTE_SERIF};font-size:13px;">
-                Si tienes preguntas, escríbenos a
+                ${t.contacto}
                 <a href="mailto:Purpose@aksha.life" style="color:#C9A84C;text-decoration:none;">Purpose@aksha.life</a>
               </p>
-              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">La IA no crea el conocimiento. Lo conecta.</p>
+              <p style="margin:0;color:#C9A84C;font-family:${FUENTE_SERIF};font-size:14px;font-style:italic;">${t.lema}</p>
             </td>
           </tr>
         </table>

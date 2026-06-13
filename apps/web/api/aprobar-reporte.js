@@ -76,11 +76,14 @@ export default async function handler(req, res) {
   }
   const reporte = await respuesta.text();
 
+  const idioma = md.idioma === 'en' ? 'en' : 'es';
+
   const envio = await enviarReporte({
     nombre: md.customer_name,
     email: md.customer_email,
     reporte,
     urlWeb: md.reporte_web_url || '',
+    idioma,
   });
 
   await stripe.paymentIntents.update(String(pi), {
