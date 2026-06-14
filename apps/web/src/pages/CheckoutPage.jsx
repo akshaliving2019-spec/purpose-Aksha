@@ -43,6 +43,10 @@ const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang, pre
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // Cuando el banco/Stripe rechaza la tarjeta (caso típico: tarjetas de fuera
+  // de EE.UU. sin compras internacionales habilitadas, frecuente en LatAm),
+  // mostramos un aviso de ayuda además del mensaje de Stripe.
+  const [cardDeclined, setCardDeclined] = useState(false);
   const es = lang === 'es';
 
   const handleSubmit = async (e) => {
@@ -50,6 +54,7 @@ const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang, pre
     if (!stripe || !elements) return;
     setLoading(true);
     setError('');
+    setCardDeclined(false);
 
     const { error: submitError } = await elements.submit();
     if (submitError) {
@@ -70,6 +75,12 @@ const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang, pre
 
     if (confirmError) {
       setError(confirmError.message);
+      // Un rechazo de tarjeta (no un error de validación del formulario)
+      // dispara el aviso de tarjeta internacional.
+      const esRechazo = confirmError.type === 'card_error' ||
+        confirmError.code === 'card_declined' ||
+        Boolean(confirmError.decline_code);
+      setCardDeclined(esRechazo);
       setLoading(false);
     }
   };
@@ -81,6 +92,26 @@ const CheckoutForm = ({ name, email, birthDate, birthTime, birthPlace, lang, pre
       {error && (
         <div className="text-sm p-3 rounded-lg" style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
           {error}
+        </div>
+      )}
+
+      {cardDeclined && (
+        <div className="text-xs p-3 rounded-lg leading-relaxed" style={{ backgroundColor: 'rgba(212,175,55,0.08)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          {es ? (
+            <>
+              ¿Tu tarjeta es de fuera de Estados Unidos? El cobro es internacional, en dólares (USD).
+              Pídele a tu banco que <strong>habilite las compras internacionales</strong> de tu tarjeta, o
+              intenta con otra tarjeta de crédito. ¿Sigues con problemas? Escríbenos a{' '}
+              <a href="mailto:purpose@aksha.life" style={{ color: '#D4AF37', textDecoration: 'underline' }}>purpose@aksha.life</a>.
+            </>
+          ) : (
+            <>
+              Is your card issued outside the United States? This is an international charge in US dollars (USD).
+              Ask your bank to <strong>enable international purchases</strong> on your card, or try another
+              credit card. Still stuck? Email us at{' '}
+              <a href="mailto:purpose@aksha.life" style={{ color: '#D4AF37', textDecoration: 'underline' }}>purpose@aksha.life</a>.
+            </>
+          )}
         </div>
       )}
 
